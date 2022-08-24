@@ -5759,6 +5759,8 @@
 	export_constant(IG_Bs_Item_M_S_54);
 	export_constant(IG_Bs_Item_M_S_55);
 	export_constant(IG_Bs_Item_M_S_56);
+	export_constant(IG_Ein_1HITEMbox);
+	export_constant(IG_Ein_UNDIUM);
 
 	/* unit stop walking */
 	export_constant(USW_NONE);

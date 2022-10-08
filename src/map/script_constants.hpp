@@ -9066,7 +9066,6 @@
 	export_constant(SCF_SETSTAND);
 	export_constant(SCF_FAILEDMADO);
 	export_constant(SCF_DEBUFF);
-	export_constant(SCF_REMOVEONCHANGEMAP);
 	export_constant(SCF_REMOVEONMAPWARP);
 	export_constant(SCF_REMOVECHEMICALPROTECT);
 	export_constant(SCF_OVERLAPIGNORELEVEL);

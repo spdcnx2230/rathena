@@ -47,6 +47,7 @@
 //= 3.1 Updated to match the latest official scripts. [Euphy]
 //= 3.2 Added GM management NPC and variable $@re_moc_time$. [Euphy]
 //= 3.3 Renewal script update for ep16.1 [Capuche]
+//= 3.4 Moved Chief Balrog to pre-renewal [Lemongrass]
 //============================================================ 
 
 // Stop Post Quest

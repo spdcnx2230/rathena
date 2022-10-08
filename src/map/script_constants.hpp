@@ -1865,6 +1865,7 @@
 	export_constant(SC_SKF_CAST);
 	export_constant(SC_BEEF_RIB_STEW);
 	export_constant(SC_PORK_RIB_STEW);
+	export_constant(SC_WEAPONBREAKER);
 
 	export_constant(SC_RUSH_QUAKE1);
 	export_constant(SC_RUSH_QUAKE2);

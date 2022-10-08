@@ -6945,3 +6945,5 @@ Body:
       NoDispell: true
       NoClearance: true
       NoClearbuff: true
+  - Status: WeaponBreaker
+    DurationLookup: NPC_WEAPONBRAKER

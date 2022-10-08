@@ -8856,3 +8856,5 @@ Body:
     DurationLookup: SOA_SOUL_OF_HEAVEN_AND_EARTH
     CalcFlags:
       Smatk: true
+  - Status: WeaponBreaker
+    DurationLookup: NPC_WEAPONBRAKER

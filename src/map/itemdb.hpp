@@ -1028,6 +1028,8 @@ enum e_random_item_group {
 	IG_S_ABSORB_SHIELD,
 	IG_PORINGSPRECIOUSBOX,
 	IG_ODIN_RELIC,
+	IG_Ein_1HITEMbox,
+	IG_Ein_UNDIUM,
 
 	IG_MAX,
 };

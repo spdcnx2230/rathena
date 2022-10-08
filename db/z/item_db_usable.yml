@@ -88,12 +88,114 @@ Header:
   Type: ITEM_DB
   Version: 3
 
-Footer:
-  Imports:
-  - Path: db/pre-re/item_db.yml
-    Mode: Prerenewal
-  - Path: db/re/item_db.yml
-    Mode: Renewal
-  - Path: db/import/item_db.yml
-#   Premium Service
-  - Path: db/z/item_db.yml
+Body:
+  - Id: 23207
+    AegisName: Premium_Box
+    Name: Premium Service Box
+    Type: Usable
+    Buy: 10
+    Weight: 0
+    Delay:
+      Duration: 15000
+    Trade:
+      Override: 100
+      NoDrop: true
+      NoTrade: true
+      NoSell: true
+      NoCart: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Script: |
+      rentitem 23165,2592000; #APACHE_PREMIUM_SERVICE = 9; #APACHE_PREMIUM_TIME = gettimetick(2)+2592000; sc_start SC_APACHE_STORAGE,2592000000,300; sc_start SC_APACHE_EXPBOOST_A,2592000000,10; sc_start SC_APACHE_ITEMBOOST_A,2592000000,10;
+  - Id: 23165
+    AegisName: Service30_AID_Buff
+    Name: Premium Service Personnel
+    Type: Usable
+    Buy: 10
+    Weight: 0
+    Delay:
+      Duration: 50000
+    Trade:
+      Override: 100
+      NoDrop: true
+      NoTrade: true
+      NoSell: true
+      NoCart: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Script: |
+      callfunc "ps_item";
+  - Id: 23647
+    AegisName: Zero_Merchant_Bell
+    Name: Zero Merchant Bell
+    Type: Usable
+    Buy: 10
+    Weight: 0
+    Delay:
+      Duration: 50000
+    Trade:
+      Override: 100
+      NoDrop: true
+      NoTrade: true
+      NoSell: true
+      NoCart: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Script: |
+      callfunc "mb_item";
+  - Id: 23648
+    AegisName: Zero_Kafra_Bell
+    Name: Zero Kafra Bell
+    Type: Usable
+    Buy: 10
+    Weight: 0
+    Trade:
+      Override: 100
+      NoDrop: true
+      NoTrade: true
+      NoSell: true
+      NoCart: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Script: |
+      callfunc "F_CashStore";
+  - Id: 17920
+    AegisName: Zero_Merchant_Bell_Box
+    Name: Zero Merchant Bell Box
+    Type: Usable
+    Buy: 2
+    Weight: 10
+    Delay:
+      Duration: 180000
+    Trade:
+      Override: 100
+      NoDrop: true
+      NoTrade: true
+      NoSell: true
+      NoCart: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Script: |
+      rentitem 23647,2592000;
+  - Id: 17921
+    AegisName: Zero_Kafra_Bell_Box
+    Name: Zero Kafra Bell Box
+    Type: Usable
+    Buy: 2
+    Weight: 10
+    Trade:
+      Override: 100
+      NoDrop: true
+      NoTrade: true
+      NoSell: true
+      NoCart: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Script: |
+      rentitem 23648,2592000;

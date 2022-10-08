@@ -1,0 +1,1503 @@
+diff --git a/conf/inter_server.yml b/conf/inter_server.yml
+index ed6bc792def..77c20eeb190 100644
+--- a/conf/inter_server.yml
++++ b/conf/inter_server.yml
+@@ -40,6 +40,9 @@ Body:
+   - ID: 0
+     Name: "Storage"
+     Table: storage
++  - ID: 1
++    Name: "vip storage"
++    Table: vip_storage
+ 
+ Footer:
+   Imports:
+diff --git a/db/item_db.yml b/db/item_db.yml
+index 4b326a4a7cc..81133fb0cf8 100644
+--- a/db/item_db.yml
++++ b/db/item_db.yml
+@@ -95,3 +95,5 @@ Footer:
+   - Path: db/re/item_db.yml
+     Mode: Renewal
+   - Path: db/import/item_db.yml
++#   Premium Service
++  - Path: db/z/item_db.yml
+diff --git a/db/re/status.yml b/db/re/status.yml
+index 4032092bc3b..d3e6dc21a40 100644
+--- a/db/re/status.yml
++++ b/db/re/status.yml
+@@ -8400,3 +8400,78 @@ Body:
+       NoDispell: true
+       NoBanishingBuster: true
+       NoClearance: true
++#   Premium Service
++  - Status: APACHE_EXPBOOST_A
++    Icon: EFST_AID_PERIOD_PLUSEXP
++    Flags:
++      NoRemoveOnDead: true
++      NoClearbuff: true
++      NoDispell: true
++      NoBanishingBuster: true
++      NoClearance: true
++      SendVal1: true
++  - Status: APACHE_EXPBOOST_S
++    Icon: EFST_AID_PERIOD_PLUSEXP_2ND
++    Flags:
++      NoRemoveOnDead: true
++      NoClearbuff: true
++      NoDispell: true
++      NoBanishingBuster: true
++      NoClearance: true
++      SendVal1: true
++  - Status: APACHE_JEXPBOOST_A
++    Icon: EFST_AID_PERIOD_PLUSJOBEXP
++    Flags:
++      NoRemoveOnDead: true
++      NoClearbuff: true
++      NoDispell: true
++      NoBanishingBuster: true
++      NoClearance: true
++      SendVal1: true
++  #- Status: Ignoredef
++  - Status: APACHE_JEXPBOOST_S
++    Icon: EFST_AID_PERIOD_PLUSJOBEXP
++    Flags:
++      NoRemoveOnDead: true
++      NoClearbuff: true
++      NoDispell: true
++      NoBanishingBuster: true
++      NoClearance: true
++      SendVal1: true
++  #- Status: Ignoredef
++  - Status: APACHE_ITEMBOOST_A
++    Icon: EFST_AID_PERIOD_RECEIVEITEM
++    Flags:
++      NoRemoveOnDead: true
++      NoClearbuff: true
++      NoDispell: true
++      NoBanishingBuster: true
++      NoClearance: true
++      SendVal1: true
++  - Status: APACHE_ITEMBOOST_S
++    Icon: EFST_AID_PERIOD_PLUSJOBEXP_2ND
++    Flags:
++      NoRemoveOnDead: true
++      NoClearbuff: true
++      NoDispell: true
++      NoBanishingBuster: true
++      NoClearance: true
++      SendVal1: true
++  - Status: APACHE_STORAGE
++    Icon: EFST_AID_PERIOD_ADDSTOREITEMCOUNT
++    Flags:
++      NoRemoveOnDead: true
++      NoClearbuff: true
++      NoDispell: true
++      NoBanishingBuster: true
++      NoClearance: true
++      SendVal1: true
++  - Status: APACHE_LIFEINSURANCE
++    Icon: EFST_AID_PERIOD_DEADPENALTY
++    States:
++      NoDeathPenalty: true
++    Flags:
++      NoDispell: true
++      NoBanishingBuster: true
++      NoClearance: true
++      NoRemoveOnDead: true
+diff --git a/db/z/item_db.yml b/db/z/item_db.yml
+new file mode 100644
+index 00000000000..e536087647f
+--- /dev/null
++++ b/db/z/item_db.yml
+@@ -0,0 +1,95 @@
++# This file is a part of rAthena.
++#   Copyright(C) 2021 rAthena Development Team
++#   https://rathena.org - https://github.com/rathena
++#
++# This program is free software: you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program. If not, see <http://www.gnu.org/licenses/>.
++#
++###########################################################################
++# Item Database
++###########################################################################
++#
++# Item Settings
++#
++###########################################################################
++# - Id                      Item ID.
++#   AegisName               Server name to reference the item in scripts and lookups, should use no spaces.
++#   Name                    Name in English for displaying as output.
++#   Type                    Item type. (Default: Etc)
++#   SubType                 Weapon, Ammo or Card type. (Default: 0)
++#   Buy                     Buying price. When not specified, becomes double the sell price. (Default: 0)
++#   Sell                    Selling price. When not specified, becomes half the buy price. (Default: 0)
++#   Weight                  Item weight. Each 10 is 1 weight. (Default: 0)
++#   Attack                  Weapon's attack. (Default: 0)
++#   MagicAttack             Weapon's magic attack. (Default: 0)
++#   Defense                 Armor's defense. (Default: 0)
++#   Range                   Weapon's attack range. (Default: 0)
++#   Slots                   Available slots in item. (Default: 0)
++#   Jobs                    Jobs that can equip the item. (Map default is 'All: true')
++#   Classes                 Upper class types that can equip the item. (Map default is 'All: true')
++#   Gender                  Gender that can equip the item. (Default: Both)
++#   Locations               Equipment's placement. (Default: None)
++#   WeaponLevel             Weapon level. (Default: 1 for Weapons)
++#   ArmorLevel              Armor level. (Default: 1 for Armors)
++#   EquipLevelMin           Minimum required level to equip. (Default: 0)
++#   EquipLevelMax           Maximum level that can equip. (Default: 0)
++#   Refineable              If the item can be refined. (Default: false)
++#   Gradable                If the item can be graded. (Default: false)
++#   View                    View sprite of an item. (Default: 0)
++#   AliasName               Another item's AegisName that will be sent to the client instead of this item's AegisName. (Default: null)
++#   Flags:                  Item flags. (Default: null)
++#     BuyingStore           If the item is available for Buyingstores. (Default: false)
++#     DeadBranch            If the item is a Dead Branch. (Default: false)
++#     Container             If the item is part of a container. (Default: false)
++#     UniqueId              If the item is a unique stack. (Default: false)
++#     BindOnEquip           If the item is bound to the character upon equipping. (Default: false)
++#     DropAnnounce          If the item has a special announcement to self on drop. (Default: false)
++#     NoConsume             If the item is consumed on use. (Default: false)
++#     DropEffect            If the item has a special effect on the ground when dropped by a monster. (Default: None)
++#   Delay:                  Item use delay. (Default: null)
++#     Duration              Duration of delay in seconds.
++#     Status                Status Change used to track delay. (Default: None)
++#   Stack:                  Item stack amount. (Default: null)
++#     Amount                Maximum amount that can be stacked.
++#     Inventory             If the stack is applied to player's inventory. (Default: true)
++#     Cart                  If the stack is applied to the player's cart. (Default: false)
++#     Storage               If the stack is applied to the player's storage. (Default: false)
++#     GuildStorage          If the stack is applied to the player's guild storage. (Default: false)
++#   NoUse:                  Conditions when the item is unusable. (Default: null)
++#     Override              Group level to override these conditions. (Default: 100)
++#     Sitting               If the item can not be used while sitting. (Default: false)
++#   Trade:                  Trade restrictions. (Default: null)
++#     Override              Group level to override these conditions. (Default: 100)
++#     NoDrop                If the item can not be dropped. (Default: false)
++#     NoTrade               If the item can not be traded. (Default: false)
++#     TradePartner          If the item can not be traded to the player's partner. (Default: false)
++#     NoSell                If the item can not be sold. (Default: false)
++#     NoCart                If the item can not be put in a cart. (Default: false)
++#     NoStorage             If the item can not be put in a storage. (Default: false)
++#     NoGuildStorage        If the item can not be put in a guild storage. (Default: false)
++#     NoMail                If the item can not be put in a mail. (Default: false)
++#     NoAuction             If the item can not be put in an auction. (Default: false)
++#   Script                  Script to execute when the item is used/equipped. (Default: null)
++#   EquipScript             Script to execute when the item is equipped. (Default: null)
++#   UnEquipScript           Script to execute when the item is unequipped or when a rental item expires. (Default: null)
++###########################################################################
++
++Header:
++  Type: ITEM_DB
++  Version: 3
++
++Footer:
++  Imports:
++  - Path: db/z/item_db_usable.yml
++  - Path: db/z/item_db_equip.yml
++  - Path: db/z/item_db_etc.yml
+diff --git a/db/z/item_db_equip.yml b/db/z/item_db_equip.yml
+new file mode 100644
+index 00000000000..3a67013cd4f
+--- /dev/null
++++ b/db/z/item_db_equip.yml
+@@ -0,0 +1,91 @@
++# This file is a part of rAthena.
++#   Copyright(C) 2021 rAthena Development Team
++#   https://rathena.org - https://github.com/rathena
++#
++# This program is free software: you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program. If not, see <http://www.gnu.org/licenses/>.
++#
++###########################################################################
++# Item Database
++###########################################################################
++#
++# Item Settings
++#
++###########################################################################
++# - Id                      Item ID.
++#   AegisName               Server name to reference the item in scripts and lookups, should use no spaces.
++#   Name                    Name in English for displaying as output.
++#   Type                    Item type. (Default: Etc)
++#   SubType                 Weapon, Ammo or Card type. (Default: 0)
++#   Buy                     Buying price. When not specified, becomes double the sell price. (Default: 0)
++#   Sell                    Selling price. When not specified, becomes half the buy price. (Default: 0)
++#   Weight                  Item weight. Each 10 is 1 weight. (Default: 0)
++#   Attack                  Weapon's attack. (Default: 0)
++#   MagicAttack             Weapon's magic attack. (Default: 0)
++#   Defense                 Armor's defense. (Default: 0)
++#   Range                   Weapon's attack range. (Default: 0)
++#   Slots                   Available slots in item. (Default: 0)
++#   Jobs                    Jobs that can equip the item. (Map default is 'All: true')
++#   Classes                 Upper class types that can equip the item. (Map default is 'All: true')
++#   Gender                  Gender that can equip the item. (Default: Both)
++#   Locations               Equipment's placement. (Default: None)
++#   WeaponLevel             Weapon level. (Default: 1 for Weapons)
++#   ArmorLevel              Armor level. (Default: 1 for Armors)
++#   EquipLevelMin           Minimum required level to equip. (Default: 0)
++#   EquipLevelMax           Maximum level that can equip. (Default: 0)
++#   Refineable              If the item can be refined. (Default: false)
++#   Gradable                If the item can be graded. (Default: false)
++#   View                    View sprite of an item. (Default: 0)
++#   AliasName               Another item's AegisName that will be sent to the client instead of this item's AegisName. (Default: null)
++#   Flags:                  Item flags. (Default: null)
++#     BuyingStore           If the item is available for Buyingstores. (Default: false)
++#     DeadBranch            If the item is a Dead Branch. (Default: false)
++#     Container             If the item is part of a container. (Default: false)
++#     UniqueId              If the item is a unique stack. (Default: false)
++#     BindOnEquip           If the item is bound to the character upon equipping. (Default: false)
++#     DropAnnounce          If the item has a special announcement to self on drop. (Default: false)
++#     NoConsume             If the item is consumed on use. (Default: false)
++#     DropEffect            If the item has a special effect on the ground when dropped by a monster. (Default: None)
++#   Delay:                  Item use delay. (Default: null)
++#     Duration              Duration of delay in seconds.
++#     Status                Status Change used to track delay. (Default: None)
++#   Stack:                  Item stack amount. (Default: null)
++#     Amount                Maximum amount that can be stacked.
++#     Inventory             If the stack is applied to player's inventory. (Default: true)
++#     Cart                  If the stack is applied to the player's cart. (Default: false)
++#     Storage               If the stack is applied to the player's storage. (Default: false)
++#     GuildStorage          If the stack is applied to the player's guild storage. (Default: false)
++#   NoUse:                  Conditions when the item is unusable. (Default: null)
++#     Override              Group level to override these conditions. (Default: 100)
++#     Sitting               If the item can not be used while sitting. (Default: false)
++#   Trade:                  Trade restrictions. (Default: null)
++#     Override              Group level to override these conditions. (Default: 100)
++#     NoDrop                If the item can not be dropped. (Default: false)
++#     NoTrade               If the item can not be traded. (Default: false)
++#     TradePartner          If the item can not be traded to the player's partner. (Default: false)
++#     NoSell                If the item can not be sold. (Default: false)
++#     NoCart                If the item can not be put in a cart. (Default: false)
++#     NoStorage             If the item can not be put in a storage. (Default: false)
++#     NoGuildStorage        If the item can not be put in a guild storage. (Default: false)
++#     NoMail                If the item can not be put in a mail. (Default: false)
++#     NoAuction             If the item can not be put in an auction. (Default: false)
++#   Script                  Script to execute when the item is used/equipped. (Default: null)
++#   EquipScript             Script to execute when the item is equipped. (Default: null)
++#   UnEquipScript           Script to execute when the item is unequipped or when a rental item expires. (Default: null)
++###########################################################################
++
++Header:
++  Type: ITEM_DB
++  Version: 3
++
++Body:
+diff --git a/db/z/item_db_etc.yml b/db/z/item_db_etc.yml
+new file mode 100644
+index 00000000000..159f0446d02
+--- /dev/null
++++ b/db/z/item_db_etc.yml
+@@ -0,0 +1,105 @@
++# This file is a part of rAthena.
++#   Copyright(C) 2021 rAthena Development Team
++#   https://rathena.org - https://github.com/rathena
++#
++# This program is free software: you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program. If not, see <http://www.gnu.org/licenses/>.
++#
++###########################################################################
++# Item Database
++###########################################################################
++#
++# Item Settings
++#
++###########################################################################
++# - Id                      Item ID.
++#   AegisName               Server name to reference the item in scripts and lookups, should use no spaces.
++#   Name                    Name in English for displaying as output.
++#   Type                    Item type. (Default: Etc)
++#   SubType                 Weapon, Ammo or Card type. (Default: 0)
++#   Buy                     Buying price. When not specified, becomes double the sell price. (Default: 0)
++#   Sell                    Selling price. When not specified, becomes half the buy price. (Default: 0)
++#   Weight                  Item weight. Each 10 is 1 weight. (Default: 0)
++#   Attack                  Weapon's attack. (Default: 0)
++#   MagicAttack             Weapon's magic attack. (Default: 0)
++#   Defense                 Armor's defense. (Default: 0)
++#   Range                   Weapon's attack range. (Default: 0)
++#   Slots                   Available slots in item. (Default: 0)
++#   Jobs                    Jobs that can equip the item. (Map default is 'All: true')
++#   Classes                 Upper class types that can equip the item. (Map default is 'All: true')
++#   Gender                  Gender that can equip the item. (Default: Both)
++#   Locations               Equipment's placement. (Default: None)
++#   WeaponLevel             Weapon level. (Default: 1 for Weapons)
++#   ArmorLevel              Armor level. (Default: 1 for Armors)
++#   EquipLevelMin           Minimum required level to equip. (Default: 0)
++#   EquipLevelMax           Maximum level that can equip. (Default: 0)
++#   Refineable              If the item can be refined. (Default: false)
++#   Gradable                If the item can be graded. (Default: false)
++#   View                    View sprite of an item. (Default: 0)
++#   AliasName               Another item's AegisName that will be sent to the client instead of this item's AegisName. (Default: null)
++#   Flags:                  Item flags. (Default: null)
++#     BuyingStore           If the item is available for Buyingstores. (Default: false)
++#     DeadBranch            If the item is a Dead Branch. (Default: false)
++#     Container             If the item is part of a container. (Default: false)
++#     UniqueId              If the item is a unique stack. (Default: false)
++#     BindOnEquip           If the item is bound to the character upon equipping. (Default: false)
++#     DropAnnounce          If the item has a special announcement to self on drop. (Default: false)
++#     NoConsume             If the item is consumed on use. (Default: false)
++#     DropEffect            If the item has a special effect on the ground when dropped by a monster. (Default: None)
++#   Delay:                  Item use delay. (Default: null)
++#     Duration              Duration of delay in seconds.
++#     Status                Status Change used to track delay. (Default: None)
++#   Stack:                  Item stack amount. (Default: null)
++#     Amount                Maximum amount that can be stacked.
++#     Inventory             If the stack is applied to player's inventory. (Default: true)
++#     Cart                  If the stack is applied to the player's cart. (Default: false)
++#     Storage               If the stack is applied to the player's storage. (Default: false)
++#     GuildStorage          If the stack is applied to the player's guild storage. (Default: false)
++#   NoUse:                  Conditions when the item is unusable. (Default: null)
++#     Override              Group level to override these conditions. (Default: 100)
++#     Sitting               If the item can not be used while sitting. (Default: false)
++#   Trade:                  Trade restrictions. (Default: null)
++#     Override              Group level to override these conditions. (Default: 100)
++#     NoDrop                If the item can not be dropped. (Default: false)
++#     NoTrade               If the item can not be traded. (Default: false)
++#     TradePartner          If the item can not be traded to the player's partner. (Default: false)
++#     NoSell                If the item can not be sold. (Default: false)
++#     NoCart                If the item can not be put in a cart. (Default: false)
++#     NoStorage             If the item can not be put in a storage. (Default: false)
++#     NoGuildStorage        If the item can not be put in a guild storage. (Default: false)
++#     NoMail                If the item can not be put in a mail. (Default: false)
++#     NoAuction             If the item can not be put in an auction. (Default: false)
++#   Script                  Script to execute when the item is used/equipped. (Default: null)
++#   EquipScript             Script to execute when the item is equipped. (Default: null)
++#   UnEquipScript           Script to execute when the item is unequipped or when a rental item expires. (Default: null)
++###########################################################################
++
++Header:
++  Type: ITEM_DB
++  Version: 3
++
++Body:
++  - Id: 6417
++    AegisName: Silvervine
++    Name: Silvervine Fruit
++    Type: Etc
++    Buy: 20
++    Trade:
++      Override: 100
++      NoDrop: true
++      NoTrade: true
++      NoSell: true
++      NoCart: true
++      NoGuildStorage: true
++      NoMail: true
++      NoAuction: true
+diff --git a/db/z/item_db_usable.yml b/db/z/item_db_usable.yml
+new file mode 100644
+index 00000000000..e090dc45f09
+--- /dev/null
++++ b/db/z/item_db_usable.yml
+@@ -0,0 +1,201 @@
++# This file is a part of rAthena.
++#   Copyright(C) 2021 rAthena Development Team
++#   https://rathena.org - https://github.com/rathena
++#
++# This program is free software: you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation, either version 3 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program. If not, see <http://www.gnu.org/licenses/>.
++#
++###########################################################################
++# Item Database
++###########################################################################
++#
++# Item Settings
++#
++###########################################################################
++# - Id                      Item ID.
++#   AegisName               Server name to reference the item in scripts and lookups, should use no spaces.
++#   Name                    Name in English for displaying as output.
++#   Type                    Item type. (Default: Etc)
++#   SubType                 Weapon, Ammo or Card type. (Default: 0)
++#   Buy                     Buying price. When not specified, becomes double the sell price. (Default: 0)
++#   Sell                    Selling price. When not specified, becomes half the buy price. (Default: 0)
++#   Weight                  Item weight. Each 10 is 1 weight. (Default: 0)
++#   Attack                  Weapon's attack. (Default: 0)
++#   MagicAttack             Weapon's magic attack. (Default: 0)
++#   Defense                 Armor's defense. (Default: 0)
++#   Range                   Weapon's attack range. (Default: 0)
++#   Slots                   Available slots in item. (Default: 0)
++#   Jobs                    Jobs that can equip the item. (Map default is 'All: true')
++#   Classes                 Upper class types that can equip the item. (Map default is 'All: true')
++#   Gender                  Gender that can equip the item. (Default: Both)
++#   Locations               Equipment's placement. (Default: None)
++#   WeaponLevel             Weapon level. (Default: 1 for Weapons)
++#   ArmorLevel              Armor level. (Default: 1 for Armors)
++#   EquipLevelMin           Minimum required level to equip. (Default: 0)
++#   EquipLevelMax           Maximum level that can equip. (Default: 0)
++#   Refineable              If the item can be refined. (Default: false)
++#   Gradable                If the item can be graded. (Default: false)
++#   View                    View sprite of an item. (Default: 0)
++#   AliasName               Another item's AegisName that will be sent to the client instead of this item's AegisName. (Default: null)
++#   Flags:                  Item flags. (Default: null)
++#     BuyingStore           If the item is available for Buyingstores. (Default: false)
++#     DeadBranch            If the item is a Dead Branch. (Default: false)
++#     Container             If the item is part of a container. (Default: false)
++#     UniqueId              If the item is a unique stack. (Default: false)
++#     BindOnEquip           If the item is bound to the character upon equipping. (Default: false)
++#     DropAnnounce          If the item has a special announcement to self on drop. (Default: false)
++#     NoConsume             If the item is consumed on use. (Default: false)
++#     DropEffect            If the item has a special effect on the ground when dropped by a monster. (Default: None)
++#   Delay:                  Item use delay. (Default: null)
++#     Duration              Duration of delay in seconds.
++#     Status                Status Change used to track delay. (Default: None)
++#   Stack:                  Item stack amount. (Default: null)
++#     Amount                Maximum amount that can be stacked.
++#     Inventory             If the stack is applied to player's inventory. (Default: true)
++#     Cart                  If the stack is applied to the player's cart. (Default: false)
++#     Storage               If the stack is applied to the player's storage. (Default: false)
++#     GuildStorage          If the stack is applied to the player's guild storage. (Default: false)
++#   NoUse:                  Conditions when the item is unusable. (Default: null)
++#     Override              Group level to override these conditions. (Default: 100)
++#     Sitting               If the item can not be used while sitting. (Default: false)
++#   Trade:                  Trade restrictions. (Default: null)
++#     Override              Group level to override these conditions. (Default: 100)
++#     NoDrop                If the item can not be dropped. (Default: false)
++#     NoTrade               If the item can not be traded. (Default: false)
++#     TradePartner          If the item can not be traded to the player's partner. (Default: false)
++#     NoSell                If the item can not be sold. (Default: false)
++#     NoCart                If the item can not be put in a cart. (Default: false)
++#     NoStorage             If the item can not be put in a storage. (Default: false)
++#     NoGuildStorage        If the item can not be put in a guild storage. (Default: false)
++#     NoMail                If the item can not be put in a mail. (Default: false)
++#     NoAuction             If the item can not be put in an auction. (Default: false)
++#   Script                  Script to execute when the item is used/equipped. (Default: null)
++#   EquipScript             Script to execute when the item is equipped. (Default: null)
++#   UnEquipScript           Script to execute when the item is unequipped or when a rental item expires. (Default: null)
++###########################################################################
++
++Header:
++  Type: ITEM_DB
++  Version: 3
++
++Body:
++  - Id: 23207
++    AegisName: Premium_Box
++    Name: Premium Service Box
++    Type: Usable
++    Buy: 10
++    Weight: 0
++    Delay:
++      Duration: 15000
++    Trade:
++      Override: 100
++      NoDrop: true
++      NoTrade: true
++      NoSell: true
++      NoCart: true
++      NoGuildStorage: true
++      NoMail: true
++      NoAuction: true
++    Script: |
++      rentitem 23165,2592000; #APACHE_PREMIUM_SERVICE = 9; #APACHE_PREMIUM_TIME = gettimetick(2)+2592000; sc_start SC_APACHE_STORAGE,2592000000,300; sc_start SC_APACHE_EXPBOOST_A,2592000000,10; sc_start SC_APACHE_ITEMBOOST_A,2592000000,10;
++  - Id: 23165
++    AegisName: Service30_AID_Buff
++    Name: Premium Service Personnel
++    Type: Usable
++    Buy: 10
++    Weight: 0
++    Delay:
++      Duration: 50000
++    Trade:
++      Override: 100
++      NoDrop: true
++      NoTrade: true
++      NoSell: true
++      NoCart: true
++      NoGuildStorage: true
++      NoMail: true
++      NoAuction: true
++    Script: |
++      callfunc "ps_item";
++  - Id: 23647
++    AegisName: Zero_Merchant_Bell
++    Name: Zero Merchant Bell
++    Type: Usable
++    Buy: 10
++    Weight: 0
++    Delay:
++      Duration: 50000
++    Trade:
++      Override: 100
++      NoDrop: true
++      NoTrade: true
++      NoSell: true
++      NoCart: true
++      NoGuildStorage: true
++      NoMail: true
++      NoAuction: true
++    Script: |
++      callfunc "mb_item";
++  - Id: 23648
++    AegisName: Zero_Kafra_Bell
++    Name: Zero Kafra Bell
++    Type: Usable
++    Buy: 10
++    Weight: 0
++    Trade:
++      Override: 100
++      NoDrop: true
++      NoTrade: true
++      NoSell: true
++      NoCart: true
++      NoGuildStorage: true
++      NoMail: true
++      NoAuction: true
++    Script: |
++      callfunc "F_CashStore";
++  - Id: 17920
++    AegisName: Zero_Merchant_Bell_Box
++    Name: Zero Merchant Bell Box
++    Type: Usable
++    Buy: 2
++    Weight: 10
++    Delay:
++      Duration: 180000
++    Trade:
++      Override: 100
++      NoDrop: true
++      NoTrade: true
++      NoSell: true
++      NoCart: true
++      NoGuildStorage: true
++      NoMail: true
++      NoAuction: true
++    Script: |
++      rentitem 23647,2592000;
++  - Id: 17921
++    AegisName: Zero_Kafra_Bell_Box
++    Name: Zero Kafra Bell Box
++    Type: Usable
++    Buy: 2
++    Weight: 10
++    Trade:
++      Override: 100
++      NoDrop: true
++      NoTrade: true
++      NoSell: true
++      NoCart: true
++      NoGuildStorage: true
++      NoMail: true
++      NoAuction: true
++    Script: |
++      rentitem 23648,2592000;
+diff --git a/npc/custom/Premium Service/bell.txt b/npc/custom/Premium Service/bell.txt
+new file mode 100644
+index 00000000000..33d61e0aefc
+--- /dev/null
++++ b/npc/custom/Premium Service/bell.txt	
+@@ -0,0 +1,349 @@
++-	shop	merchant_bell_shop	-1,611:-1,1750:-1,501:-1,502:-1,503:-1,504:-1,506:-1,645:-1,656:-1,601:-1,602:-1,1065:-1,2239:-1
++
++-	script	bell_command	-1,{
++OnInit:
++	bindatcmd "KafraBell",strnpcinfo(3)+"::OnKafraBell",99,99;
++	bindatcmd "MerchantBell",strnpcinfo(3)+"::OnMerchantBell",99,99;
++	$A_npcmax = 100;	// ตั้งค่าจำนวน npc ที่ทั้งเซิฟเรียกได้
++	for(.@i = 1; .@i <= $A_npcmax; ++.@i){
++		setd "$A_MERCHANT_BELL"+.@i , 0;
++		setd "$A_Kafra_Bell"+.@i , 0;
++	}
++	end;
++
++OnMerchantBell:
++	.@npc = 1;
++	while(getd("$A_MERCHANT_BELL"+.@npc) && .@npc < ($A_npcmax+1)){
++		.@npc++;
++	}
++	if(.@npc == ($A_npcmax+1)){
++		dispbottom "GM กำหนดให้ใช้พร้อมกัน "+$A_npcmax+" คน ตอนนี้ไม่ว่าง รอสักครู่";
++		end;
++	}
++	getmapxy .@map$,.@x,.@y,BL_PC;
++	.@xr=rand(1,2);
++	.@yr=rand(1,2);
++	if(.@xr>1){ .@x=.@x-rand(1,3); } else { .@x=.@x+rand(1,3); }
++	if(.@yr>1){ .@y=.@y-rand(1,3); } else { .@y=.@y+rand(1,3); }
++	unitwarp getnpcid(0,("Wanderer Merchant#mb"+.@npc)),.@map$,.@x,.@y;
++	movenpc ("Wanderer Merchant#mb"+.@npc),.@x,.@y;
++	classchange 4_M_HUMERCHANT, ("Wanderer Merchant#mb"+.@npc), bc_self;
++	initnpctimer ("Wanderer Merchant#mb"+.@npc);
++	setd "$A_MERCHANT_BELL"+.@npc , 1;
++	end;
++
++OnKafraBell:
++	.@npc = 1;
++	while(getd("$A_Kafra_Bell"+.@npc) && .@npc < ($A_npcmax+1)){
++		.@npc++;
++	}
++	if(.@npc == ($A_npcmax+1)){
++		dispbottom "GM กำหนดให้ใช้พร้อมกัน "+$A_npcmax+" คน ตอนนี้ไม่ว่าง รอสักครู่";
++		end;
++	}
++	getmapxy .@map$,.@x,.@y,BL_PC;
++	.@xr=rand(1,2);
++	.@yr=rand(1,2);
++	if(.@xr>1){ .@x=.@x-rand(1,3); } else { .@x=.@x+rand(1,3); }
++	if(.@yr>1){ .@y=.@y-rand(1,3); } else { .@y=.@y+rand(1,3); }
++	unitwarp getnpcid(0,("Kafra Employee#kf"+.@npc)),.@map$,.@x,.@y;
++	movenpc ("Kafra Employee#kf"+.@npc),.@x,.@y;
++	classchange 4_F_KAFRA5, ("Kafra Employee#kf"+.@npc), bc_self;
++	initnpctimer ("Kafra Employee#kf"+.@npc);
++	setd "$A_Kafra_Bell"+.@npc , 1;
++	end;
++}
++
++function	script	mb_item	{
++	.@npc = 1;
++	while(getd("$A_MERCHANT_BELL"+.@npc) && .@npc < ($A_npcmax+1)){
++		.@npc++;
++	}
++	if(.@npc == ($A_npcmax+1)){
++		dispbottom "GM กำหนดให้ใช้พร้อมกัน "+$A_npcmax+" คน ตอนนี้ไม่ว่าง รอสักครู่";
++		end;
++	}
++	getmapxy .@map$,.@x,.@y,BL_PC;
++	.@xr=rand(1,2);
++	.@yr=rand(1,2);
++	if(.@xr>1){ .@x=.@x-rand(1,3); } else { .@x=.@x+rand(1,3); }
++	if(.@yr>1){ .@y=.@y-rand(1,3); } else { .@y=.@y+rand(1,3); }
++	unitwarp getnpcid(0,("Wanderer Merchant#mb"+.@npc)),.@map$,.@x,.@y;
++	movenpc ("Wanderer Merchant#mb"+.@npc),.@x,.@y;
++	classchange 4_M_HUMERCHANT, ("Wanderer Merchant#mb"+.@npc), bc_self;
++	initnpctimer ("Wanderer Merchant#mb"+.@npc);
++	setd "$A_MERCHANT_BELL"+.@npc , 1;
++	end;
++}
++
++prontera,0,0,4	script	merchant_bell	HIDDEN_WARP_NPC,{
++	mes "[Wanderer Merchant]";
++	mes "ยินดีต้อนรับ!";
++	mes "ต้องการขายของที่มีอยู่หรอกรึ?";
++	mes "หรือว่าต้องการจะซื้อไอเท็ม?";
++	switch(select("ซื้อไอเท็มใช้แล้วหมดไป:ขายของ:ไม่มีอะไร")){
++		case 1:
++			close2;
++			callshop "merchant_bell_shop",1;
++			end;
++		case 2:
++			close2;
++			callshop "merchant_bell_shop",2;
++			end;
++		case 3:
++			end;
++	}
++	close;
++OnTimer60000:	// ตั้งค่าเวลาnpcที่เรียกมา หน่วย 1000 = 1วินาที
++	sscanf( strnpcinfo(0), "Wanderer Merchant#mb%d", .@num );
++	stopnpctimer;
++	unitwarp getnpcid(0,("Wanderer Merchant#mb"+.@num)),"prontera",0,0;
++	setd "$A_MERCHANT_BELL"+.@num , 0;
++	end;
++}
++
++function	script	kf_item	{
++	.@npc = 1;
++	while(getd("$A_Kafra_Bell"+.@npc) && .@npc < ($A_npcmax+1)){
++		.@npc++;
++	}
++	if(.@npc == ($A_npcmax+1)){
++		dispbottom "GM กำหนดให้ใช้พร้อมกัน "+$A_npcmax+" คน ตอนนี้ไม่ว่าง รอสักครู่";
++		end;
++	}
++	getmapxy .@map$,.@x,.@y,BL_PC;
++	.@xr=rand(1,2);
++	.@yr=rand(1,2);
++	if(.@xr>1){ .@x=.@x-rand(1,3); } else { .@x=.@x+rand(1,3); }
++	if(.@yr>1){ .@y=.@y-rand(1,3); } else { .@y=.@y+rand(1,3); }
++	unitwarp getnpcid(0,("Kafra Employee#kf"+.@npc)),.@map$,.@x,.@y;
++	movenpc ("Kafra Employee#kf"+.@npc),.@x,.@y;
++	classchange 4_F_KAFRA5, ("Kafra Employee#kf"+.@npc), bc_self;
++	initnpctimer ("Kafra Employee#kf"+.@npc);
++	setd "$A_Kafra_Bell"+.@npc , 1;
++	end;
++}
++
++prontera,0,0,4	script	kafra_bell	HIDDEN_WARP_NPC,{
++	cutin "kafra_05",2;
++	mes "[Kafra Employee]";
++	mes "สวัสดีค่ะ บริการเรียกใช้งาน Kafra ค่ะ";
++	if(select("เปิดคลัง:ไม่มีอะไร")==2){
++		close2;
++		cutin "", 255;
++		end;
++	}
++	mes "จะทำการเปิดคลังให้ตามที่ขอนะคะ";
++	close2;
++	openstorage;
++	cutin "", 255;
++	end;
++OnTimer60000:	// ตั้งค่าเวลาnpcที่เรียกมา หน่วย 1000 = 1วินาที
++	sscanf( strnpcinfo(0), "Kafra Employee#kf%d", .@num );
++	stopnpctimer;
++	unitwarp getnpcid(0,("Kafra Employee#kf"+.@num)),"prontera",0,0;
++	setd "$A_Kafra_Bell"+.@num , 0;
++	end;
++}
++
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb1	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb2	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb3	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb4	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb5	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb6	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb7	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb8	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb9	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb10	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb11	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb12	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb13	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb14	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb15	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb16	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb17	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb18	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb19	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb20	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb21	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb22	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb23	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb24	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb25	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb26	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb27	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb28	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb29	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb30	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb31	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb32	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb33	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb34	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb35	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb36	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb37	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb38	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb39	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb40	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb41	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb42	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb43	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb44	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb45	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb46	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb47	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb48	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb49	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb50	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb51	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb52	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb53	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb54	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb55	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb56	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb57	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb58	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb59	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb60	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb61	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb62	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb63	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb64	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb65	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb66	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb67	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb68	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb69	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb70	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb71	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb72	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb73	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb74	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb75	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb76	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb77	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb78	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb79	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb80	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb81	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb82	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb83	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb84	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb85	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb86	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb87	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb88	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb89	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb90	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb91	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb92	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb93	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb94	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb95	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb96	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb97	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb98	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb99	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(merchant_bell)	Wanderer Merchant#mb100	HIDDEN_WARP_NPC
++
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf1	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf2	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf3	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf4	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf5	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf6	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf7	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf8	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf9	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf10	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf11	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf12	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf13	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf14	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf15	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf16	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf17	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf18	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf19	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf20	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf21	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf22	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf23	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf24	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf25	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf26	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf27	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf28	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf29	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf30	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf31	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf32	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf33	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf34	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf35	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf36	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf37	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf38	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf39	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf40	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf41	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf42	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf43	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf44	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf45	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf46	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf47	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf48	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf49	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf50	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf51	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf52	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf53	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf54	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf55	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf56	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf57	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf58	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf59	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf60	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf61	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf62	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf63	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf64	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf65	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf66	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf67	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf68	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf69	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf70	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf71	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf72	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf73	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf74	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf75	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf76	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf77	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf78	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf79	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf80	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf81	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf82	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf83	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf84	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf85	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf86	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf87	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf88	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf89	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf90	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf91	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf92	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf93	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf94	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf95	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf96	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf97	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf98	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf99	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(kafra_bell)	Kafra Employee#kf100	HIDDEN_WARP_NPC
+\ No newline at end of file
+diff --git a/npc/custom/Premium Service/premium_service.txt b/npc/custom/Premium Service/premium_service.txt
+new file mode 100644
+index 00000000000..677a3ea14e1
+--- /dev/null
++++ b/npc/custom/Premium Service/premium_service.txt	
+@@ -0,0 +1,348 @@
++prontera,156,193,4	script	Storage VIP	4_F_KAFRA5,{
++	mes "เปิดคลังเก็บของให้กับ";
++	mes "Premium Service เท่านั้น !!";
++	if(#APACHE_PREMIUM_TIME){
++		if(#APACHE_PREMIUM_TIME <= gettimetick(2)){
++			mes "^CC0000ขณะนี้บริการ Sremium Service หมดแล้ว";
++			mes "^CC0000สามารถเปิดคลังเพื่อหยิบออกเท่านั้น !!^000000";
++		}
++		mes "คุณ "+strcharinfo(0)+" ต้องการเปิดคลังไหม ?";
++		
++		if(select("เปิดคลังเก็บของ:ยกเลิก") == 1) {
++			if(#APACHE_PREMIUM_TIME <= gettimetick(2)){
++				openstorage2 1,STOR_MODE_GET;
++			}
++			if(#APACHE_PREMIUM_TIME > gettimetick(2)){
++				openstorage2 1,STOR_MODE_GET|STOR_MODE_PUT;
++			}
++		}
++		mes "ขอบคุณที่ใช้บริการ";
++	}
++	close;
++}
++
++-	script	premium_service_cmd	-1,{
++OnInit:
++	bindatcmd "PremiumService",strnpcinfo(3)+"::OnPremiumService",99,99;
++	$A_npcmax = 100;	// ตั้งค่าจำนวน npc ที่ทั้งเซิฟเรียกได้
++	for(.@i = 1; .@i <= $A_npcmax; ++.@i){
++		setd "$A_PREMIUM_SERVICE"+.@i , 0;
++	}
++	end;
++
++OnPremiumService:
++	.@npc = 1;
++	while(getd("$A_PREMIUM_SERVICE"+.@npc) && .@npc < ($A_npcmax+1)){
++		.@npc++;
++	}
++	if(.@npc == ($A_npcmax+1)){
++		dispbottom "GM กำหนดให้ใช้พร้อมกัน "+$A_npcmax+" คน ตอนนี้ไม่ว่าง รอสักครู่";
++		end;
++	}
++	getmapxy .@map$,.@x,.@y,BL_PC;
++	.@xr=rand(1,2);
++	.@yr=rand(1,2);
++	if(.@xr>1){ .@x=.@x-rand(1,3); } else { .@x=.@x+rand(1,3); }
++	if(.@yr>1){ .@y=.@y-rand(1,3); } else { .@y=.@y+rand(1,3); }
++	unitwarp getnpcid(0,("Premi#ps"+.@npc)),.@map$,.@x,.@y;
++	movenpc ("Premi#ps"+.@npc),.@x,.@y;
++	classchange 4_F_PREMI, ("Premi#ps"+.@npc), bc_self;
++	initnpctimer ("Premi#ps"+.@npc);
++	setd "$A_PREMIUM_SERVICE"+.@npc , 1;
++	end;
++}
++
++-	script	APACHE_CHK_PREMIUM	-1,{
++OnPCLoginEvent:
++	if(#APACHE_PREMIUM_TIME > gettimetick(2)){
++		sc_end SC_APACHE_EXPBOOST_A;
++		sc_end SC_APACHE_ITEMBOOST_A;
++		sc_end SC_APACHE_STORAGE;
++		sc_start SC_APACHE_STORAGE,((#APACHE_PREMIUM_TIME-gettimetick(2))*1000),300;
++		sc_start SC_APACHE_EXPBOOST_A,((#APACHE_PREMIUM_TIME-gettimetick(2))*1000),20;
++		sc_start SC_APACHE_ITEMBOOST_A,((#APACHE_PREMIUM_TIME-gettimetick(2))*1000),30;
++	}
++	if(#APACHE_PREMIUM_TIME <= gettimetick(2)){ sc_end SC_APACHE_EXPBOOST_A; sc_end SC_APACHE_ITEMBOOST_A; sc_end SC_APACHE_STORAGE; }
++	if(#APACHE_EXP_S > gettimetick(2)){
++		sc_end SC_APACHE_EXPBOOST_S;
++		sc_start SC_APACHE_EXPBOOST_S,((#APACHE_EXP_S-gettimetick(2))*1000),30;
++	}
++	if(#APACHE_EXP_S <= gettimetick(2)){ sc_end SC_APACHE_EXPBOOST_S; }
++	if(#APACHE_ITEM_S > gettimetick(2)){
++		sc_end SC_APACHE_ITEMBOOST_S;
++		sc_start SC_APACHE_ITEMBOOST_S,((#APACHE_ITEM_S-gettimetick(2))*1000),30;
++	}
++	if(#APACHE_ITEM_S <= gettimetick(2)){ sc_end SC_APACHE_ITEMBOOST_S; }
++	if(#APACHE_LIFE_S > gettimetick(2)){
++		sc_end SC_APACHE_LIFEINSURANCE;
++		sc_start SC_APACHE_LIFEINSURANCE,((#APACHE_LIFE_S-gettimetick(2))*1000),50;
++	}
++	if(#APACHE_LIFE_S <= gettimetick(2)){ sc_end SC_APACHE_LIFEINSURANCE; }
++	end;
++}
++
++function	script	ps_item	{
++	.@npc = 1;
++	while(getd("$A_PREMIUM_SERVICE"+.@npc) && .@npc < ($A_npcmax+1)){
++		.@npc++;
++	}
++	if(.@npc == ($A_npcmax+1)){
++		dispbottom "GM กำหนดให้ใช้พร้อมกัน "+$A_npcmax+" คน ตอนนี้ไม่ว่าง รอสักครู่";
++		end;
++	}
++	getmapxy .@map$,.@x,.@y,BL_PC;
++	.@xr=rand(1,2);
++	.@yr=rand(1,2);
++	if(.@xr>1){ .@x=.@x-rand(1,3); } else { .@x=.@x+rand(1,3); }
++	if(.@yr>1){ .@y=.@y-rand(1,3); } else { .@y=.@y+rand(1,3); }
++	unitwarp getnpcid(0,("Premi#ps"+.@npc)),.@map$,.@x,.@y;
++	movenpc ("Premi#ps"+.@npc),.@x,.@y;
++	classchange 4_F_PREMI, ("Premi#ps"+.@npc), bc_self;
++	initnpctimer ("Premi#ps"+.@npc);
++	setd "$A_PREMIUM_SERVICE"+.@npc , 1;
++	end;
++}
++
++prontera,0,0,4	script	premium_service	HIDDEN_WARP_NPC,{
++	cutin "prm_3",2;
++	mes "[Premi]";
++	mes "สวัสดี เมี้ยว~";
++	mes "ข้าคือ ^00CC00Premi^000000เอง!";
++	mes "ยินดีที่ได้รู้จักนะ~";
++	next;
++	cutin "prm_2",2;
++	mes "[Premi]";
++	mes "วันนี้ให้ Premi ช่วยบริการอะไรดีเจ้าคะ?";
++	next;
++	setarray .@items[0],4,2,1,6,0;
++	setarray .@names$[0],
++		"เพิ่มค่าประสบการณ์","เพิ่มอัตราการดรอป",
++		"ลดบทลงโทษตอนตาย","รับบริการทั้งหมดครั้งเดียว",
++		"ไม่ทำสิ่งใด";
++	setarray .@names2$[0],
++		"เพิ่มค่าประสบการณ์","เพิ่มอัตราการดรอป",
++		"ลดบทลงโทษตอนตาย","ทั้งหมด";
++	for(.@i=0; .@i<5; .@i++) {
++		if (countitem(6417) < .@items[.@i]) {
++			.@status[.@i] = 2;
++			.@menu$ = .@menu$+.@names$[.@i]+"^aaaaaa (วัตถุดิบไม่พอ)^000000:";
++		} else if (.@i == 4) {
++			.@menu$ = .@menu$+.@names$[.@i]+":";
++		} else {
++			.@status[.@i] = 1;
++			.@menu$ = .@menu$+.@names$[.@i]+" (1วัน):";
++		}
++	}
++	.@i = select(.@menu$)-1;
++	if (.@i == 4) {
++		cutin "prm_3",2;
++		mes "[Premi]";
++		mes "อ่าา!";
++		mes "วันนี้ช่างอากาศดี ไม่ต้องทำอะไร!";
++		next;
++		cutin "prm_2",2;
++		mes "[Premi]";
++		mes "สำหรับ Premi, วันแบบนี้ถ้าได้กิน";
++		mes getitemname(6417)+" คงจะดีที่สุดเลย!";
++		close2;
++		cutin "",255;
++		end;
++	}
++	switch(.@status[.@i]) {
++	case 0:
++	case 1:
++		break;
++	case 2:
++		cutin "prm_4",2;
++		mes "[Premi]";
++		mes "สำหรับ "+.@names$[.@i]+" (1วัน)";
++		mes "ต้องใช้ "+getitemname(6417)+" "+.@items[.@i]+" ชิ้น";
++		close2;
++		cutin "",255;
++		end;
++	}
++	cutin "prm_1",2;
++	mes "^00CC00[Premi]";
++	mes "^00CC00หากต้องการใช้เวทมนต์";
++	if(.@i==3){
++		mes "^00CC00หากต้องการใช้เวทมนต์";
++		mes "^00CC00เพิ่มค่าประสบการณ์";
++		mes "^00CC00เพิ่มอัตราการดรอป";
++		mes "^00CC00ลดบทลงโทษตอนตาย";
++		mes "^00CC00พร้อมกัน ต้องให้";
++	} else {
++		mes "^00CC00"+.@names2$[.@i];
++	}
++	mes "^00CC00"+getitemname(6417)+" "+.@items[.@i]+" ชิ้น";
++	mes "^00CC00ในการเสกนะเจ้าคะ^000000";
++	next;
++	mes "^CC0000? คำเตือน ?";
++	mes "^CC0000ให้ "+getitemname(6417)+" "+.@items[.@i]+" ชิ้น จะได้รับ Buff";
++	if(.@i==3){
++		mes "^CC0000เพิ่มค่าประสบการณ์ (1วัน)";
++		mes "^CC0000เพิ่มอัตราการดรอป (1วัน)";
++		mes "^CC0000ลดบทลงโทษตอนตาย (1วัน)";
++	} else {
++		mes "^CC0000"+.@names2$[.@i]+" (1วัน)";
++	}
++	mes "^CC0000Buff ที่ได้รับ";
++	mes "^CC0000ไม่สามารถถอดสิทธิ์ออกจากตัวได้^000000";
++	next;
++	if(select("รับ Buff:ยกเลิก") == 2) {
++		cutin "prm_3",2;
++		mes "[Premi]";
++		mes "อ่าา!";
++		mes "วันนี้ช่างอากาศดี ไม่ต้องทำอะไร!";
++		next;
++		cutin "prm_2",2;
++		mes "[Premi]";
++		mes "สำหรับ Premi, วันแบบนี้ถ้าได้กิน";
++		mes getitemname(6417)+" คงจะดีที่สุดเลย!";
++		close2;
++		cutin "",255;
++		end;
++	}
++	delitem 6417,.@items[.@i];
++	cutin "prm_1",2;
++	mes "[Premi]";
++	mes "อาฮ่า!";
++	mes "เรามาลองดูความสามารถกันหน่อยไหม!!!";
++	next;
++	switch(.@i) {
++		case 0:
++			sc_start SC_APACHE_EXPBOOST_S,86400000,30;
++			#APACHE_EXP_S = gettimetick(2)+86400;
++			break;
++		case 1:
++			sc_start SC_APACHE_ITEMBOOST_S,86400000,30;
++			#APACHE_ITEM_S = gettimetick(2)+86400;
++			break;
++		case 2:
++			sc_start SC_APACHE_LIFEINSURANCE,86400000,50;
++			#APACHE_LIFE_S = gettimetick(2)+86400;
++			break;
++		case 3:
++			sc_start SC_APACHE_EXPBOOST_S,86400000,30;
++			sc_start SC_APACHE_ITEMBOOST_S,86400000,30;
++			sc_start SC_APACHE_LIFEINSURANCE,86400000,50;
++			#APACHE_EXP_S = gettimetick(2)+86400;
++			#APACHE_ITEM_S = gettimetick(2)+86400;
++			#APACHE_LIFE_S = gettimetick(2)+86400;
++			break;
++	}
++	mes "[Premi]";
++	mes "เป็นอย่างไรบ้างคะ คุณ "+strcharinfo(0)+"!";
++	mes "ยังไม่รู้สึกถึงเวทมนต์ "+.@name$+" หรือเจ้าคะ?";
++	mes "จะมาเป็นแบบนี้ไม่ได้นะ!";
++	mes "รีบออกไปลองต่อสู้ดูค่ะ!";
++	close2;
++	cutin "",255;
++	end;
++OnTimer60000:	// ตั้งค่าเวลาnpcที่เรียกมา หน่วย 1000 = 1วินาที
++	sscanf( strnpcinfo(0), "Premi#ps%d", .@num );
++	stopnpctimer;
++	unitwarp getnpcid(0,("Premi#ps"+.@num)),"prontera",0,0;
++	setd "$A_PREMIUM_SERVICE"+.@num , 0;
++	end;
++}
++
++prontera,0,0,4	duplicate(premium_service)	Premi#ps1	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps2	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps3	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps4	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps5	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps6	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps7	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps8	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps9	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps10	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps11	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps12	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps13	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps14	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps15	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps16	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps17	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps18	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps19	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps20	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps21	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps22	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps23	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps24	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps25	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps26	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps27	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps28	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps29	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps30	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps31	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps32	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps33	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps34	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps35	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps36	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps37	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps38	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps39	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps40	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps41	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps42	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps43	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps44	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps45	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps46	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps47	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps48	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps49	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps50	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps51	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps52	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps53	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps54	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps55	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps56	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps57	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps58	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps59	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps60	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps61	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps62	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps63	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps64	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps65	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps66	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps67	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps68	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps69	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps70	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps71	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps72	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps73	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps74	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps75	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps76	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps77	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps78	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps79	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps80	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps81	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps82	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps83	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps84	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps85	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps86	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps87	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps88	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps89	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps90	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps91	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps92	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps93	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps94	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps95	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps96	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps97	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps98	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps99	HIDDEN_WARP_NPC
++prontera,0,0,4	duplicate(premium_service)	Premi#ps100	HIDDEN_WARP_NPC
+\ No newline at end of file
+diff --git a/npc/scripts_custom.conf b/npc/scripts_custom.conf
+index fb46627e439..457e55d3ca9 100644
+--- a/npc/scripts_custom.conf
++++ b/npc/scripts_custom.conf
+@@ -5,6 +5,9 @@
+ //      Place your scripts here!
+ 
+ //npc: npc/location/to/script.txt
++// ----------------------- Premium Service Scripts -----------------------
++npc: npc/custom/Premium Service/bell.txt
++npc: npc/custom/Premium Service/premium_service.txt
+ 
+ // ----------------------- Basic Scripts -----------------------
+ //npc: npc/custom/warper.txt
+diff --git a/src/map/mob.cpp b/src/map/mob.cpp
+index fd6fbf8c773..cc16ec0c23a 100644
+--- a/src/map/mob.cpp
++++ b/src/map/mob.cpp
+@@ -2490,6 +2490,12 @@ int mob_getdroprate(struct block_list *src, std::shared_ptr<s_mob_db> mob, int b
+ 			if (sd->sc.data[SC_ITEMBOOST])
+ 				drop_rate_bonus += sd->sc.data[SC_ITEMBOOST]->val1;
+ 
++			// APACHE PREMIUM SERVICE
++			if (sd->sc.data[SC_APACHE_ITEMBOOST_A])
++				drop_rate_bonus += sd->sc.data[SC_APACHE_ITEMBOOST_A]->val1;
++			if (sd->sc.data[SC_APACHE_ITEMBOOST_S])
++				drop_rate_bonus += sd->sc.data[SC_APACHE_ITEMBOOST_S]->val1;
++
+ 			int cap;
+ 
+ 			if (pc_isvip(sd)) { // Increase item drop rate for VIP.
+diff --git a/src/map/pc.cpp b/src/map/pc.cpp
+index dae71809255..4b005b5abfd 100755
+--- a/src/map/pc.cpp
++++ b/src/map/pc.cpp
+@@ -7818,16 +7818,35 @@ static void pc_calcexp(struct map_session_data *sd, t_exp *base_exp, t_exp *job_
+ 		if (battle_config.vip_bm_increase && pc_isvip(sd)) // Increase Battle Manual EXP rate for VIP
+ 			bonus += (sd->sc.data[SC_EXPBOOST]->val1 / battle_config.vip_bm_increase);
+ 	}
++	
++	// APACHE PREMIUM SERVICE
++	if (sd->sc.data[SC_APACHE_EXPBOOST_A]) {
++		bonus += sd->sc.data[SC_APACHE_EXPBOOST_A]->val1;
++		if (battle_config.vip_bm_increase && pc_isvip(sd)) // Increase Battle Manual EXP rate for VIP
++			bonus += (sd->sc.data[SC_APACHE_EXPBOOST_A]->val1 / battle_config.vip_bm_increase);
++	}
++	if (sd->sc.data[SC_APACHE_EXPBOOST_S]) {
++		bonus += sd->sc.data[SC_APACHE_EXPBOOST_S]->val1;
++		if (battle_config.vip_bm_increase && pc_isvip(sd)) // Increase Battle Manual EXP rate for VIP
++			bonus += (sd->sc.data[SC_APACHE_EXPBOOST_S]->val1 / battle_config.vip_bm_increase);
++	}
+ 
+ 	if (*base_exp) {
+ 		t_exp exp = (t_exp)(*base_exp + ((double)*base_exp * ((bonus + vip_bonus_base) / 100.)));
+ 		*base_exp = cap_value(exp, 1, MAX_EXP);
+ 	}
+-
++	
+ 	// Give JEXPBOOST for quests even if src is NULL.
+ 	if (sd->sc.data[SC_JEXPBOOST])
+ 		bonus += sd->sc.data[SC_JEXPBOOST]->val1;
+ 
++	// APACHE PREMIUM SERVICE
++	if (sd->sc.data[SC_APACHE_JEXPBOOST_A])
++		bonus += sd->sc.data[SC_APACHE_JEXPBOOST_A]->val1;
++	if (sd->sc.data[SC_APACHE_JEXPBOOST_S])
++		bonus += sd->sc.data[SC_APACHE_JEXPBOOST_S]->val1;
++
++
+ 	if (*job_exp) {
+ 		t_exp exp = (t_exp)(*job_exp + ((double)*job_exp * ((bonus + vip_bonus_job) / 100.)));
+ 		*job_exp = cap_value(exp, 1, MAX_EXP);
+@@ -9428,6 +9447,13 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
+ 				case 1: base_penalty = (t_exp) ( pc_nextbaseexp(sd) * ( base_penalty / 10000. ) ); break;
+ 				case 2: base_penalty = (t_exp) ( sd->status.base_exp * ( base_penalty / 10000. ) ); break;
+ 			}
++
++			// APACHE PREMIUM SERVICE
++			t_exp a_base = 0;
++			a_base = base_penalty;
++			if (sd->sc.data[SC_APACHE_LIFEINSURANCE])
++				base_penalty -= (t_exp) ( a_base * ( sd->sc.data[SC_APACHE_LIFEINSURANCE]->val1 / 100. ) );
++			
+ 			if (base_penalty){ //recheck after altering to speedup
+ 				if (battle_config.pk_mode && src && src->type==BL_PC)
+ 					base_penalty *= 2;
+@@ -9439,9 +9465,16 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
+ 
+ 		if ((battle_config.death_penalty_maxlv&2 || !pc_is_maxjoblv(sd)) && job_penalty > 0) {
+ 			switch (battle_config.death_penalty_type) {
+-				case 1: job_penalty = (uint32) ( pc_nextjobexp(sd) * ( job_penalty / 10000. ) ); break;
+-				case 2: job_penalty = (uint32) ( sd->status.job_exp * ( job_penalty /10000. ) ); break;
++				case 1: job_penalty = (t_exp) ( pc_nextjobexp(sd) * ( job_penalty / 10000. ) ); break;
++				case 2: job_penalty = (t_exp) ( sd->status.job_exp * ( job_penalty /10000. ) ); break;
+ 			}
++
++			// APACHE PREMIUM SERVICE
++			t_exp a_job = 0;
++			a_job = job_penalty;
++			if (sd->sc.data[SC_APACHE_LIFEINSURANCE])
++				job_penalty -= (t_exp) ( a_job * ( sd->sc.data[SC_APACHE_LIFEINSURANCE]->val1 / 100. ) );
++
+ 			if (job_penalty) {
+ 				if (battle_config.pk_mode && src && src->type==BL_PC)
+ 					job_penalty *= 2;
+diff --git a/src/map/script_constants.hpp b/src/map/script_constants.hpp
+index c5e8f797e16..370d9f2128c 100644
+--- a/src/map/script_constants.hpp
++++ b/src/map/script_constants.hpp
+@@ -1866,6 +1866,16 @@
+ 	export_constant(SC_BEEF_RIB_STEW);
+ 	export_constant(SC_PORK_RIB_STEW);
+ 
++	// APACHE PREMIUM SERVICE
++	export_constant(SC_APACHE_EXPBOOST_A);
++	export_constant(SC_APACHE_EXPBOOST_S);
++	export_constant(SC_APACHE_JEXPBOOST_A);
++	export_constant(SC_APACHE_JEXPBOOST_S);
++	export_constant(SC_APACHE_ITEMBOOST_A);
++	export_constant(SC_APACHE_ITEMBOOST_S);
++	export_constant(SC_APACHE_STORAGE);
++	export_constant(SC_APACHE_LIFEINSURANCE);
++
+ #ifdef RENEWAL
+ 	export_constant(SC_EXTREMITYFIST2);
+ #endif
+diff --git a/src/map/status.cpp b/src/map/status.cpp
+index f905e00f061..cd5d86a1828 100644
+--- a/src/map/status.cpp
++++ b/src/map/status.cpp
+@@ -11306,6 +11306,17 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
+ 		case SC_EXPBOOST:
+ 		case SC_JEXPBOOST:
+ 		case SC_JP_EVENT04:
++
++		// APACHE PREMIUM SERVICE
++		case SC_APACHE_EXPBOOST_A:
++		case SC_APACHE_EXPBOOST_S:
++		case SC_APACHE_JEXPBOOST_A:
++		case SC_APACHE_JEXPBOOST_S:
++		case SC_APACHE_ITEMBOOST_A:
++		case SC_APACHE_ITEMBOOST_S:
++		case SC_APACHE_STORAGE:
++		case SC_APACHE_LIFEINSURANCE:
++
+ 			if (val1 < 0)
+ 				val1 = 0;
+ 			break;
+diff --git a/src/map/status.hpp b/src/map/status.hpp
+index d738cbae8e6..bbea1574b7e 100644
+--- a/src/map/status.hpp
++++ b/src/map/status.hpp
+@@ -1255,6 +1255,16 @@ enum sc_type : int16 {
+ 	SC_BEEF_RIB_STEW,
+ 	SC_PORK_RIB_STEW,
+ 
++	// APACHE PREMIUM SERVICE
++	SC_APACHE_EXPBOOST_A,
++	SC_APACHE_EXPBOOST_S,
++	SC_APACHE_JEXPBOOST_A,
++	SC_APACHE_JEXPBOOST_S,
++	SC_APACHE_ITEMBOOST_A,
++	SC_APACHE_ITEMBOOST_S,
++	SC_APACHE_STORAGE,
++	SC_APACHE_LIFEINSURANCE,
++
+ #ifdef RENEWAL
+ 	SC_EXTREMITYFIST2, //! NOTE: This SC should be right before SC_MAX, so it doesn't disturb if RENEWAL is disabled
+ #endif

@@ -1940,6 +1940,16 @@
 	export_constant(SC_BLESSING_OF_M_C_DEBUFF);
 
 
+	// APACHE PREMIUM SERVICE
+	export_constant(SC_APACHE_EXPBOOST_A);
+	export_constant(SC_APACHE_EXPBOOST_S);
+	export_constant(SC_APACHE_JEXPBOOST_A);
+	export_constant(SC_APACHE_JEXPBOOST_S);
+	export_constant(SC_APACHE_ITEMBOOST_A);
+	export_constant(SC_APACHE_ITEMBOOST_S);
+	export_constant(SC_APACHE_STORAGE);
+	export_constant(SC_APACHE_LIFEINSURANCE);
+
 #ifdef RENEWAL
 	export_constant(SC_EXTREMITYFIST2);
 #endif

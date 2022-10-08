@@ -24791,7 +24791,6 @@ void clif_broadcast_refine_result(map_session_data& sd, t_itemid itemId, int8 le
 	}
 
 	clif_send(&p, sizeof(p), &sd.bl, ALL_CLIENT);
-	clif_send( &p, sizeof( p ), &sd->bl, SELF );
 #endif
 }
 

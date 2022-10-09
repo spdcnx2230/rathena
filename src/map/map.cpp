@@ -191,6 +191,7 @@ int enable_grf = 0;	//To enable/disable reading maps from GRF files, bypassing m
 #ifdef MAP_GENERATOR
 struct s_generator_options {
 	bool navi;
+	bool reputation;
 } gen_options;
 #endif
 
@@ -5102,6 +5103,8 @@ int mapgenerator_get_options(int argc, char** argv) {
 
 			if (strcmp(arg, "generate-navi") == 0) {
 				gen_options.navi = true;
+			} else if (strcmp(arg, "generate-reputation") == 0) {
+				gen_options.reputation = true;
 			} else {
 				// pass through to default get_options
 				continue;
@@ -5291,6 +5294,10 @@ int do_init(int argc, char *argv[])
 	// depending on gen_options, generate the correct things
 	if (gen_options.navi)
 		navi_create_lists();
+
+	if (gen_options.reputation)
+		pc_reputation_generate();
+
 	runflag = CORE_ST_STOP;
 #endif
 

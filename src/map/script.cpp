@@ -24169,6 +24169,12 @@ BUILDIN_FUNC(minmax){
 	return SCRIPT_CMD_SUCCESS;
 }
 
+BUILDIN_FUNC(cap_value)
+{
+	script_pushint(st, (int)cap_value(script_getnum(st, 2), script_getnum(st, 3), script_getnum(st, 4)));
+	return true;
+}
+
 /**
  * Safety Base/Job EXP addition than using `set BaseExp,n;` or `set JobExp,n;`
  * Unlike `getexp` that affected by some adjustments.
@@ -27156,6 +27162,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF2(minmax,"minimum", "*"),
 	BUILDIN_DEF2(minmax,"max", "*"),
 	BUILDIN_DEF2(minmax,"maximum", "*"),
+	BUILDIN_DEF(cap_value, "iii"),
 	// <--- [zBuffer] List of mathematics commands
 	BUILDIN_DEF(md5,"s"),
 	// [zBuffer] List of dynamic var commands --->

@@ -107,7 +107,12 @@ Body:
       NoMail: true
       NoAuction: true
     Script: |
-      rentitem 23165,2592000; #APACHE_PREMIUM_SERVICE = 9; #APACHE_PREMIUM_TIME = gettimetick(2)+2592000; sc_start SC_APACHE_STORAGE,2592000000,300; sc_start SC_APACHE_EXPBOOST_A,2592000000,10; sc_start SC_APACHE_ITEMBOOST_A,2592000000,10;
+      rentitem 23165,2592000;
+      .APACHE_PREMIUM_SERVICE = 9; 
+      .APACHE_PREMIUM_TIME = gettimetick(2)+2592000; 
+      sc_start SC_APACHE_STORAGE,2592000,300; 
+      sc_start SC_APACHE_EXPBOOST_A,2592000,10; 
+      sc_start SC_APACHE_ITEMBOOST_A,2592000,10;
   - Id: 23165
     AegisName: Service30_AID_Buff
     Name: Premium Service Personnel

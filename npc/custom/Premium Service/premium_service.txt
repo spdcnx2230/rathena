@@ -1,18 +1,18 @@
 prontera,156,193,4	script	Storage VIP	4_F_KAFRA5,{
 	mes "เปิดคลังเก็บของให้กับ";
 	mes "Premium Service เท่านั้น !!";
-	if(#APACHE_PREMIUM_TIME){
-		if(#APACHE_PREMIUM_TIME <= gettimetick(2)){
+	if(.APACHE_PREMIUM_TIME){
+		if(.APACHE_PREMIUM_TIME <= gettimetick(2)){
 			mes "^CC0000ขณะนี้บริการ Sremium Service หมดแล้ว";
 			mes "^CC0000สามารถเปิดคลังเพื่อหยิบออกเท่านั้น !!^000000";
 		}
 		mes "คุณ "+strcharinfo(0)+" ต้องการเปิดคลังไหม ?";
 		
 		if(select("เปิดคลังเก็บของ:ยกเลิก") == 1) {
-			if(#APACHE_PREMIUM_TIME <= gettimetick(2)){
+			if(.APACHE_PREMIUM_TIME <= gettimetick(2)){
 				openstorage2 1,STOR_MODE_GET;
 			}
-			if(#APACHE_PREMIUM_TIME > gettimetick(2)){
+			if(.APACHE_PREMIUM_TIME > gettimetick(2)){
 				openstorage2 1,STOR_MODE_GET|STOR_MODE_PUT;
 			}
 		}
@@ -54,30 +54,30 @@ OnPremiumService:
 
 -	script	APACHE_CHK_PREMIUM	-1,{
 OnPCLoginEvent:
-	if(#APACHE_PREMIUM_TIME > gettimetick(2)){
+	if(.APACHE_PREMIUM_TIME > gettimetick(2)){
 		sc_end SC_APACHE_EXPBOOST_A;
 		sc_end SC_APACHE_ITEMBOOST_A;
 		sc_end SC_APACHE_STORAGE;
-		sc_start SC_APACHE_STORAGE,((#APACHE_PREMIUM_TIME-gettimetick(2))*1000),300;
-		sc_start SC_APACHE_EXPBOOST_A,((#APACHE_PREMIUM_TIME-gettimetick(2))*1000),20;
-		sc_start SC_APACHE_ITEMBOOST_A,((#APACHE_PREMIUM_TIME-gettimetick(2))*1000),30;
+		sc_start SC_APACHE_STORAGE,((.APACHE_PREMIUM_TIME-gettimetick(2))*1000),300;
+		sc_start SC_APACHE_EXPBOOST_A,((.APACHE_PREMIUM_TIME-gettimetick(2))*1000),20;
+		sc_start SC_APACHE_ITEMBOOST_A,((.APACHE_PREMIUM_TIME-gettimetick(2))*1000),30;
 	}
-	if(#APACHE_PREMIUM_TIME <= gettimetick(2)){ sc_end SC_APACHE_EXPBOOST_A; sc_end SC_APACHE_ITEMBOOST_A; sc_end SC_APACHE_STORAGE; }
-	if(#APACHE_EXP_S > gettimetick(2)){
+	if(.APACHE_PREMIUM_TIME <= gettimetick(2)){ sc_end SC_APACHE_EXPBOOST_A; sc_end SC_APACHE_ITEMBOOST_A; sc_end SC_APACHE_STORAGE; }
+	if(.APACHE_EXP_S > gettimetick(2)){
 		sc_end SC_APACHE_EXPBOOST_S;
-		sc_start SC_APACHE_EXPBOOST_S,((#APACHE_EXP_S-gettimetick(2))*1000),30;
+		sc_start SC_APACHE_EXPBOOST_S,((.APACHE_EXP_S-gettimetick(2))*1000),30;
 	}
-	if(#APACHE_EXP_S <= gettimetick(2)){ sc_end SC_APACHE_EXPBOOST_S; }
-	if(#APACHE_ITEM_S > gettimetick(2)){
+	if(.APACHE_EXP_S <= gettimetick(2)){ sc_end SC_APACHE_EXPBOOST_S; }
+	if(.APACHE_ITEM_S > gettimetick(2)){
 		sc_end SC_APACHE_ITEMBOOST_S;
-		sc_start SC_APACHE_ITEMBOOST_S,((#APACHE_ITEM_S-gettimetick(2))*1000),30;
+		sc_start SC_APACHE_ITEMBOOST_S,((.APACHE_ITEM_S-gettimetick(2))*1000),30;
 	}
-	if(#APACHE_ITEM_S <= gettimetick(2)){ sc_end SC_APACHE_ITEMBOOST_S; }
-	if(#APACHE_LIFE_S > gettimetick(2)){
+	if(.APACHE_ITEM_S <= gettimetick(2)){ sc_end SC_APACHE_ITEMBOOST_S; }
+	if(.APACHE_LIFE_S > gettimetick(2)){
 		sc_end SC_APACHE_LIFEINSURANCE;
-		sc_start SC_APACHE_LIFEINSURANCE,((#APACHE_LIFE_S-gettimetick(2))*1000),50;
+		sc_start SC_APACHE_LIFEINSURANCE,((.APACHE_LIFE_S-gettimetick(2))*1000),50;
 	}
-	if(#APACHE_LIFE_S <= gettimetick(2)){ sc_end SC_APACHE_LIFEINSURANCE; }
+	if(.APACHE_LIFE_S <= gettimetick(2)){ sc_end SC_APACHE_LIFEINSURANCE; }
 	end;
 }
 
@@ -211,23 +211,23 @@ prontera,0,0,4	script	premium_service	HIDDEN_WARP_NPC,{
 	switch(.@i) {
 		case 0:
 			sc_start SC_APACHE_EXPBOOST_S,86400000,30;
-			#APACHE_EXP_S = gettimetick(2)+86400;
+			.APACHE_EXP_S = gettimetick(2)+86400;
 			break;
 		case 1:
 			sc_start SC_APACHE_ITEMBOOST_S,86400000,30;
-			#APACHE_ITEM_S = gettimetick(2)+86400;
+			.APACHE_ITEM_S = gettimetick(2)+86400;
 			break;
 		case 2:
 			sc_start SC_APACHE_LIFEINSURANCE,86400000,50;
-			#APACHE_LIFE_S = gettimetick(2)+86400;
+			.APACHE_LIFE_S = gettimetick(2)+86400;
 			break;
 		case 3:
 			sc_start SC_APACHE_EXPBOOST_S,86400000,30;
 			sc_start SC_APACHE_ITEMBOOST_S,86400000,30;
 			sc_start SC_APACHE_LIFEINSURANCE,86400000,50;
-			#APACHE_EXP_S = gettimetick(2)+86400;
-			#APACHE_ITEM_S = gettimetick(2)+86400;
-			#APACHE_LIFE_S = gettimetick(2)+86400;
+			.APACHE_EXP_S = gettimetick(2)+86400;
+			.APACHE_ITEM_S = gettimetick(2)+86400;
+			.APACHE_LIFE_S = gettimetick(2)+86400;
 			break;
 	}
 	mes "[Premi]";

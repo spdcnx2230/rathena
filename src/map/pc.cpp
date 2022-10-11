@@ -7896,16 +7896,17 @@ static void pc_calcexp(struct map_session_data *sd, t_exp *base_exp, t_exp *job_
 			bonus += (sd->sc.data[SC_EXPBOOST]->val1 / battle_config.vip_bm_increase);
 	}
 	
-	// APACHE PREMIUM SERVICE
-	if (sd->sc.data[SC_APACHE_EXPBOOST_A]) {
-		bonus += sd->sc.data[SC_APACHE_EXPBOOST_A]->val1;
+	// PREMIUM SERVICE
+	if (sd->sc.data[SC_PREMIUMSERVICE_EXPBOOST_A]) {
+		bonus += sd->sc.data[SC_PREMIUMSERVICE_EXPBOOST_A]->val1;
 		if (battle_config.vip_bm_increase && pc_isvip(sd)) // Increase Battle Manual EXP rate for VIP
-			bonus += (sd->sc.data[SC_APACHE_EXPBOOST_A]->val1 / battle_config.vip_bm_increase);
+			bonus += (sd->sc.data[SC_PREMIUMSERVICE_EXPBOOST_A]->val1 / battle_config.vip_bm_increase);
 	}
-	if (sd->sc.data[SC_APACHE_EXPBOOST_S]) {
-		bonus += sd->sc.data[SC_APACHE_EXPBOOST_S]->val1;
+	
+	if (sd->sc.data[SC_PREMIUMSERVICE_EXPBOOST_S]) {
+		bonus += sd->sc.data[SC_PREMIUMSERVICE_EXPBOOST_S]->val1;
 		if (battle_config.vip_bm_increase && pc_isvip(sd)) // Increase Battle Manual EXP rate for VIP
-			bonus += (sd->sc.data[SC_APACHE_EXPBOOST_S]->val1 / battle_config.vip_bm_increase);
+			bonus += (sd->sc.data[SC_PREMIUMSERVICE_EXPBOOST_S]->val1 / battle_config.vip_bm_increase);
 	}
 
 	if (*base_exp) {
@@ -7917,12 +7918,12 @@ static void pc_calcexp(struct map_session_data *sd, t_exp *base_exp, t_exp *job_
 	if (sd->sc.data[SC_JEXPBOOST])
 		bonus += sd->sc.data[SC_JEXPBOOST]->val1;
 
-	// APACHE PREMIUM SERVICE
-	if (sd->sc.data[SC_APACHE_JEXPBOOST_A])
-		bonus += sd->sc.data[SC_APACHE_JEXPBOOST_A]->val1;
-	if (sd->sc.data[SC_APACHE_JEXPBOOST_S])
-		bonus += sd->sc.data[SC_APACHE_JEXPBOOST_S]->val1;
-
+	// PREMIUM SERVICE
+	if (sd->sc.data[SC_PREMIUMSERVICE_JEXPBOOST_A])
+		bonus += sd->sc.data[SC_PREMIUMSERVICE_JEXPBOOST_A]->val1;
+	
+	if (sd->sc.data[SC_PREMIUMSERVICE_JEXPBOOST_S])
+		bonus += sd->sc.data[SC_PREMIUMSERVICE_JEXPBOOST_S]->val1;
 
 	if (*job_exp) {
 		t_exp exp = (t_exp)(*job_exp + ((double)*job_exp * ((bonus + vip_bonus_job) / 100.)));
@@ -9525,12 +9526,12 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 				case 2: base_penalty = (t_exp) ( sd->status.base_exp * ( base_penalty / 10000. ) ); break;
 			}
 
-			// APACHE PREMIUM SERVICE
-			t_exp a_base = 0;
-			a_base = base_penalty;
-			if (sd->sc.data[SC_APACHE_LIFEINSURANCE])
-				base_penalty -= (t_exp) ( a_base * ( sd->sc.data[SC_APACHE_LIFEINSURANCE]->val1 / 100. ) );
-			
+		// PREMIUM SERVICE
+		t_exp a_base = 0;
+		a_base = base_penalty;
+		if (sd->sc.data[SC_PREMIUMSERVICE_LIFEINSURANCE])
+		base_penalty -= (uint32)(a_base * (sd->sc.data[SC_PREMIUMSERVICE_LIFEINSURANCE]->val1 / 100.));
+
 			if (base_penalty){ //recheck after altering to speedup
 				if (battle_config.pk_mode && src && src->type==BL_PC)
 					base_penalty *= 2;
@@ -9546,11 +9547,11 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 				case 2: job_penalty = (t_exp) ( sd->status.job_exp * ( job_penalty /10000. ) ); break;
 			}
 
-			// APACHE PREMIUM SERVICE
-			t_exp a_job = 0;
-			a_job = job_penalty;
-			if (sd->sc.data[SC_APACHE_LIFEINSURANCE])
-				job_penalty -= (t_exp) ( a_job * ( sd->sc.data[SC_APACHE_LIFEINSURANCE]->val1 / 100. ) );
+		// PREMIUM SERVICE
+		t_exp a_job = 0;
+		a_job = job_penalty;
+		if (sd->sc.data[SC_PREMIUMSERVICE_LIFEINSURANCE])
+		job_penalty -= (uint32)(a_job * (sd->sc.data[SC_PREMIUMSERVICE_LIFEINSURANCE]->val1 / 100.));
 
 			if (job_penalty) {
 				if (battle_config.pk_mode && src && src->type==BL_PC)

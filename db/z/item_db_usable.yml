@@ -107,16 +107,14 @@ Body:
       NoMail: true
       NoAuction: true
     Script: |
-      .min = 43800;
-      .sec = 60;
-      .day = 30;
-      rentitem 23165,.min*.sec*.day;
-      #PREMIUMSERVICE_TIME = gettimetick(2)+.min*.sec*.day;
-      sc_start SC_PREMIUMSERVICE,.min*.sec*.day;
-      sc_start SC_PREMIUMSERVICE_STORAGE,.min*.sec*.day;
-      sc_start SC_PREMIUMSERVICE_EXPBOOST_A,.min*.sec*.day;
-      sc_start SC_PREMIUMSERVICE_JEXPBOOST_A,.min*.sec*.day;
-      sc_start SC_PREMIUMSERVICE_ITEMBOOST_A,.min*.sec*.day;
+      rentitem 23165,2592000;
+      #PREMIUMSERVICE_TIME = gettimetick(2)+2592000;
+      sc_start SC_PREMIUMSERVICE,2592000000,30;
+      sc_start SC_PREMIUMSERVICE_STORAGE,2592000000,300;
+      sc_start SC_PREMIUMSERVICE_EXPBOOST_A,2592000000,20;
+      sc_start SC_PREMIUMSERVICE_JEXPBOOST_A,2592000000,20;
+      sc_start SC_PREMIUMSERVICE_ITEMBOOST_A,2592000000,30;
+#      cmd
   - Id: 23165
     AegisName: Service30_AID_Buff
     Name: Premium Service Personnel

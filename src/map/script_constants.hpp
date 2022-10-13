@@ -1939,16 +1939,16 @@
 	export_constant(SC_BLESSING_OF_M_CREATURES);
 	export_constant(SC_BLESSING_OF_M_C_DEBUFF);
 
-
-	// APACHE PREMIUM SERVICE
-	export_constant(SC_APACHE_EXPBOOST_A);
-	export_constant(SC_APACHE_EXPBOOST_S);
-	export_constant(SC_APACHE_JEXPBOOST_A);
-	export_constant(SC_APACHE_JEXPBOOST_S);
-	export_constant(SC_APACHE_ITEMBOOST_A);
-	export_constant(SC_APACHE_ITEMBOOST_S);
-	export_constant(SC_APACHE_STORAGE);
-	export_constant(SC_APACHE_LIFEINSURANCE);
+	// PREMIUM SERVICE
+	export_constant(SC_PREMIUMSERVICE_EXPBOOST_A);
+	export_constant(SC_PREMIUMSERVICE_EXPBOOST_S);
+	export_constant(SC_PREMIUMSERVICE_JEXPBOOST_A);
+	export_constant(SC_PREMIUMSERVICE_JEXPBOOST_S);
+	export_constant(SC_PREMIUMSERVICE_ITEMBOOST_A);
+	export_constant(SC_PREMIUMSERVICE_ITEMBOOST_S);
+	export_constant(SC_PREMIUMSERVICE_STORAGE);
+	export_constant(SC_PREMIUMSERVICE_LIFEINSURANCE);
+	export_constant(SC_PREMIUMSERVICE);
 
 #ifdef RENEWAL
 	export_constant(SC_EXTREMITYFIST2);

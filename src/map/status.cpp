@@ -4453,14 +4453,14 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 		sd->indexed_bonus.subele[ELE_FIRE] += skill*5;
 	}
 	if((skill=pc_checkskill(sd,SA_DRAGONOLOGY))>0) {
-		sd->right_weapon.addrace[RC_DRAGON]+=skill*4;
-		sd->left_weapon.addrace[RC_DRAGON]+=skill*4;
-#ifdef RENEWAL
-		sd->indexed_bonus.magic_addrace[RC_DRAGON]+=skill*2;
-#else
-		sd->indexed_bonus.magic_addrace[RC_DRAGON]+=skill*4;
-#endif
-		sd->indexed_bonus.subrace[RC_DRAGON]+=skill*4;
+		uint8 dragon_matk = skill * 2;
+
+		skill = skill * 4;
+
+		sd->right_weapon.addrace[RC_DRAGON]+=skill;
+		sd->left_weapon.addrace[RC_DRAGON]+=skill;
+		sd->indexed_bonus.magic_addrace[RC_DRAGON]+=dragon_matk;
+		sd->indexed_bonus.subrace[RC_DRAGON]+=skill;
 	}
 	if ((skill = pc_checkskill(sd, AB_EUCHARISTICA)) > 0) {
 		sd->right_weapon.addrace[RC_DEMON] += skill;
@@ -13661,7 +13661,7 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 
 				std::shared_ptr<s_skill_db> skill = skill_db.find(RL_H_MINE);
 
-				if (!itemdb_exists(skill->require.itemid[0]))
+				if (!item_db.exists(skill->require.itemid[0]))
 					break;
 				memset(&it, 0, sizeof(it));
 				it.nameid = skill->require.itemid[0];

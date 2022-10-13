@@ -1939,7 +1939,6 @@
 	export_constant(SC_BLESSING_OF_M_CREATURES);
 	export_constant(SC_BLESSING_OF_M_C_DEBUFF);
 
-
 	// PREMIUM SERVICE
 	export_constant(SC_PREMIUMSERVICE_EXPBOOST_A);
 	export_constant(SC_PREMIUMSERVICE_EXPBOOST_S);

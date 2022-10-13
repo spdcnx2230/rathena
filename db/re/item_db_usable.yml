@@ -100,7 +100,7 @@ Body:
     AegisName: Red_Potion
     Name: Red Potion
     Type: Healing
-    Buy: 30
+    Buy: 10
     Weight: 70
     Script: |
       itemheal rand(45,65),0;
@@ -108,7 +108,7 @@ Body:
     AegisName: Orange_Potion
     Name: Orange Potion
     Type: Healing
-    Buy: 90
+    Buy: 50
     Weight: 100
     Script: |
       itemheal rand(105,145),0;
@@ -1077,7 +1077,7 @@ Body:
     AegisName: Wing_Of_Fly
     Name: Fly Wing
     Type: Delayconsume
-    Buy: 100
+    Buy: 250
     Weight: 50
     Flags:
       BuyingStore: true
@@ -1087,7 +1087,7 @@ Body:
     AegisName: Wing_Of_Butterfly
     Name: Butterfly Wing
     Type: Delayconsume
-    Buy: 400
+    Buy: 1000
     Weight: 50
     Flags:
       BuyingStore: true
@@ -2533,8 +2533,11 @@ Body:
     Weight: 10
     Trade:
       NoDrop: true
+      NoTrade: true
       NoSell: true
+      NoCart: true
       NoGuildStorage: true
+      NoMail: true
       NoAuction: true
     Script: |
       getitem 7620,5;
@@ -3413,7 +3416,7 @@ Body:
     Script: |
       itemheal rand(45,65),0;
   - Id: 11569
-    AegisName: Orange_Potion_
+    AegisName: Orange_Potion_B
     Name: Orange Potion
     Type: Healing
     Buy: 10
@@ -6333,8 +6336,11 @@ Body:
       Status: Reuse_Limit_C
     Trade:
       NoDrop: true
+      NoTrade: true
       NoSell: true
+      NoCart: true
       NoGuildStorage: true
+      NoMail: true
       NoAuction: true
     Script: |
       sc_start SC_EXPBOOST,1800000,50;
@@ -6365,8 +6371,11 @@ Body:
       Status: Reuse_Limit_D
     Trade:
       NoDrop: true
+      NoTrade: true
       NoSell: true
+      NoCart: true
       NoGuildStorage: true
+      NoMail: true
       NoAuction: true
     Script: |
       sc_start SC_ITEMBOOST,1800000,100;
@@ -6451,7 +6460,7 @@ Body:
       NoAuction: true
     Script: |
       skilleffect "AL_BLESSING",0;
-      sc_start SC_BLESSING,900000,10;
+      sc_start SC_BLESSING,240000,10;
   - Id: 12216
     AegisName: Inc_Agi_10_Scroll
     Name: LV10 Agil Scroll
@@ -6471,7 +6480,7 @@ Body:
     Script: |
       if (Hp>15) {
          skilleffect "AL_INCAGI",0;
-         sc_start SC_INCREASEAGI,900000,10;
+         sc_start SC_INCREASEAGI,240000,10;
          heal -15,0;
       }
   - Id: 12217
@@ -6999,7 +7008,7 @@ Body:
       NoMail: true
       NoAuction: true
     Script: |
-      sc_start SC_EXPBOOST,1800000,50;
+      sc_start SC_EXPBOOST,1800000,200;
   - Id: 12264
     AegisName: Comp_Bubble_Gum
     Name: Bubble Gum
@@ -7011,12 +7020,11 @@ Body:
       NoTrade: true
       NoSell: true
       NoCart: true
-      NoStorage: true
       NoGuildStorage: true
       NoMail: true
       NoAuction: true
     Script: |
-      sc_start SC_ITEMBOOST,1800000,100;
+      sc_start SC_ITEMBOOST,1800000,200;
   - Id: 12265
     AegisName: Comp_Insurance
     Name: Life Insurrance
@@ -8635,14 +8643,16 @@ Body:
       }
   - Id: 12391
     AegisName: Lucky_Egg_C
-    Name: Thank You Egg
+    Name: Lucky Egg C
     Type: Usable
     Weight: 10
     Flags:
       Container: true
     Trade:
       NoDrop: true
+      NoTrade: true
       NoSell: true
+      NoCart: true
       NoGuildStorage: true
       NoMail: true
       NoAuction: true
@@ -8806,8 +8816,11 @@ Body:
       Container: true
     Trade:
       NoDrop: true
+      NoTrade: true
       NoSell: true
+      NoCart: true
       NoGuildStorage: true
+      NoMail: true
       NoAuction: true
     Script: |
       getgroupitem(IG_Lucky_Egg_C2);
@@ -8948,8 +8961,8 @@ Body:
       NoMail: true
       NoAuction: true
   - Id: 12416
-    AegisName: Fashion_Costume_Box1
-    Name: Fashion Costume Box1
+    AegisName: Lucky_Egg_C3
+    Name: Lucky Egg C3
     Type: Usable
     Buy: 20
     Weight: 10
@@ -8957,8 +8970,11 @@ Body:
       Container: true
     Trade:
       NoDrop: true
+      NoTrade: true
       NoSell: true
+      NoCart: true
       NoGuildStorage: true
+      NoMail: true
       NoAuction: true
     Script: |
       getgroupitem(IG_Lucky_Egg_C3);
@@ -13063,26 +13079,6 @@ Body:
       NoGuildStorage: true
       NoMail: true
       NoAuction: true
-    Script: |
-      getitem 5544,1;      //Time_Keeper_Hat
-      getitem 2559,1;      //Time_Keepr_Manteau
-      getitem 28511,1;      //Time_Keeper_Ring
-      getitem 15007,1;      //Time_Keepr_Robe
-      getitem 19218,1;      //Time_Keeper_Glasses
-      getitem 2455,1;       //Time_Keepr_Boots
-      getitem 2145,1;      //Time_Keepr_Shield
-      getitem 1296,1;      //Metal_Katar
-      getitem 1398,1;      //Metal_Two_Handed_Axe
-      getitem 1493,1;      //Metal_Lance
-      getitem 1588,1;      //Metal_Book
-      getitem 2018,1;      //Metal_Staff
-      getitem 13079,1;      //Metal_Dagger
-      getitem 13125,1;      //Metal_Revolver
-      getitem 13322,1;      //Metal_Huuma_Shuriken
-      getitem 16023,1;      //Metal_Mace
-      getitem 18116,1;      //Metal_Bow
-      getitem 21005,1;      //Metal_Two_Hand_Sword
-      getitem 26111,1;      //Metal_Foxtail
   - Id: 12803
     AegisName: Beginner_Kit_Box
     Name: Beginner Kit Box
@@ -13096,13 +13092,6 @@ Body:
       NoGuildStorage: true
       NoMail: true
       NoAuction: true
-    Script: |
-      getitem 24387,1;      //S_Beginner's_Armor
-      getitem 24388,1;      //S_Beginner's_Shield
-      getitem 24389,1;      //S_Beginner's_Shoes
-      getitem 24390,1;      //S_Beginner's_Weapon
-      getitem 24391,1;      //S_Beginner's_Earring
-      getitem 24392,1;      //S_Beginner's_Pendant
   - Id: 12804
     AegisName: Cru_Scroll
     Name: Cru Scroll
@@ -13601,6 +13590,18 @@ Body:
       Container: true
     Script: |
       getgroupitem(IG_Patron_Scroll);
+  - Id: 12858
+    AegisName: Golden_Potion_RG
+    Name: RG Golden Potion
+    Type: Healing
+    Buy: 0
+    Weight: 30
+    Delay:
+      Duration: 1000
+      Status: Reuse_Limit_F
+    Script: |
+      percentheal 100,100;
+      itemskill "PR_KYRIE",10;
   - Id: 12860
     AegisName: Mommy_Day_Cake
     Name: Mommy Day Cake
@@ -14112,8 +14113,11 @@ Body:
       UniqueId: true
     Trade:
       NoDrop: true
+      NoTrade: true
       NoSell: true
+      NoCart: true
       NoGuildStorage: true
+      NoMail: true
       NoAuction: true
     Script: |
       getitem 12215,10;
@@ -14127,8 +14131,11 @@ Body:
       UniqueId: true
     Trade:
       NoDrop: true
+      NoTrade: true
       NoSell: true
+      NoCart: true
       NoGuildStorage: true
+      NoMail: true
       NoAuction: true
     Script: |
       getitem 12216,10;
@@ -16365,8 +16372,11 @@ Body:
       UniqueId: true
     Trade:
       NoDrop: true
+      NoTrade: true
       NoSell: true
+      NoCart: true
       NoGuildStorage: true
+      NoMail: true
       NoAuction: true
     Script: |
       getitem 14516,10;
@@ -17366,8 +17376,11 @@ Body:
       UniqueId: true
     Trade:
       NoDrop: true
+      NoTrade: true
       NoSell: true
+      NoCart: true
       NoGuildStorage: true
+      NoMail: true
       NoAuction: true
     Script: |
       getitem 12208,5;
@@ -17507,8 +17520,11 @@ Body:
       UniqueId: true
     Trade:
       NoDrop: true
+      NoTrade: true
       NoSell: true
+      NoCart: true
       NoGuildStorage: true
+      NoMail: true
       NoAuction: true
     Script: |
       getitem 12210,5;
@@ -17540,8 +17556,11 @@ Body:
       UniqueId: true
     Trade:
       NoDrop: true
+      NoTrade: true
       NoSell: true
+      NoCart: true
       NoGuildStorage: true
+      NoMail: true
       NoAuction: true
     Script: |
       getitem 12221,5;
@@ -22681,14 +22700,20 @@ Body:
       NoMail: true
       NoAuction: true
     Script: |
-      getitem 569,500;      //Novice_Potion
-      getitem 7059,10;      //Cargo_Free_Ticket
-      getitem 12323,200;    //N_Fly_Wing
-      getitem 12324,20;     //N_Butterfly_Wing
-      getitem 12325,10;     //N_Magnifier
-      getitem 12263,3;      //Comp_Battle_Manual
-      getitem 12264,3;      //Comp_Bubble_Gum
-      getitem 12803,1;      //Beginner_Kit_Box
+      getitem 7229,2;
+      getitem 569,300;
+      getitem 504,20;
+      getitem 505,20;
+      getitem 7060,30;
+      getitem 2403,1;
+      getitem 5039,1;
+      getitem 2503,1;
+      getitem 2307,1;
+      getitem 616,1;
+      getitem 603,1;
+      getitem 617,1;
+      getitem 610,5;
+      getitem 604,5;
   - Id: 13896
     AegisName: Mimic_Summon_Box5
     Name: Mimic Summoning 5 Box
@@ -46423,6 +46448,40 @@ Body:
       Container: true
     Script: |
       getitem callfunc("F_Rand",19602,19603,19604,20506),1;
+  - Id: 23036
+    AegisName: Pope_Merc_Scroll2
+    Name: Pope Mercenary Scroll
+    Type: Usable
+    Buy: 20
+    Weight: 0
+    Trade:
+      NoSell: true
+      NoDrop: true
+      NoTrade: true
+      NoCart: true
+      NoStorage: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Script: |
+      mercenary_create 3527,1800000;
+  - Id: 23037
+    AegisName: CasualPope_Merc_Scroll2
+    Name: Casual Pope Mercenary Scroll
+    Type: Usable
+    Buy: 20
+    Weight: 0
+    Trade:
+      NoSell: true
+      NoDrop: true
+      NoTrade: true
+      NoCart: true
+      NoStorage: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Script: |
+      mercenary_create 3528,1800000;
   - Id: 23038
     AegisName: S_Slim_White_Box
     Name: "[Sale] Slim White Potion Box"
@@ -46583,6 +46642,23 @@ Body:
       Container: true
     Script: |
       getgroupitem(IG_Enchant_Stone_Box9);
+  - Id: 23063
+    AegisName: Freeze_Dream
+    Name: Frozen Dream
+    Type: Usable
+    Buy: 0
+    Weight: 0
+    Trade:
+      NoSell: true
+      NoDrop: true
+      NoTrade: true
+      NoCart: true
+      NoStorage: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Script: |
+      getitem 25088,rand(3,6);
   - Id: 23073
     AegisName: AngelPoring_Box
     Name: Angel Poring Shoes Box
@@ -46773,6 +46849,58 @@ Body:
       getitem 12508,3;
       getitem 12509,3;
       getitem 12510,3;
+  - Id: 23142
+    AegisName: EXPUP_Potion1
+    Name: Minor Growth Elixir
+    Type: Usable
+    Trade:
+      Override: 100
+      NoDrop: true
+      NoTrade: true
+      NoCart: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Buy: 2
+    Weight: 10
+    Script: |
+      getexp (BaseLevel < 100)?15000:1500,0;
+  - Id: 23143
+    AegisName: JEXPUP_Potion1
+    Name: Minor Job Elixir
+    Type: Usable
+    Trade:
+      Override: 100
+      NoDrop: true
+      NoTrade: true
+      NoCart: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Buy: 2
+    Weight: 10
+    Script: |
+      getexp 0,(BaseLevel < 100)?15000:1500;
+  - Id: 23144
+    AegisName: EXPUP_Potion1Box
+    Name: Minor Growth Elixir Box
+    Type: Usable
+    Buy: 2
+    Weight: 10
+    Flags:
+      Container: true
+    Script: |
+      getitem 23142,5;
+  - Id: 23145
+    AegisName: JEXPUP_Potion1Box
+    Name: Minor Job Elixir Box
+    Type: Usable
+    Buy: 2
+    Weight: 10
+    Flags:
+      Container: true
+    Script: |
+      getitem 23143,5;
   - Id: 23150
     AegisName: Lapine_DdukddakBox
     Name: Lapine Big Box
@@ -47246,7 +47374,7 @@ Body:
     AegisName: N_Fly_Wing_
     Name: Novice Fly Wing
     Type: Delayconsume
-    Buy: 50
+    Buy: 10
     EquipLevelMin: 1
     EquipLevelMax: 98
     Trade:
@@ -47300,8 +47428,8 @@ Body:
     AegisName: Compressed_Wing_Of_Fly
     Name: Compressed Fly Wing
     Type: Delayconsume
-    Buy: 300
-    Weight: 1
+    Buy: 1000
+    Weight: 10
     Script: |
       itemskill "AL_TELEPORT",1;
   - Id: 23289
@@ -47369,6 +47497,16 @@ Body:
       Container: true
     Script: |
       getgroupitem(IG_Enchant_Stone_Box12);
+  - Id: 23302
+    AegisName: PoringsPreciousBox
+    Name: Poring Treasure Box
+    Type: Usable
+    Weight: 200
+    EquipLevelMin: 30
+    Flags:
+      Container: true
+    Script: |
+      getgroupitem(IG_PORINGSPRECIOUSBOX);
   - Id: 23307
     AegisName: Comp_M_DEFScroll
     Name: "[Sale] Shining Defense Scroll"
@@ -49702,6 +49840,30 @@ Body:
     Weight: 250
     Script: |
       getitem "Explosive_Kunai",500;
+  - Id: 100192
+    AegisName: Gemstone_Blue
+    Name: Blue Gemstone Pouch
+    Type: Usable
+    Buy: 20
+    Weight: 250
+    Script: |
+      getitem "Blue_Gemstone",500;
+  - Id: 100193
+    AegisName: Gemstone_YL
+    Name: Yellow Gemstone Pouch
+    Type: Usable
+    Buy: 20
+    Weight: 250
+    Script: |
+      getitem "Yellow_Gemstone",500;
+  - Id: 100194
+    AegisName: Gemstone_Red
+    Name: Red Gemstone Pouch
+    Type: Usable
+    Buy: 20
+    Weight: 250
+    Script: |
+      getitem "Red_Gemstone",500;
   - Id: 100195
     AegisName: aegis_100195
     Name: Full Metal Jacket Cartridge
@@ -51208,6 +51370,23 @@ Body:
     Weight: 10
     Script: |
       item_reform();
+  - Id: 100848
+    AegisName: Watermelon_Pudding_J
+    Name: Watermelon Pudding    # !todo check english name
+    Type: Healing
+    Weight: 30
+    Trade:
+      NoDrop: true
+      NoTrade: true
+      NoCart: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Script: |
+      percentheal 3,3;
+      specialeffect2 999;
+      specialeffect2 572;
+      /* TODO check effect */
   - Id: 100880
     AegisName: aegis_100880
     Name: Piercing Shadow Box
@@ -52707,6 +52886,15 @@ Body:
     Weight: 10
     Flags:
       BuyingStore: true
+  - Id: 101792
+    AegisName: SubjectCape_Refine_Cube
+    Name: Subject Manteau 12 Refine Cube
+    Type: DelayConsume
+    Weight: 10
+    Flags:
+      BuyingStore: true
+    Script: |
+      laphine_upgrade();
   - Id: 200055
     AegisName: C_Acid_B_50Box
     Name: Acid Bomb 50 Box
@@ -52899,10 +53087,3 @@ Body:
     EquipLevelMin: 200
     Script: |
       itemheal 1925,0;
-  - Id: 1100100
-    AegisName: Enchant_Upg_Armor_Ticket
-    Name: Enchant Upgrade Ticket
-    Type: Delayconsume
-    Weight: 1
-    Script: |
-      laphine_upgrade();

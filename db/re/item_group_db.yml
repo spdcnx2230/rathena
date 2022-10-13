@@ -12607,41 +12607,45 @@ Body:
     SubGroups:
       - SubGroup: 1
         List:
-          - Item: Guarantee_Armor_7Up
-            Rate: 30
+          - Item: Sealed_Mistress_Card
+            Rate: 1
             Announced: true
-          - Item: Guarantee_Weapon_7Up
-            Rate: 30
-            Announced: true
-          - Item: Lucky_Egg_C2
+          - Item: Magic_Card_Album
             Rate: 50
             Announced: true
-          - Item: Blacksmith_Blessing
-            Rate: 30
-            Announced: true
-          - Item: Enriched_Elunium
-            Rate: 1000
-          - Item: HD_Elunium
-            Rate: 1000
-          - Item: Enriched_Oridecon
-            Rate: 1000
-          - Item: HD_Oridecon
-            Rate: 1000
-          - Item: Set_Of_Taiming_Item
-            Rate: 1000
-          - Item: Battle_Manual
-            Rate: 1000
-          - Item: Bubble_Gum
-            Rate: 1000
-          - Item: Max_Weight_Up_Scroll
-            Rate: 1000
-          - Item: Inc_Agi_10_Scroll
-            Rate: 1000
-          - Item: Blessing_10_Scroll
-            Rate: 1000
-          - Item: Shadow_Refine_Hammer
+          - Item: White_Slim_Pot_Box2
+            Rate: 1500
+          - Item: Poison_Bottle_Box2
+            Rate: 1500
+          - Item: Blue_Herb_Box2
+            Rate: 1500
+          - Item: Chung_E_Pet_Coupon
+            Rate: 1200
+          - Item: Succu_Pet_Coupon
+            Rate: 1200
+          - Item: Imp_Pet_Coupon
+            Rate: 1200
+          - Item: Guarantee_Weapon_5Up
             Rate: 200
+          - Item: Guarantee_Armor_5Up
+            Rate: 200
+          - Item: Crown_
+            Rate: 290
+          - Item: Sharp_Gear_
+            Rate: 250
+          - Item: Ribbon_Of_Bride
+            Rate: 50
             Announced: true
+          - Item: Odin's_Blessing
+            Rate: 599
+          - Item: Archangel_Wing
+            Rate: 50
+            Announced: true
+          - Item: Elven_Ears_
+            Rate: 10
+            Announced: true
+          - Item: Rabbit_Earplug
+            Rate: 200
   - Group: LUCKY_EGG_C10
     SubGroups:
       - SubGroup: 1
@@ -12719,96 +12723,126 @@ Body:
     SubGroups:
       - SubGroup: 1
         List:
-          - Item: S_Power_Earring
-            Rate: 500
-          - Item: S_Power_Pendant
-            Rate: 500
-          - Item: S_Athletic_Shield
-            Rate: 500
-          - Item: S_Athletic_Shoes
-            Rate: 500
-          - Item: S_Lucky_Armor
-            Rate: 500
-          - Item: S_Lucky_Weapon
-            Rate: 500
-          - Item: S_Vital_Shoes
-            Rate: 500
-          - Item: S_Vital_Shield
-            Rate: 500
-          - Item: S_Int_Pendant
-            Rate: 500
-          - Item: S_Int_Earring
-            Rate: 500
-          - Item: S_Dexterous_Armor
-            Rate: 500
-          - Item: S_Ancient_Armor
-            Rate: 500
-          - Item: S_Kingbird_Weapon
-            Rate: 500
-          - Item: S_Critical_Armor
-            Rate: 500
-          - Item: S_Cri_Hit_Weapon
-            Rate: 500
-          - Item: S_Big_Armor
-            Rate: 500
-          - Item: S_Big_Weapon
-            Rate: 500
-          - Item: S_Medium_Armor
-            Rate: 500
-          - Item: S_Medium_Weapon
-            Rate: 500
-          - Item: S_Small_Armor
-            Rate: 500
-          - Item: S_Small_Weapon
-            Rate: 500
-          - Item: Shadow_Refine_Hammer
-            Rate: 20
+          - Item: Magic_Card_Album
+            Rate: 50
+          - Item: White_Slim_Pot_Box2
+            Rate: 900
+          - Item: Poison_Bottle_Box2
+            Rate: 900
+          - Item: Blue_Herb_Box2
+            Rate: 900
+          - Item: Guarantee_Weapon_5Up
+            Rate: 200
+          - Item: Guarantee_Armor_5Up
+            Rate: 200
+          - Item: Sealed_Dracula_Card
+            Rate: 1
+          - Item: Drake_Card
+            Rate: 1
+          - Item: Cancer_Diadem
+            Rate: 150
+          - Item: Cancer_Crown
+            Rate: 150
+          - Item: Mini_Propeller_
+            Rate: 150
+          - Item: Battle_Manual_Box
+            Rate: 1000
+            Announced: true
+          - Item: Comp_Bubble_Gum
+            Rate: 800
+          - Item: Comp_Insurance
+            Rate: 800
+            Amount: 3
+            Announced: true
+          - Item: J_Aspersio_5_Scroll
+            Rate: 800
+            Amount: 5
+            Announced: true
+          - Item: Underripe_Yggseed
+            Rate: 800
+            Amount: 10
+            Announced: true
+          - Item: Psychic_ArmorS
+            Rate: 800
+            Amount: 2
+            Announced: true
+          - Item: Yggdrasilberry_Box_
+            Rate: 948
+            Announced: true
+          - Item: Bogy_Horn
+            Rate: 150
+            Announced: true
+          - Item: Flame_Sprits_Armor__
+            Rate: 150
+            Announced: true
+          - Item: Jasper_Crest
+            Rate: 150
             Announced: true
   - Group: LUCKY_EGG_C3
     SubGroups:
       - SubGroup: 1
         List:
-          - Item: C_Rudra_Wing
-            Rate: 30
-            Announced: true
-          - Item: C_Bell_Pigeon
-            Rate: 60
-            Announced: true
-          - Item: C_Angel_Spirit
-            Rate: 60
-            Announced: true
-          - Item: C_Robo_Eye
-            Rate: 60
-            Announced: true
-          - Item: C_Rabbit_Ear_Hat
-            Rate: 100
-            Announced: true
-          - Item: C_White_Cat_Hood
-            Rate: 100
-            Announced: true
-          - Item: C_Darkness_Helm
-            Rate: 100
-            Announced: true
-          - Item: C_Little_Angel_Doll
-            Rate: 100
-            Announced: true
-          - Item: C_J_Captain_Hat
-            Rate: 100
-            Announced: true
-          - Item: C_Chick_Hat
-            Rate: 100
-            Announced: true
-          - Item: Shadow_Refine_Hammer
+          - Item: Magic_Card_Album
             Rate: 50
             Announced: true
-          - Item: Inc_Agi_10_Scroll_Box
+          - Item: White_Slim_Pot_Box2
+            Rate: 800
+          - Item: Poison_Bottle_Box2
+            Rate: 800
+          - Item: Blue_Herb_Box2
+            Rate: 800
+          - Item: Chung_E_Pet_Coupon
             Rate: 500
-          - Item: Blessing_10_Scroll_Box
+            Announced: true
+          - Item: Succu_Pet_Coupon
             Rate: 500
-          - Item: Enriched_Elunium
-            Rate: 1500
-          - Item: Enriched_Oridecon
-            Rate: 1500
+            Announced: true
+          - Item: Imp_Pet_Coupon
+            Rate: 500
+            Announced: true
+          - Item: Leo_Crown
+            Rate: 150
+            Announced: true
+          - Item: Dress_Hat
+            Rate: 100
+            Announced: true
+          - Item: Sunglasses_
+            Rate: 10
+            Announced: true
+          - Item: Battle_Manual_Box
+            Rate: 489
+          - Item: Comp_Bubble_Gum
+            Rate: 800
+            Amount: 3
+          - Item: Comp_Insurance
+            Rate: 800
+            Amount: 3
+          - Item: J_Aspersio_5_Scroll
+            Rate: 800
+            Amount: 5
+          - Item: Underripe_Yggseed
+            Rate: 800
+            Amount: 10
+          - Item: Psychic_ArmorS
+            Rate: 800
+            Amount: 2
+          - Item: Yggdrasilberry_Box_
+            Rate: 800
+          - Item: Upg_Buckler_Box
+            Rate: 100
+            Announced: true
+          - Item: Flame_Sprits_Armor__
+            Rate: 200
+            Announced: true
+          - Item: Sealed_Kiel_Card
+            Rate: 1
+            Announced: true
+          - Item: Donut_In_Mouth
+            Rate: 150
+            Announced: true
+          - Item: K_Rabbit_Bonnet
+            Rate: 50
+            Announced: true
   - Group: LUCKY_EGG_C4
     SubGroups:
       - SubGroup: 1
@@ -31441,6 +31475,18 @@ Body:
           - Item: S_Absorb_Shield
             RefineMinimum: 7
             RefineMaximum: 10
+  - Group: PORINGSPRECIOUSBOX
+    SubGroups:
+      - SubGroup: 0
+        List:
+          - Item: Orange_Potion_B
+            Amount: 3
+          - Item: N_Fly_Wing
+            Amount: 3
+          - Item: Candy_Striper_B
+            Amount: 5
+          - Item: Candy_B
+            Amount: 5
   - Group: ODIN_RELIC
     SubGroups:
       - SubGroup: 1

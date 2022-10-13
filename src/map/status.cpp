@@ -231,7 +231,7 @@ uint64 RefineDatabase::parseBodyNode( const ryml::NodeRef& node ){
 					}
 
 					if (this->nodeExists(refineLevelNode, "BroadcastSuccess")) {
-						bool bcast = false;
+						bool bcast;
 						if (!this->asBool(refineLevelNode, "BroadcastSuccess", bcast)) {
 							return 0;
 						}
@@ -244,7 +244,7 @@ uint64 RefineDatabase::parseBodyNode( const ryml::NodeRef& node ){
 					}
 
 					if (this->nodeExists(refineLevelNode, "BroadcastFailure")) {
-						bool bcast = false;
+						bool bcast;
 						if (!this->asBool(refineLevelNode, "BroadcastFailure", bcast)) {
 							return 0;
 						}
@@ -1592,7 +1592,7 @@ int status_damage(struct block_list *src,struct block_list *target,int64 dhp, in
 	if(flag&4) // Delete from memory. (also invokes map removal code)
 		unit_free(target,CLR_DEAD);
 	else if(flag&2) // remove from map
-		unit_remove_map(target,CLR_DEAD);
+		unit_remove_map(target,CLR_DEAD, false);
 	else { // Some death states that would normally be handled by unit_remove_map
 		unit_stop_attack(target);
 		unit_stop_walking(target,1);
@@ -3681,9 +3681,9 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 	memset(&sd->bonus, 0, sizeof(sd->bonus));
 
 	// Autobonus
-	pc_delautobonus(*sd, sd->autobonus, (opt & SCO_ITEM_RELOAD) ? false : true);
-	pc_delautobonus(*sd, sd->autobonus2, (opt & SCO_ITEM_RELOAD) ? false : true);
-	pc_delautobonus(*sd, sd->autobonus3, (opt & SCO_ITEM_RELOAD) ? false : true);
+	pc_delautobonus(*sd, sd->autobonus, true);
+	pc_delautobonus(*sd, sd->autobonus2, true);
+	pc_delautobonus(*sd, sd->autobonus3, true);
 
 	if (sd->pd != nullptr) {
 		pet_delautobonus(*sd, sd->pd->autobonus, true);
@@ -3704,6 +3704,8 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 		if (!sd->inventory_data[index])
 			continue;
 
+		base_status->def += sd->inventory_data[index]->def;
+
 		// Items may be equipped, their effects however are nullified.
 		if (opt&SCO_FIRST && sd->inventory_data[index]->equip_script && (pc_has_permission(sd,PC_PERM_USE_ALL_EQUIPMENT)
 			|| !itemdb_isNoEquip(sd->inventory_data[index],sd->bl.m))) { // Execute equip-script on login
@@ -3712,9 +3714,71 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 				return 1;
 		}
 
+		// Sanitize the refine level in case someone decreased the value inbetween
+		if (sd->inventory.u.items_inventory[index].refine > MAX_REFINE)
+			sd->inventory.u.items_inventory[index].refine = MAX_REFINE;
+
+		std::shared_ptr<s_refine_level_info> info = refine_db.findCurrentLevelInfo( *sd->inventory_data[index], sd->inventory.u.items_inventory[index] );
+#ifdef RENEWAL
+		std::shared_ptr<s_enchantgradelevel> enchantgrade_info = nullptr;
+
+		if( sd->inventory.u.items_inventory[index].enchantgrade > 0 ){
+			enchantgrade_info = enchantgrade_db.findCurrentLevelInfo( *sd->inventory_data[index], sd->inventory.u.items_inventory[index] );
+		}
+#endif
+
 		if (sd->inventory_data[index]->type == IT_WEAPON) {
+			int wlv = sd->inventory_data[index]->weapon_level;
+			struct weapon_data *wd;
+			struct weapon_atk *wa;
+
+			if(wlv >= MAX_WEAPON_LEVEL)
+				wlv = MAX_WEAPON_LEVEL;
+
+			if(i == EQI_HAND_L && sd->inventory.u.items_inventory[index].equip == EQP_HAND_L) {
+				wd = &sd->left_weapon; // Left-hand weapon
+				wa = &base_status->lhw;
+			} else {
+				wd = &sd->right_weapon;
+				wa = &base_status->rhw;
+			}
+			wa->atk += sd->inventory_data[index]->atk;
+			if( info != nullptr ){
+				wa->atk2 += info->bonus / 100;
+
+#ifdef RENEWAL
+				if( enchantgrade_info != nullptr ){
+					wa->atk2 += ( ( ( info->bonus / 100 ) * enchantgrade_info->bonus ) / 100 );
+				}
+
+				if( wlv == 5 ){
+					base_status->patk += sd->inventory.u.items_inventory[index].refine * 2;
+					base_status->smatk += sd->inventory.u.items_inventory[index].refine * 2;
+				}
+#endif
+			}
+#ifdef RENEWAL
+			if (sd->bonus.weapon_atk_rate)
+				wa->atk += wa->atk * sd->bonus.weapon_atk_rate / 100;
+			wa->matk += sd->inventory_data[index]->matk;
+			wa->wlv = wlv;
+			// Renewal magic attack refine bonus
+			if( info != nullptr && sd->weapontype1 != W_BOW ){
+				wa->matk += info->bonus / 100;
+
+				if( enchantgrade_info != nullptr ){
+					wa->matk += ( ( ( info->bonus / 100 ) * enchantgrade_info->bonus ) / 100 );
+				}
+			}
+#endif
+			// Overrefine bonus.
+			if( info != nullptr ){
+				wd->overrefine = info->randombonus_max / 100;
+			}
+
+			wa->range += sd->inventory_data[index]->range;
 			if(sd->inventory_data[index]->script && (pc_has_permission(sd,PC_PERM_USE_ALL_EQUIPMENT) || !itemdb_isNoEquip(sd->inventory_data[index],sd->bl.m))) {
-				if (i == EQI_HAND_L && sd->inventory.u.items_inventory[index].equip == EQP_HAND_L) {
+				if (wd == &sd->left_weapon) {
 					sd->state.lr_flag = 1;
 					run_script(sd->inventory_data[index]->script,0,sd->bl.id,0);
 					sd->state.lr_flag = 0;
@@ -3723,7 +3787,30 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 				if (!calculating) // Abort, run_script retriggered this. [Skotlex]
 					return 1;
 			}
+#ifdef RENEWAL
+			if (sd->bonus.weapon_matk_rate)
+				wa->matk += wa->matk * sd->bonus.weapon_matk_rate / 100;
+#endif
+			if(sd->inventory.u.items_inventory[index].card[0] == CARD0_FORGE) { // Forged weapon
+				wd->star += (sd->inventory.u.items_inventory[index].card[1]>>8);
+				if(wd->star >= 15) wd->star = 40; // 3 Star Crumbs now give +40 dmg
+				if(pc_famerank(MakeDWord(sd->inventory.u.items_inventory[index].card[2],sd->inventory.u.items_inventory[index].card[3]) ,MAPID_BLACKSMITH))
+					wd->star += 10;
+				if (!wa->ele) // Do not overwrite element from previous bonuses.
+					wa->ele = (sd->inventory.u.items_inventory[index].card[1]&0x0f);
+			}
 		} else if(sd->inventory_data[index]->type == IT_ARMOR) {
+			if( info != nullptr ){
+				refinedef += info->bonus;
+
+#ifdef RENEWAL
+				if( sd->inventory_data[index]->armor_level == 2 ){
+					base_status->res += sd->inventory.u.items_inventory[index].refine * 2;
+					base_status->mres += sd->inventory.u.items_inventory[index].refine * 2;
+				}
+#endif
+			}
+
 			if(sd->inventory_data[index]->script && (pc_has_permission(sd,PC_PERM_USE_ALL_EQUIPMENT) || !itemdb_isNoEquip(sd->inventory_data[index],sd->bl.m))) {
 				if( i == EQI_HAND_L ) // Shield
 					sd->state.lr_flag = 3;
@@ -3754,7 +3841,7 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 				return 1;
 		}
 	}
-	
+
 	// Process and check item combos
 	if (!sd->combos.empty()) {
 		for (const auto &combo : sd->combos) {
@@ -3888,114 +3975,6 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 		current_equip_opt_index = -1;
 	}
 
-	// Give equipment bonuses based on all parsed information.
-	for (i = 0; i < EQI_MAX; i++) {
-		index = sd->equip_index[i];
-
-		if (index < 0)
-			continue;
-		if (i == EQI_AMMO)
-			continue;
-		if (pc_is_same_equip_index((enum equip_index)i, sd->equip_index, index))
-			continue;
-		if (!sd->inventory_data[index])
-			continue;
-
-		base_status->def += sd->inventory_data[index]->def;
-
-		// Sanitize the refine level in case someone decreased the value inbetween
-		if (sd->inventory.u.items_inventory[index].refine > MAX_REFINE)
-			sd->inventory.u.items_inventory[index].refine = MAX_REFINE;
-
-		std::shared_ptr<s_refine_level_info> info = refine_db.findCurrentLevelInfo(*sd->inventory_data[index], sd->inventory.u.items_inventory[index]);
-#ifdef RENEWAL
-		std::shared_ptr<s_enchantgradelevel> enchantgrade_info = nullptr;
-
-		if (sd->inventory.u.items_inventory[index].enchantgrade > 0)
-			enchantgrade_info = enchantgrade_db.findCurrentLevelInfo(*sd->inventory_data[index], sd->inventory.u.items_inventory[index]);
-#endif
-
-		if (sd->inventory_data[index]->type == IT_WEAPON) {
-			uint16 wlv = sd->inventory_data[index]->weapon_level;
-			weapon_data *wd;
-			weapon_atk *wa;
-
-			if (wlv >= MAX_WEAPON_LEVEL)
-				wlv = MAX_WEAPON_LEVEL;
-
-			if (i == EQI_HAND_L && sd->inventory.u.items_inventory[index].equip == EQP_HAND_L) {
-				wd = &sd->left_weapon; // Left-hand weapon
-				wa = &base_status->lhw;
-			} else {
-				wd = &sd->right_weapon;
-				wa = &base_status->rhw;
-			}
-
-			wa->atk += sd->inventory_data[index]->atk;
-
-			if (info != nullptr) {
-				wa->atk2 += info->bonus / 100;
-
-#ifdef RENEWAL
-				if (enchantgrade_info != nullptr)
-					wa->atk2 += (((info->bonus / 100) * enchantgrade_info->bonus) / 100);
-
-				if (wlv == 5) {
-					base_status->patk += sd->inventory.u.items_inventory[index].refine * 2;
-					base_status->smatk += sd->inventory.u.items_inventory[index].refine * 2;
-				}
-#endif
-			}
-
-#ifdef RENEWAL
-			if (sd->bonus.weapon_atk_rate)
-				wa->atk += wa->atk * sd->bonus.weapon_atk_rate / 100;
-
-			wa->matk += sd->inventory_data[index]->matk;
-			wa->wlv = static_cast<uint8>(wlv);
-
-			// Renewal magic attack refine bonus
-			if (info != nullptr && sd->weapontype1 != W_BOW) {
-				wa->matk += info->bonus / 100;
-
-				if (enchantgrade_info != nullptr)
-					wa->matk += (((info->bonus / 100) * enchantgrade_info->bonus) / 100);
-			}
-#endif
-			// Overrefine bonus.
-			if (info != nullptr)
-				wd->overrefine = info->randombonus_max / 100;
-
-			wa->range += sd->inventory_data[index]->range;
-
-#ifdef RENEWAL
-			if (sd->bonus.weapon_matk_rate)
-				wa->matk += wa->matk * sd->bonus.weapon_matk_rate / 100;
-#endif
-			if (sd->inventory.u.items_inventory[index].card[0] == CARD0_FORGE) { // Forged weapon
-				wd->star += (sd->inventory.u.items_inventory[index].card[1] >> 8);
-
-				if (wd->star >= 15)
-					wd->star = 40; // 3 Star Crumbs now give +40 dmg
-				if (pc_famerank(MakeDWord(sd->inventory.u.items_inventory[index].card[2], sd->inventory.u.items_inventory[index].card[3]), MAPID_BLACKSMITH))
-					wd->star += 10;
-				if (!wa->ele) // Do not overwrite element from previous bonuses.
-					wa->ele = (sd->inventory.u.items_inventory[index].card[1] & 0x0f);
-			}
-		} else if (sd->inventory_data[index]->type == IT_ARMOR) {
-			if (info != nullptr) {
-				refinedef += info->bonus;
-
-#ifdef RENEWAL
-				if (sd->inventory_data[index]->armor_level == 2) {
-					base_status->res += sd->inventory.u.items_inventory[index].refine * 2;
-					base_status->mres += sd->inventory.u.items_inventory[index].refine * 2;
-				}
-#endif
-			}
-		}
-	}
-
 	if (sc->count && sc->data[SC_ITEMSCRIPT]) {
 		std::shared_ptr<item_data> data = item_db.find(sc->data[SC_ITEMSCRIPT]->val1);
 
@@ -4076,23 +4055,11 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 		base_status->luk += 10;
 	}
 
-	// Absolute modifiers from passive skills	
+	// Absolute modifiers from passive skills
 	if(pc_checkskill(sd,BS_HILTBINDING)>0)
 		base_status->str++;
-	if(pc_checkskill(sd,NV_BASIC)>0)
-		base_status->hit += skill+1;
 	if((skill=pc_checkskill(sd,SA_DRAGONOLOGY))>0)
-		base_status->int_ += (skill+1)/2; // +1 INT / 2 lv		
-	if((skill=pc_checkskill(sd,SA_AUTOSPELL))>0)
-		base_status->agi += skill;
-	if((skill=pc_checkskill(sd,RG_PLAGIARISM))>0)
-		base_status->int_ += skill*2;
-	if((skill=pc_checkskill(sd,AS_KATAR))>0)
-		base_status->luk += skill;
-	if((skill=pc_checkskill(sd,SM_RECOVERY))>0)
-		base_status->vit += skill;
-	if((skill=pc_checkskill(sd,MG_SRECOVERY))>0)
-		base_status->int_ += skill;
+		base_status->int_ += (skill+1)/2; // +1 INT / 2 lv
 	if((skill=pc_checkskill(sd,AC_OWL))>0)
 		base_status->dex += skill;
 	if((skill = pc_checkskill(sd,RA_RESEARCHTRAP))>0)
@@ -4725,8 +4692,8 @@ int status_calc_pc_sub(struct map_session_data* sd, uint8 opt)
 		if (sc->data[SC_STRIKING])
 			sd->bonus.perfect_hit += 20 + 10 * pc_checkskill(sd, SO_STRIKING);
 		if (sc->data[SC_RUSH_QUAKE2]) {
-			sd->bonus.short_attack_atk_rate += 5 * pc_checkskill(sd, MT_RUSH_QUAKE);
-			sd->bonus.long_attack_atk_rate += 5 * pc_checkskill(sd, MT_RUSH_QUAKE);
+			sd->bonus.short_attack_atk_rate += 5 * sc->data[SC_RUSH_QUAKE2]->val1;
+			sd->bonus.long_attack_atk_rate += 5 * sc->data[SC_RUSH_QUAKE2]->val1;
 		}
 		if (sc->data[SC_BO_HELL_DUSTY]) {
 			sd->bonus.long_attack_atk_rate += 20;
@@ -11505,15 +11472,16 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 		case SC_JEXPBOOST:
 		case SC_JP_EVENT04:
 
-		// APACHE PREMIUM SERVICE
-		case SC_APACHE_EXPBOOST_A:
-		case SC_APACHE_EXPBOOST_S:
-		case SC_APACHE_JEXPBOOST_A:
-		case SC_APACHE_JEXPBOOST_S:
-		case SC_APACHE_ITEMBOOST_A:
-		case SC_APACHE_ITEMBOOST_S:
-		case SC_APACHE_STORAGE:
-		case SC_APACHE_LIFEINSURANCE:
+		// PREMIUM SERVICE
+	case SC_PREMIUMSERVICE_EXPBOOST_A:
+	case SC_PREMIUMSERVICE_EXPBOOST_S:
+	case SC_PREMIUMSERVICE_JEXPBOOST_A:
+	case SC_PREMIUMSERVICE_JEXPBOOST_S:
+	case SC_PREMIUMSERVICE_ITEMBOOST_A:
+	case SC_PREMIUMSERVICE_ITEMBOOST_S:
+	case SC_PREMIUMSERVICE_STORAGE:
+	case SC_PREMIUMSERVICE_LIFEINSURANCE:
+	case SC_PREMIUMSERVICE:
 
 			if (val1 < 0)
 				val1 = 0;
@@ -12765,6 +12733,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			break;
 		case SC_TEMPORARY_COMMUNION:
 			val2 = val1 * 3;
+			break;
 		case SC_BLESSING_OF_M_CREATURES:
 			val2 = val1 * 10;
 		case SC_WEAPONBREAKER:
@@ -13331,11 +13300,6 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 						((TBL_MER*)d_bl)->devotion_flag = 0;
 					clif_devotion(d_bl, NULL);
 				}
-
-				status_change_end(bl, SC_AUTOGUARD);
-				status_change_end(bl, SC_DEFENDER);
-				status_change_end(bl, SC_REFLECTSHIELD);
-				status_change_end(bl, SC_ENDURE);
 			}
 			break;
 
@@ -13397,12 +13361,6 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 
 				if((sce->val1&0xFFFF) == CG_MOONLIT)
 					clif_status_change(bl,EFST_MOON,0,0,0,0,0);
-
-#ifdef RENEWAL
-				status_change_end(bl, SC_ENSEMBLEFATIGUE);
-#else
-				status_change_end(bl, SC_LONGING);
-#endif
 			}
 			break;
 		case SC_NOCHAT:
@@ -13630,9 +13588,6 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 				}
 			}
 			break;
-		case SC_TEARGAS:
-			status_change_end(bl,SC_TEARGAS_SOB);
-			break;
 		case SC_SITDOWN_FORCE:
 		case SC_BANANA_BOMB_SITDOWN:
 			if( sd && pc_issit(sd) && pc_setstand(sd, false) )
@@ -13646,25 +13601,6 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 			calc_flag = status_db.getSCB_ALL(); // Required for overlapping
 			break;
 
-		case SC_SUNSTANCE:
-			status_change_end(bl, SC_LIGHTOFSUN);
-			break;
-		case SC_LUNARSTANCE:
-			status_change_end(bl, SC_NEWMOON);
-			status_change_end(bl, SC_LIGHTOFMOON);
-			break;
-		case SC_STARSTANCE:
-			status_change_end(bl, SC_FALLINGSTAR);
-			status_change_end(bl, SC_LIGHTOFSTAR);
-			break;
-		case SC_UNIVERSESTANCE:
-			status_change_end(bl, SC_LIGHTOFSUN);
-			status_change_end(bl, SC_NEWMOON);
-			status_change_end(bl, SC_LIGHTOFMOON);
-			status_change_end(bl, SC_FALLINGSTAR);
-			status_change_end(bl, SC_LIGHTOFSTAR);
-			status_change_end(bl, SC_DIMENSION);
-			break;
 		case SC_GRAVITYCONTROL:
 			status_fix_damage(bl, bl, sce->val2, clif_damage(bl, bl, gettick(), 0, 0, sce->val2, 0, DMG_NORMAL, 0, false), 0);
 			clif_specialeffect(bl, 223, AREA);
@@ -13738,13 +13674,6 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 			///< !CHECKME: Seems on official, there's delay before same target can be vacuumed in same area again [Cydh]
 			sc_start2(bl, bl, SC_VACUUM_EXTREME_POSTDELAY, 100, sce->val1, sce->val2, skill_get_time2(SO_VACUUM_EXTREME,sce->val1));
 			break;
-		case SC_SWORDCLAN:
-		case SC_ARCWANDCLAN:
-		case SC_GOLDENMACECLAN:
-		case SC_CROSSBOWCLAN:
-		case SC_JUMPINGCLAN:
-			status_change_end(bl,SC_CLAN_INFO);
-			break;
 		case SC_DIMENSION1:
 		case SC_DIMENSION2:
 			if (sd)
@@ -13782,9 +13711,6 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 				pc_delservantball( *sd, sd->servantball );
 			}
 			break;
-		case SC_CHARGINGPIERCE:
-			status_change_end(bl, SC_CHARGINGPIERCE_COUNT);
-			break;
 		case SC_ABYSSFORCEWEAPON:
 			if( sd ){
 				pc_delabyssball( *sd, sd->abyssball );
@@ -13794,6 +13720,14 @@ int status_change_end(struct block_list* bl, enum sc_type type, int tid)
 			sc_start(bl,bl, SC_BLESSING_OF_M_C_DEBUFF, 100, 1, skill_get_time2(SH_BLESSING_OF_MYSTICAL_CREATURES, 1));
 			status_percent_change(bl,bl,0, 0, -100,1);
 			break;
+	}
+
+	// End statuses found in the Cancel list.
+	if (!scdb->cancel.empty()) {
+		for (const auto &it : scdb->cancel) {
+			if (it == type)
+				status_change_end(bl, it);
+		}
 	}
 
 	// Reset the options as needed

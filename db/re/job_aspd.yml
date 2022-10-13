@@ -92,14 +92,14 @@ Body:
       Hyper_Novice: true
     BaseASPD:
       Fist: 40
-      Dagger: 45
-      1hSword: 50
+      Dagger: 55
+      1hSword: 57
       1hAxe: 50
       Mace: 50
       2hMace: 55
       Staff: 65
       2hStaff: 65
-      Shield: 9
+      Shield: 10
   - Jobs:
       Swordman: true
       Swordman_High: true

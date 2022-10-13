@@ -82,13 +82,14 @@
 #   Script                  Script to execute when the item is used/equipped. (Default: null)
 #   EquipScript             Script to execute when the item is equipped. (Default: null)
 #   UnEquipScript           Script to execute when the item is unequipped or when a rental item expires. (Default: null)
+###########################################################################
 
 Header:
   Type: ITEM_DB
   Version: 3
+
 Footer:
   Imports:
-#  item_db_customer
   - Path: db/z/item_db_usable.yml
   - Path: db/z/item_db_equip.yml
   - Path: db/z/item_db_etc.yml

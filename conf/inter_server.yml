@@ -40,6 +40,12 @@ Body:
   - ID: 0
     Name: "Storage"
     Table: storage
+  - ID: 1
+    Name: "Premium storage"
+    Table: Premium_storage
+  - ID: 2
+    Name: "vip storage"
+    Table: vip_storage
 
 Footer:
   Imports:

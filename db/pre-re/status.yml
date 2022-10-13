@@ -37,11 +37,12 @@
 #   Fail:                     List of Status Changes that causes the status to fail to activate. (Optional)
 #   End:                      List of Status Changes that will end when the status activates. (Optional)
 #   EndReturn:                List of Status Changes that will end when the status activates and won't give its effect. (Optional)
+#   Cancel:                   List of Status Changes that will be canceled when the status becomes inactive. (Optional)
 ###########################################################################
 
 Header:
   Type: STATUS_DB
-  Version: 2
+  Version: 3
 
 Body:
   - Status: Stone
@@ -323,10 +324,11 @@ Body:
       OnTouch: true
       StopAttacking: true
       RemoveOnDamaged: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
       NoBanishingBuster: true
       NoDispell: true
       NoClearance: true
+      NoSave: true
     End:
       Closeconfine: true
       Closeconfine2: true
@@ -588,7 +590,7 @@ Body:
       RemoveOnDamaged: true
       NoSave: true
       NoClearance: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
     End:
       Dancing: true
   - Status: Loud
@@ -730,7 +732,8 @@ Body:
       NoDispell: true
       NoBanishingBuster: true
       NoClearance: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
+      NoSave: true
     MinDuration: 5000
   - Status: Keeping
     DurationLookup: NPC_KEEPING
@@ -962,7 +965,8 @@ Body:
     States:
       NoMove: true
     Flags:
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
+      NoSave: true
   - Status: Bladestop
     Icon: EFST_BLADESTOP
     DurationLookup: MO_BLADESTOP
@@ -979,7 +983,7 @@ Body:
       NoClearbuff: true
       NoSave: true
       NoClearance: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
   - Status: Fireweapon
     Icon: EFST_PROPERTYFIRE
     DurationLookup: SA_FLAMELAUNCHER
@@ -1192,7 +1196,7 @@ Body:
     Flags:
       NoSave: true
       NoClearance: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
   - Status: Guildaura
     Flags:
       NoDispell: true
@@ -1284,10 +1288,11 @@ Body:
       OnTouch: true
       StopAttacking: true
       RemoveOnDamaged: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
       NoBanishingBuster: true
       NoDispell: true
       NoClearance: true
+      NoSave: true
   - Status: Rejectsword
     Icon: EFST_SWORDREJECT
     DurationLookup: ST_REJECTSWORD
@@ -1304,7 +1309,8 @@ Body:
     Opt3:
       Marionette: true
     Flags:
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
+      NoSave: true
     Fail:
       Marionette: true
   - Status: Marionette2
@@ -1320,7 +1326,8 @@ Body:
     Opt3:
       Marionette: true
     Flags:
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
+      NoSave: true
     Fail:
       Marionette2: true
   - Status: Changeundead
@@ -1394,8 +1401,13 @@ Body:
     DurationLookup: CR_DEVOTION
     Flags:
       NoSave: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
       OverlapIgnoreLevel: true
+    Cancel:
+      Autoguard: true
+      Defender: true
+      ReflectShield: true
+      Endure: true
   - Status: Sacrifice
     DurationLookup: PA_SACRIFICE
   - Status: Steelbody
@@ -1473,7 +1485,7 @@ Body:
     Flags:
       NoSave: true
       NoClearance: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
   - Status: Shadowweapon
     Icon: EFST_PROPERTYDARK
     DurationLookup: TK_SEVENWIND
@@ -1651,7 +1663,7 @@ Body:
       NoClearance: true
       NoSave: true
       NoRemoveOnDead: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
   - Status: Closeconfine2
     Icon: EFST_RG_CCONFINE_S
     DurationLookup: RG_CLOSECONFINE
@@ -1664,7 +1676,7 @@ Body:
       NoClearance: true
       NoSave: true
       NoRemoveOnDead: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
     Fail:
       Closeconfine2: true
   - Status: Dancing
@@ -1681,9 +1693,12 @@ Body:
       NoDispell: true
       NoBanishingBuster: true
       NoClearance: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
       RequireWeapon: true
       OverlapIgnoreLevel: true
+      NoSave: true
+    Cancel:
+      Longing: true
   - Status: Elementalchange
     Icon: EFST_ARMOR_PROPERTY
     DurationLookup: NPC_ATTRICHANGE
@@ -1845,7 +1860,7 @@ Body:
       StopWalking: true
       NoSave: true
       NoClearance: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
       Debuff: true
   - Status: Spurt
     Icon: EFST_STRUP
@@ -2162,8 +2177,8 @@ Body:
       NoDispell: true
       NoBanishingBuster: true
       NoClearance: true
-      RemoveOnChangeMap: true
       RemoveOnMapWarp: true
+      NoSave: true
   - Status: Sun_Comfort
     Icon: EFST_SUN_COMFORT
     DurationLookup: SG_SUN_COMFORT
@@ -2171,6 +2186,7 @@ Body:
       Def2: true
     Flags:
       RemoveOnMapWarp: true
+      NoSave: true
   - Status: Moon_Comfort
     Icon: EFST_MOON_COMFORT
     DurationLookup: SG_MOON_COMFORT
@@ -2178,6 +2194,7 @@ Body:
       Flee: true
     Flags:
       RemoveOnMapWarp: true
+      NoSave: true
   - Status: Star_Comfort
     Icon: EFST_STAR_COMFORT
     DurationLookup: SG_STAR_COMFORT
@@ -2185,6 +2202,7 @@ Body:
       Aspd: true
     Flags:
       RemoveOnMapWarp: true
+      NoSave: true
   - Status: Fusion
     DurationLookup: SG_FUSION
     CalcFlags:
@@ -2380,7 +2398,8 @@ Body:
       Vit: true
       Int: true
     Flags:
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
+      NoSave: true
     Fail:
       Change: true
   - Status: Bloodlust
@@ -3191,7 +3210,7 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
       NoSave: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
   - Status: Bite
     Icon: EFST_WUGBITE
     DurationLookup: RA_WUGBITE
@@ -3223,7 +3242,7 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
       NoSave: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
   - Status: Acceleration
     Icon: EFST_ACCELERATION
     DurationLookup: NC_ACCELERATION
@@ -3305,7 +3324,7 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
       NoSave: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
   - Status: Stealthfield
     Icon: EFST_STEALTHFIELD
     DurationLookup: NC_STEALTHFIELD
@@ -3328,7 +3347,7 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
       NoSave: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
   - Status: Overheat
     Icon: EFST_OVERHEAT
     Flags:
@@ -3737,7 +3756,7 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
       NoSave: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
       Debuff: true
     Fail:
       Hallucinationwalk: true
@@ -4124,7 +4143,7 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
       StopAttacking: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
   - Status: Cursedcircle_Target
     Icon: EFST_CURSEDCIRCLE_TARGET
     DurationLookup: SR_CURSEDCIRCLE
@@ -4466,7 +4485,7 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
       NoSave: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
   - Status: _Bodypaint
     Icon: EFST_BODYPAINT
     DurationLookup: SC_BODYPAINT
@@ -4600,7 +4619,8 @@ Body:
       NoDispell: true
       NoBanishingBuster: true
       NoClearance: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
+      NoSave: true
   - Status: _Bloodylust
     Icon: EFST_BLOODYLUST
     DurationLookup: SC_BLOODYLUST
@@ -5194,7 +5214,7 @@ Body:
     Flags:
       StopWalking: true
       NoSave: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
   - Status: Tinder_Breaker2
     Icon: EFST_TINDER_BREAKER
     DurationLookup: MH_TINDER_BREAKER
@@ -5205,7 +5225,7 @@ Body:
     Flags:
       StopWalking: true
       NoSave: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
   - Status: Cbc
     Icon: EFST_CBC
     DurationLookup: MH_CBC
@@ -5739,7 +5759,7 @@ Body:
     Flags:
       NoSave: true
       NoClearance: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
       NoBanishingBuster: true
       NoDispell: true
   - Status: Mtf_Aspd2
@@ -6044,7 +6064,6 @@ Body:
     Flags:
       StopAttacking: true
       RemoveOnDamaged: true
-      RemoveOnChangeMap: true
       RemoveOnMapWarp: true
   - Status: Su_Stoop
     Icon: EFST_SU_STOOP
@@ -6272,6 +6291,8 @@ Body:
       NoDispell: true
       NoBanishingBuster: true
       NoClearance: true
+    Cancel:
+      Clan_Info: true
   - Status: Arcwandclan
     Icon: EFST_ARCWANDCLAN
     CalcFlags:
@@ -6285,6 +6306,8 @@ Body:
       NoDispell: true
       NoBanishingBuster: true
       NoClearance: true
+    Cancel:
+      Clan_Info: true
   - Status: Goldenmaceclan
     Icon: EFST_GOLDENMACECLAN
     CalcFlags:
@@ -6298,6 +6321,8 @@ Body:
       NoDispell: true
       NoBanishingBuster: true
       NoClearance: true
+    Cancel:
+      Clan_Info: true
   - Status: Crossbowclan
     Icon: EFST_CROSSBOWCLAN
     CalcFlags:
@@ -6311,6 +6336,8 @@ Body:
       NoDispell: true
       NoBanishingBuster: true
       NoClearance: true
+    Cancel:
+      Clan_Info: true
   - Status: Jumpingclan
     Icon: EFST_JUMPINGCLAN
     CalcFlags:
@@ -6326,6 +6353,8 @@ Body:
       NoDispell: true
       NoBanishingBuster: true
       NoClearance: true
+    Cancel:
+      Clan_Info: true
   - Status: Tarotcard
     Icon: EFST_TAROTCARD
     DurationLookup: CG_TAROTCARD
@@ -6600,7 +6629,8 @@ Body:
       NoBanishingBuster: true
       NoClearance: true
       NoClearbuff: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
+      NoSave: true
   - Status: Entry_Queue_Apply_Delay
     Icon: EFST_ENTRY_QUEUE_APPLY_DELAY
     Flags:
@@ -6672,7 +6702,7 @@ Body:
     Icon: EFST_FLASHKICK
     DurationLookup: SJ_FLASHKICK
     Flags:
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
       NoBanishingBuster: true
       NoDispell: true
       NoClearance: true
@@ -6689,7 +6719,7 @@ Body:
       NoClearance: true
       StopAttacking: true
       RemoveOnDamaged: true
-      RemoveOnChangeMap: true
+      RemoveOnMapWarp: true
     Fail:
       Bite: true
   - Status: Starstance

@@ -960,9 +960,6 @@ Body:
       - Item: Thanos_Axe_AD
   - Item: Geffen_Magic_Scroll2
     RandomOptionGroup: GEFFEN_MAGIC_SCROLL2
-    ResultRefine: 0
-    MinimumRefine: 0
-    MaximumRefine: 0
     TargetItems:
       - Item: Body_Power_Up_Ring
       - Item: Ring_Of_Spell_Explosion
@@ -5112,28 +5109,6 @@ Body:
 #      - Item: S_Stamina_Shield
 #      - Item: S_Creative_Weapon
 #      - Item: S_Creative_Shield
-  - Item: Enchant_Upg_Armor_Ticket
-    RandomOptionGroup: Enchant_Upg_Armor
-    ResultRefine: 1
-    MaximumRefine: 1
-    CardsAllowed: true
-    TargetItems:
-      - Item: Upg_Guard
-      - Item: Upg_Buckler
-      - Item: Upg_Shield
-      - Item: Upg_Shoes
-      - Item: Upg_Boots
-      - Item: Upg_Greave
-      - Item: Upg_Hood
-      - Item: Upg_Muffler
-      - Item: Upg_Manteau
-      - Item: Upg_Adv_Suit
-      - Item: Upg_Coat
-      - Item: Upg_Saint_Robe
-      - Item: Upg_Tights
-      - Item: Upg_Thief_Cloth
-      - Item: Upg_Mail
-      - Item: Upg_Formal_Dress   
   - Item: Snow_F_Refine
     ResultRefine: 9
     MaximumRefine: 8
@@ -5200,3 +5175,11 @@ Body:
 #      - Item: S_M_Mammoth_Shoes
 #      - Item: S_M_Mammoth_Earring
 #      - Item: S_M_Mammoth_Pendant
+  - Item: SubjectCape_Refine_Cube
+    ResultRefine: 12
+    MaximumRefine: 11
+    CardsAllowed: true
+    TargetItems:
+      - Item: Subject_CapeRange_TH
+      - Item: Subject_CapeMagic_TH
+      - Item: Subject_CapeMelee_TH

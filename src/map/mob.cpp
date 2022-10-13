@@ -696,7 +696,7 @@ int mob_once_spawn(struct map_session_data* sd, int16 m, int16 x, int16 y, const
 					memcpy(md->guardian_data->guild_name, g->name, NAME_LENGTH);
 				}
 				else if (gc->guild_id) //Guild not yet available, retry in 5.
-					add_timer(gettick()+5000,mob_spawn_guardian_sub,md->bl.id,md->guardian_data->guild_id);
+					add_timer(gettick() + battle_config.mob_respawn_time,mob_spawn_guardian_sub,md->bl.id,md->guardian_data->guild_id);
 			}
 		}	// end addition [Valaris]
 
@@ -914,7 +914,7 @@ int mob_spawn_guardian(const char* mapname, int16 x, int16 y, const char* mobnam
 		memcpy (md->guardian_data->guild_name, g->name, NAME_LENGTH);
 		md->guardian_data->guardup_lv = guild_checkskill(g,GD_GUARDUP);
 	} else if (md->guardian_data->guild_id)
-		add_timer(gettick()+5000,mob_spawn_guardian_sub,md->bl.id,md->guardian_data->guild_id);
+		add_timer(gettick() + battle_config.mob_respawn_time,mob_spawn_guardian_sub,md->bl.id,md->guardian_data->guild_id);
 	mob_spawn(md);
 
 	return md->bl.id;
@@ -1073,8 +1073,7 @@ int mob_setdelayspawn(struct mob_data *md)
 		spawntime = spawntime/100*battle_config.mob_spawn_delay;
 	}
 
-	if (spawntime < 5000) //Monsters should never respawn faster than within 5 seconds
-		spawntime = 5000;
+	spawntime = u32max(1000, spawntime); //Monsters should never respawn faster than 1 second
 
 	if( md->spawn_timer != INVALID_TIMER )
 		delete_timer(md->spawn_timer, mob_delayspawn);
@@ -1105,7 +1104,7 @@ int mob_spawn (struct mob_data *md)
 
 	md->last_thinktime = tick;
 	if (md->bl.prev != NULL)
-		unit_remove_map(&md->bl,CLR_RESPAWN);
+		unit_remove_map(&md->bl,CLR_RESPAWN, false);
 	else
 	if (md->spawn && md->mob_id != md->spawn->id)
 	{
@@ -1126,7 +1125,7 @@ int mob_spawn (struct mob_data *md)
 			{ // retry again later
 				if( md->spawn_timer != INVALID_TIMER )
 					delete_timer(md->spawn_timer, mob_delayspawn);
-				md->spawn_timer = add_timer(tick+5000,mob_delayspawn,md->bl.id,0);
+				md->spawn_timer = add_timer(tick + battle_config.mob_respawn_time,mob_delayspawn,md->bl.id,0);
 				return 1;
 			}
 		}
@@ -1134,7 +1133,7 @@ int mob_spawn (struct mob_data *md)
 		{ // retry again later (players on sight)
 			if( md->spawn_timer != INVALID_TIMER )
 				delete_timer(md->spawn_timer, mob_delayspawn);
-			md->spawn_timer = add_timer(tick+5000,mob_delayspawn,md->bl.id,0);
+			md->spawn_timer = add_timer(tick + battle_config.mob_respawn_time,mob_delayspawn,md->bl.id,0);
 			return 1;
 		}
 	}
@@ -2412,7 +2411,6 @@ void mob_damage(struct mob_data *md, struct block_list *src, int damage)
 	if( src != nullptr && md->special_state.ai == AI_SPHERE && !md->dmglog[0].id ) {//LOne WOlf explained that ANYONE can trigger the marine countdown skill. [Skotlex]
 		md->state.alchemist = 1;
 		mobskill_use(md, gettick(), MSC_ALCHEMIST);
-		unit_escape(&md->bl, src, 7, 2);
 	}
 
 	if (src && damage > 0) { //Store total damage...
@@ -2490,11 +2488,12 @@ int mob_getdroprate(struct block_list *src, std::shared_ptr<s_mob_db> mob, int b
 			if (sd->sc.data[SC_ITEMBOOST])
 				drop_rate_bonus += sd->sc.data[SC_ITEMBOOST]->val1;
 
-			// APACHE PREMIUM SERVICE
-			if (sd->sc.data[SC_APACHE_ITEMBOOST_A])
-				drop_rate_bonus += sd->sc.data[SC_APACHE_ITEMBOOST_A]->val1;
-			if (sd->sc.data[SC_APACHE_ITEMBOOST_S])
-				drop_rate_bonus += sd->sc.data[SC_APACHE_ITEMBOOST_S]->val1;
+			// PREMIUM SERVICE
+		if (sd->sc.data[SC_PREMIUMSERVICE_ITEMBOOST_A])
+			drop_rate_bonus += sd->sc.data[SC_PREMIUMSERVICE_ITEMBOOST_A]->val1;
+		
+		if (sd->sc.data[SC_PREMIUMSERVICE_ITEMBOOST_S])
+			drop_rate_bonus += sd->sc.data[SC_PREMIUMSERVICE_ITEMBOOST_S]->val1;
 
 			int cap;
 
@@ -6703,7 +6702,7 @@ void mob_reload_itemmob_data(void) {
 static int mob_reload_sub( struct mob_data *md, va_list args ){
 	// Slaves have to be killed
 	if( md->master_id != 0 ){
-		unit_remove_map( &md->bl, CLR_OUTSIGHT );
+		unit_remove_map( &md->bl, CLR_OUTSIGHT, false);
 		return 0;
 	}
 
@@ -6716,7 +6715,7 @@ static int mob_reload_sub( struct mob_data *md, va_list args ){
 			ShowDebug( "mob_reload_sub: The monster was removed from map %s (%hu/%hu).\n", map_mapid2mapname( md->bl.m ), md->bl.x, md->bl.y );
 		}
 
-		unit_remove_map( &md->bl, CLR_OUTSIGHT );
+		unit_remove_map( &md->bl, CLR_OUTSIGHT, false);
 
 		return 0;
 	}

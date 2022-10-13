@@ -1,7 +1,0 @@
--	script	cell_novending	-1,{
-end;
-
-OnInit:
-	setcell "morocc",144,117,175,83,cell_novending,1;
-	end;
-}

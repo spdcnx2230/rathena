@@ -137,6 +137,20 @@ struct s_questinfo {
 	}
 };
 
+// Status of NPC view.
+enum e_npcv_status : uint8 {
+	NPCVIEW_DISABLE  = 0x01,
+	NPCVIEW_ENABLE   = 0x02,
+	NPCVIEW_HIDEOFF  = 0x04,
+	NPCVIEW_HIDEON   = 0x08,
+	NPCVIEW_CLOAKOFF = 0x10,
+	NPCVIEW_CLOAKON  = 0x20,
+
+	NPCVIEW_VISIBLE   = NPCVIEW_ENABLE | NPCVIEW_HIDEOFF | NPCVIEW_CLOAKOFF,
+	NPCVIEW_INVISIBLE = NPCVIEW_DISABLE | NPCVIEW_HIDEON | NPCVIEW_CLOAKON,
+	NPCVIEW_CLOAK     = NPCVIEW_CLOAKOFF | NPCVIEW_CLOAKON,
+};
+
 struct npc_data {
 	struct block_list bl;
 	struct unit_data ud; //Because they need to be able to move....
@@ -149,6 +163,7 @@ struct npc_data {
 	int chat_id,touching_id;
 	unsigned int next_walktime;
 	int instance_id;
+	e_npcv_status state;
 
 	unsigned size : 2;
 
@@ -1460,19 +1475,6 @@ enum npce_event : uint8 {
 	NPCE_MAX
 };
 
-// Status of NPC view.
-enum e_npcv_status : uint8 {
-	NPCVIEW_DISABLE  = 0x01,
-	NPCVIEW_ENABLE   = 0x02,
-	NPCVIEW_HIDEOFF  = 0x04,
-	NPCVIEW_HIDEON   = 0x08,
-	NPCVIEW_CLOAKOFF = 0x10,
-	NPCVIEW_CLOAKON  = 0x20,
-
-	NPCVIEW_VISIBLE   = 0x16,
-	NPCVIEW_INVISIBLE = 0x29,
-	NPCVIEW_CLOAK     = 0x30,
-};
 struct view_data* npc_get_viewdata(int class_);
 int npc_chat_sub(struct block_list* bl, va_list ap);
 int npc_event_dequeue(struct map_session_data* sd,bool free_script_stack=true);
@@ -1494,6 +1496,7 @@ void npc_parse_mob2(struct spawn_data* mob);
 struct npc_data* npc_add_warp(char* name, short from_mapid, short from_x, short from_y, short xs, short ys, unsigned short to_mapindex, short to_x, short to_y);
 int npc_globalmessage(const char* name,const char* mes);
 const char *npc_get_script_event_name(int npce_index);
+npc_data* npc_duplicate_npc( npc_data* nd, char name[NPC_NAME_LENGTH + 1], int16 mapid, int16 x, int16 y, int class_, uint8 dir, int16 xs, int16 ys );
 
 void npc_setcells(struct npc_data* nd);
 void npc_unsetcells(struct npc_data* nd);

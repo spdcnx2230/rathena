@@ -1214,12 +1214,17 @@ struct s_reputation{
 	std::string variable;
 	int64 minimum;
 	int64 maximum;
+#ifdef MAP_GENERATOR
+	enum e_visibility {ALWAYS, NEVER, EXIST} visibility;
+#endif
 };
 
 class ReputationDatabase : public TypesafeYamlDatabase<int64, s_reputation>{
 public:
 	ReputationDatabase() : TypesafeYamlDatabase( "REPUTATION_DB", 1 ){
-
+#ifdef MAP_GENERATOR
+	setGenerator(true);
+#endif
 	}
 
 	const std::string getDefaultLocation() override;
@@ -1634,5 +1639,9 @@ uint16 pc_level_penalty_mod( struct map_session_data* sd, e_penalty_type type, s
 bool pc_attendance_enabled();
 int32 pc_attendance_counter( struct map_session_data* sd );
 void pc_attendance_claim_reward( struct map_session_data* sd );
+
+#ifdef MAP_GENERATOR
+void pc_reputation_generate();
+#endif
 
 #endif /* PC_HPP */

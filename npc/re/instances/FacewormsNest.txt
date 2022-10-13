@@ -481,11 +481,11 @@ OnStart:
 	donpcevent instance_npcname("#globaltimer22") + "::OnT_s";
 	hideoffnpc instance_npcname("Chaos#01");
 	hideonnpc instance_npcname("Chaos#0");
-	sleep 3000;
+	sleep 5000;
 	npctalk "Chaos: Hahaha, you really never heard about it? Faceworm is the name of a monster which has recently showed up in this area.";
-	sleep 3000;
+	sleep 5000;
 	npctalk "Chaos: I don't care. I would not care as long as you don't disturb me.";
-	sleep 3000;
+	sleep 5000;
 	npctalk "Iris: Ah~ A gentle breeze~", .@iris_name$;
 	sleep 3000;
 	npctalk "Iris: Hehe, the weather has been great. I'm so happy~", .@iris_name$;
@@ -497,7 +497,7 @@ OnStart:
 	npctalk "Chaos: A black wind has started blowing.";
 	sleep 4000;
 	npctalk "Chaos: Iris! I feel like faceworms are around here. Maybe, the queen's nest is in the deepest side of this forest!";
-	sleep 3000;
+	sleep 5000;
 	npctalk "Iris: Ahah~ Let's take care of it as always like usual ok?", .@iris_name$;
 	sleep 3000;
 	npctalk "Chaos: Yes, let's take care of it and go back. Hey, adventurers. Watch out! I'm sure lots of faceworms will be here soon.";
@@ -719,11 +719,11 @@ OnStart:
 	npctalk "Chaos: No~~ It can't be the faceworm queen.";
 	sleep 4000;
 	npctalk "Chaos: The one we just saw before is a mutant faceworm.";
-	sleep 3000;
+	sleep 5000;
 	npctalk "Chaos: Wait! The dead faceworm's castoff skin might be useful.";
 	sleep 3000;
 	npctalk "Iris: But, if the fight takes too long. The scales might be damaged. They'll be worthless!", .@iris_name$;
-	sleep 3000;
+	sleep 5000;
 	npctalk "Iris: I heard that skillful hunters are good at taking the scales off super fast.", .@iris_name$;
 	sleep 6000;
 	npctalk "Iris: Chaos, are you any good at it?", .@iris_name$;
@@ -733,7 +733,7 @@ OnStart:
 	npctalk "Iris: Useless Chaos.", .@iris_name$;
 	sleep 3000;
 	npctalk "Chaos: Besides, the one we are looking for is not here. I will go back first, so take care of the rest ok?";
-	sleep 3000;
+	sleep 5000;
 	hideonnpc instance_npcname("Chaos#11");
 	npctalk "Iris: Chaos! Are you leaving me alone?", .@iris_name$;
 	sleep 3000;
@@ -1311,7 +1311,7 @@ OnStart:
 	npctalk "Iris: Chaos! Cut the crap.", .@iris$;
 	sleep 3000;
 	npctalk "Chaos: Why not? It doesn't even look that dangerous!";
-	sleep 3000;
+	sleep 5000;
 	hideonnpc instance_npcname("Chaos#4");
 	sleep 3000;
 	npctalk "Iris: Arrghh, Chaos you're such a troublemaker.", .@iris$;
@@ -1333,7 +1333,7 @@ OnStart:
 	npctalk "Chaos: Argghhhhhhhhh", .@chaos5$;
 	sleep 100;
 	npctalk "Chaos: Argghhhhhhhhhhh!!", .@chaos5$;
-	sleep 3000;
+	sleep 5000;
 	hideoffnpc instance_npcname("Chaos#4");
 	sleep 3000;
 	npctalk "Chaos: Damn, I was close to being eaten alive.";
@@ -1347,7 +1347,7 @@ OnStart:
 	npctalk "Iris: Chaos you idiot!!", .@iris$;
 	specialeffect EF_DUSTSTORM,AREA, .@chaos5$;
 	specialeffect EF_MAPPILLAR2,AREA, .@chaos5$;
-	sleep 3000;
+	sleep 5000;
 	hideonnpc instance_npcname("Iris#4");
 	sleep 9000;
 	donpcevent instance_npcname("#fwormboss5") + "::OnStart";
@@ -2242,8 +2242,7 @@ OnInstanceInit:
 	if (.@dr_t1 > 3)
 		.@dr_t1 = 3;
 	.@r_st1 = 7 - .@dr_t1;
-	//.@refine = rand( (.@r_st1 - 4), .@r_st1 );// Min = 0, Max = 6
-	.@refine = rand(5,12);
+	.@refine = rand( (.@r_st1 - 4), .@r_st1 );// Min = 0, Max = 6
 
 	// card slot 4
 	.@dr_t1 = .@dr_t * 10;
@@ -2251,7 +2250,7 @@ OnInstanceInit:
 		.@dr_t1 = .@val[0] + 1;
 	.@r_st = (.@val[0]+2) - .@dr_t1;// Min = 1, Max = .@val[0] + 2
 	.@ren_e_m = rand(.@r_st,1316);
-	     if (.@ren_e_m < 1) .@en_name_4 = 0;
+	     if (.@ren_e_m < 201) .@en_name_4 = 0;
 	else if (.@ren_e_m < 301) .@en_name_4 = 4740;	// Vitality1
 	else if (.@ren_e_m < 401) .@en_name_4 = 4700;	// Strength1
 	else if (.@ren_e_m < 501) .@en_name_4 = 4730;	// Agility1
@@ -2290,7 +2289,7 @@ OnInstanceInit:
 			.@dr_t1 = 601;
 		.@r_st = 602 - .@dr_t1;
 		.@ren_e_m = rand(.@r_st,1716);// Min = 1, Max = 602
-			 if (.@ren_e_m < 1) .@en_name_3 = 0;
+			 if (.@ren_e_m < 601) .@en_name_3 = 0;
 		else if (.@ren_e_m < 701) .@en_name_3 = 4740;	// Vitality1
 		else if (.@ren_e_m < 801) .@en_name_3 = 4700;	// Strength1
 		else if (.@ren_e_m < 901) .@en_name_3 = 4730;	// Agility1
@@ -2364,15 +2363,8 @@ OnInstanceInit:
 	if (rand(1,100) > .@val[2])
 		.@d_item = 20718;	// FaceWorm_Skin_
 	else
-		.@d_item = 20718;	// FaceWorm_Skin_
-	
-	.@OptSelect = rand( 3,8 );	// str agi vit int dex luk
-	.@OptMinMax = rand( 2,6 );	// ค่า stat ที่สุ่ม 1-5
-	setarray .@OptParam[0],0;
-	
-	//makeitem2 .@d_item,1,'map_name$,.@x,.@y,0,.@refine,0,0,.@en_name_2,.@en_name_3,.@en_name_4;
-	makeitem3 .@d_item,1,'map_name$,.@x,.@y,0,.@refine,0,0,.@en_name_2,.@en_name_3,.@en_name_4,.@OptSelect,.@OptMinMax,.@OptParam;
-	
+		.@d_item = 20717;	// FaceWorm_Skin
+	makeitem2 .@d_item,1,'map_name$,.@x,.@y,0,.@refine,0,0,.@en_name_2,.@en_name_3,.@en_name_4;
 	end;
 OnStart:
 	initnpctimer;
@@ -2429,8 +2421,7 @@ OnInstanceInit:
 
 	for ( .@i = 1; .@i <= 2; ++.@i ) {
 		// refine
-		//.@refine = rand( .@refine_rand[0],.@refine_rand[1] );// Min = 1, Max = 11
-		.@refine = rand( 5,12);
+		.@refine = rand( .@refine_rand[0],.@refine_rand[1] );// Min = 1, Max = 11
 
 		// card slot 4
 		.@ren_e_m = rand( .@slot_4_rand,1934 );
@@ -2563,14 +2554,8 @@ OnInstanceInit:
 		if (rand(1,100) > 40)
 			.@d_item = 20718;	// FaceWorm_Skin_
 		else
-			.@d_item = 20718;	// FaceWorm_Skin
-
-	.@OptSelect = rand( 3,8 );	// str agi vit int dex luk
-	.@OptMinMax = rand( 2,6 );	// ค่า stat ที่สุ่ม 1-5
-	setarray .@OptParam[0],0;
-	
-	//makeitem2 .@d_item,1,'map_name$,rand(209,217),rand(152,161),0,.@refine,0,0,.@en_name_2,.@en_name_3,.@en_name_4;
-	makeitem3 .@d_item,1,'map_name$,rand(209,217),rand(152,161),0,.@refine,0,0,.@en_name_2,.@en_name_3,.@en_name_4,.@OptSelect,.@OptMinMax,.@OptParam;
+			.@d_item = 20717;	// FaceWorm_Skin
+		makeitem2 .@d_item,1,'map_name$,rand(209,217),rand(152,161),0,.@refine,0,0,.@en_name_2,.@en_name_3,.@en_name_4;
 	}
 	end;
 OnStart:

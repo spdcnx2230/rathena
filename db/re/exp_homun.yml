@@ -379,3 +379,255 @@ Body:
     Exp: 87140000
   - Level: 174
     Exp: 94875000
+  - Level: 175
+    Exp: 36503371
+  - Level: 176
+    Exp: 36778367
+  - Level: 177
+    Exp: 37053363
+  - Level: 178
+    Exp: 37328360
+  - Level: 179
+    Exp: 37603356
+  - Level: 180
+    Exp: 37878352
+  - Level: 181
+    Exp: 38153349
+  - Level: 182
+    Exp: 38428345
+  - Level: 183
+    Exp: 38703341
+  - Level: 184
+    Exp: 38978337
+  - Level: 185
+    Exp: 39253334
+  - Level: 186
+    Exp: 39528330
+  - Level: 187
+    Exp: 39803326
+  - Level: 188
+    Exp: 40078323
+  - Level: 189
+    Exp: 40353319
+  - Level: 190
+    Exp: 40628315
+  - Level: 191
+    Exp: 40903311
+  - Level: 192
+    Exp: 41178308
+  - Level: 193
+    Exp: 41453304
+  - Level: 194
+    Exp: 41728300
+  - Level: 195
+    Exp: 42003296
+  - Level: 196
+    Exp: 42278293
+  - Level: 197
+    Exp: 42553289
+  - Level: 198
+    Exp: 42828285
+  - Level: 199
+    Exp: 43103282
+  - Level: 200
+    Exp: 43378278
+  - Level: 201
+    Exp: 43653274
+  - Level: 202
+    Exp: 43928270
+  - Level: 203
+    Exp: 44203267
+  - Level: 204
+    Exp: 44478263
+  - Level: 205
+    Exp: 44753259
+  - Level: 206
+    Exp: 45028256
+  - Level: 207
+    Exp: 45303252
+  - Level: 208
+    Exp: 45578248
+  - Level: 209
+    Exp: 45853244
+  - Level: 210
+    Exp: 46128241
+  - Level: 211
+    Exp: 46403237
+  - Level: 212
+    Exp: 46678233
+  - Level: 213
+    Exp: 46953230
+  - Level: 214
+    Exp: 47228226
+  - Level: 215
+    Exp: 47503222
+  - Level: 216
+    Exp: 47778218
+  - Level: 217
+    Exp: 48053215
+  - Level: 218
+    Exp: 48328211
+  - Level: 219
+    Exp: 48603207
+  - Level: 220
+    Exp: 48878204
+  - Level: 221
+    Exp: 49153200
+  - Level: 222
+    Exp: 49428196
+  - Level: 223
+    Exp: 49703192
+  - Level: 224
+    Exp: 49978189
+  - Level: 225
+    Exp: 50253185
+  - Level: 226
+    Exp: 50528181
+  - Level: 227
+    Exp: 50803177
+  - Level: 228
+    Exp: 51078174
+  - Level: 229
+    Exp: 51353170
+  - Level: 230
+    Exp: 51628166
+  - Level: 231
+    Exp: 51903163
+  - Level: 232
+    Exp: 52178159
+  - Level: 233
+    Exp: 52453155
+  - Level: 234
+    Exp: 52728151
+  - Level: 235
+    Exp: 53003148
+  - Level: 236
+    Exp: 53278144
+  - Level: 237
+    Exp: 53553140
+  - Level: 238
+    Exp: 53828137
+  - Level: 239
+    Exp: 54103133
+  - Level: 240
+    Exp: 54378129
+  - Level: 241
+    Exp: 54653125
+  - Level: 242
+    Exp: 54928122
+  - Level: 243
+    Exp: 55203118
+  - Level: 244
+    Exp: 55478114
+  - Level: 245
+    Exp: 55753111
+  - Level: 246
+    Exp: 56028107
+  - Level: 247
+    Exp: 56303103
+  - Level: 248
+    Exp: 56578099
+  - Level: 249
+    Exp: 56853096
+#  - Level: 250
+#    Exp: 57128092
+#  - Level: 251
+#    Exp: 57403088
+#  - Level: 252
+#    Exp: 57678085
+#  - Level: 253
+#    Exp: 57953081
+#  - Level: 254
+#    Exp: 58228077
+#  - Level: 255
+#    Exp: 58503073
+#  - Level: 256
+#    Exp: 58778070
+#  - Level: 257
+#    Exp: 59053066
+#  - Level: 258
+#    Exp: 59328062
+#  - Level: 259
+#    Exp: 59603058
+#  - Level: 260
+#    Exp: 59878055
+#  - Level: 261
+#    Exp: 60153051
+#  - Level: 262
+#    Exp: 60428047
+#  - Level: 263
+#    Exp: 60703044
+#  - Level: 264
+#    Exp: 60978040
+#  - Level: 265
+#    Exp: 61253036
+#  - Level: 266
+#    Exp: 61528032
+#  - Level: 267
+#    Exp: 61803029
+#  - Level: 268
+#    Exp: 62078025
+#  - Level: 269
+#    Exp: 62353021
+#  - Level: 270
+#    Exp: 62628018
+#  - Level: 271
+#    Exp: 62903014
+#  - Level: 272
+#    Exp: 63178010
+#  - Level: 273
+#    Exp: 63453006
+#  - Level: 274
+#    Exp: 63728003
+#  - Level: 275
+#    Exp: 64002999
+#  - Level: 276
+#    Exp: 64277995
+#  - Level: 277
+#    Exp: 64552992
+#  - Level: 278
+#    Exp: 64827988
+#  - Level: 279
+#    Exp: 65102984
+#  - Level: 280
+#    Exp: 65377980
+#  - Level: 281
+#    Exp: 65652977
+#  - Level: 282
+#    Exp: 65927973
+#  - Level: 283
+#    Exp: 66202969
+#  - Level: 284
+#    Exp: 66477966
+#  - Level: 285
+#    Exp: 66752962
+#  - Level: 286
+#    Exp: 67027958
+#  - Level: 287
+#    Exp: 67302954
+#  - Level: 288
+#    Exp: 67577951
+#  - Level: 289
+#    Exp: 67852947
+#  - Level: 290
+#    Exp: 68127943
+#  - Level: 291
+#    Exp: 68402940
+#  - Level: 292
+#    Exp: 68677936
+#  - Level: 293
+#    Exp: 68952932
+#  - Level: 294
+#    Exp: 69227928
+#  - Level: 295
+#    Exp: 69502925
+#  - Level: 296
+#    Exp: 69777921
+#  - Level: 297
+#    Exp: 70052917
+#  - Level: 298
+#    Exp: 70327913
+#  - Level: 299
+#    Exp: 70602910
+#  - Level: 300
+#    Exp: 70877906

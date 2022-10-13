@@ -10,27 +10,18 @@
 //= One-click automatic mount rentals.
 //============================================================
 
-morocc,149,80,6	script	บริการเช่าทุกอย่างฟรี	726,{
-	mes "บริการ เช่าทุกอย่าง";
-	mes "สวัสดีสหาย. ข้ามีทุกอย่าง ให้เช่า เจ้าสนใจไหมล่ะ ?";
-	next;
-	mes "บริการ เช่าทุกอย่าง";
-	mes "เจ้าเลือกมาเลย เข้าให้เจ้าได้ทุกอย่าง ว๊ะ 555+ ?";
-	next;
-	mes "บริการ เช่าทุกอย่าง";
-	mes "เอาไปเลย ฟรีๆ ไม่อยากได้ตัง ว๊ะ 555+ ?";
-	next;
+prontera,124,201,1	script	Universal Rental NPC	726,{
 	if (ismounting()) {
-		message strcharinfo(0),"เจ้าต้องถอดสัตว์ขี่่หรือรถเข็นหรืออื่นๆออกก่อน.";
+		message strcharinfo(0),"You must first remove your mount.";
 		end;
 	} else if (((eaclass()&EAJ_THIRDMASK)==EAJ_RANGER) && !countitem(6124)) {
 		if (!checkfalcon() && getskilllv("HT_FALCON") && !checkwug()) {
-			if(select(" ~ เหยี่ยว: ~ หมาป่า")==1) setfalcon;
+			if(select(" ~ Falcon: ~ Warg")==1) setfalcon;
 			else getitem 6124,1; //Wolf's_Flute
 		} else getitem 6124,1; //Wolf's_Flute
 	} else if (((eaclass()&EAJ_THIRDMASK)==EAJ_MECHANIC) && !checkcart() && getskilllv("MC_PUSHCART")) {
 		if (!checkmadogear() && getskilllv("NC_MADOLICENCE")) {
-			if(select(" ~ รถเข็น: ~ หุ่นยนต์")==1) setcart;
+			if(select(" ~ Cart: ~ Mado")==1) setcart;
 			else setmadogear;
 		} else setcart;
 	} else if (!checkcart() && getskilllv("MC_PUSHCART")) setcart;
@@ -40,18 +31,9 @@ morocc,149,80,6	script	บริการเช่าทุกอย่างฟรี	726,{
 		else setriding;
 	} else if (!checkmadogear() && getskilllv("NC_MADOLICENCE")) setmadogear;
 	else {
-		message strcharinfo(0),"ไม่พบสิ่งที่เจ้าสามารถเช่าได้.";
+		message strcharinfo(0),"You do not meet requirements to rent.";
 		end;
 	}
 	specialeffect2 EF_TEIHIT3;
-	next;
-	//end;
-	
-	mes "[ เป็นไงล๊ะ ]";;
-	mes "เรียบร้อย!";
-	close;
-	
-	OnInit:
-waitingroom "บริการเช่าทุกอย่างฟรี",0;
-end;
+	end;
 }

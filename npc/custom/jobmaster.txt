@@ -16,7 +16,7 @@
 //= 2.0 Added 4th class [Lemongrass]
 //============================================================
 
-morocc,159,112,3	script	Job Master	435,{
+prontera,153,193,6	script	Job Master	123,{
 function Get_Job_Equip;
 // Checks if the Player has the required level.
 // closes if not, returns if yes
@@ -479,19 +479,18 @@ function	Get_Job_Equip	{
 
 OnInit:
 	// Initialisation, do not edit these
-	waitingroom "เปลี่ยนอาชีพ",0;
 	.NPCName$ = "[Job Master]";
 	
 	// Settings
-	.FourthClass = false;				// Enable fourth classes?
-	.ThirdClass = false;					// Enable third classes?
+	.FourthClass = true;				// Enable fourth classes?
+	.ThirdClass = true;					// Enable third classes?
 	.RebirthClass = true;				// Enable rebirth classes?
-	.SecondExpanded = false;				// Enable new expanded second classes: Ex. Super Novice, Kagerou/Oboro, Rebellion?
-	.BabyNovice = false;					// Enable Baby novice classes? Disable it if you like player must have parent to get job baby.
-	.BabyClass = false;					// Enable Baby classes?
-	.BabyThird = false;					// Enable Baby third classes?
-	.BabyExpanded = false;				// Enable Baby Expanded classes: Ex. Baby Ninja, Baby Taekwon, etc.
-	.BabySummoner = false;				// Enable Baby Summoner?
+	.SecondExpanded = true;				// Enable new expanded second classes: Ex. Super Novice, Kagerou/Oboro, Rebellion?
+	.BabyNovice = true;					// Enable Baby novice classes? Disable it if you like player must have parent to get job baby.
+	.BabyClass = true;					// Enable Baby classes?
+	.BabyThird = true;					// Enable Baby third classes?
+	.BabyExpanded = true;				// Enable Baby Expanded classes: Ex. Baby Ninja, Baby Taekwon, etc.
+	.BabySummoner = true;				// Enable Baby Summoner?
 	.LastJob = true;					// Enforce linear class changes?
 	.SkillPointCheck = true;			// Force player to use up all skill points?
 	.Platinum = true;					// Get platinum skills automatically?

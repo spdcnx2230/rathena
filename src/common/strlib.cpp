@@ -155,7 +155,11 @@ char* trim(char* str)
 // value must NOT be deallocated using free() etc.
 char *trim2(char *str,char flag) {
 	if(flag&1) { // Trim leading space
+<<<<<<< HEAD
 		while(ISSPACE(*str)) str++;
+=======
+		while(isspace(static_cast<unsigned char>(*str))) str++;
+>>>>>>> parent of 8fd24f9db (.)
 		if(*str == 0)  // All spaces?
 			return str;
 	}
@@ -163,7 +167,11 @@ char *trim2(char *str,char flag) {
 		char *end;
 
 		end = str + strlen(str) - 1;
+<<<<<<< HEAD
 		while(end > str && ISSPACE(*end)) end--;
+=======
+		while(end > str && isspace(static_cast<unsigned char>(*end))) end--;
+>>>>>>> parent of 8fd24f9db (.)
 		*(end+1) = 0; // Write new null terminator
 	}
 

@@ -1340,10 +1340,7 @@ enum sc_type : int16 {
 	SC_PREMIUMSERVICE_LIFEINSURANCE,
 	SC_PREMIUMSERVICE,
 	SC_EXTREMITYFIST2,
-	SC_WEAPONBREAKER,
 
-#ifdef RENEWAL
-	SC_EXTREMITYFIST2, //! NOTE: This SC should be right before SC_MAX, so it doesn't disturb if RENEWAL is disabled
 #endif
 	SC_MAX, //Automatically updated max, used in for's to check we are within bounds.
 };

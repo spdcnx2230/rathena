@@ -563,7 +563,6 @@ struct Battle_Config
 	int discount_item_point_shop;
 	int update_enemy_position;
 	int devotion_rdamage;
-	int feature_itemlink;
 
 	// autotrade persistency
 	int feature_autotrade;
@@ -712,7 +711,6 @@ struct Battle_Config
 	int feature_barter;
 	int feature_barter_extended;
 	int break_mob_equip;
-	int mob_respawn_time;
 
 #include "../custom/battle_config_struct.inc"
 };

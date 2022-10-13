@@ -1339,7 +1339,7 @@ int unit_warp(struct block_list *bl,short m,short x,short y,clr_type type)
 	if (bl->type == BL_PC) // Use pc_setpos
 		return pc_setpos((TBL_PC*)bl, map_id2index(m), x, y, type);
 
-	if (!unit_remove_map(bl, type, false))
+	if (!unit_remove_map(bl, type))
 		return 3;
 
 	if (bl->m != m && battle_config.clear_unit_onwarp &&
@@ -3033,7 +3033,7 @@ int unit_changetarget(struct block_list *bl, va_list ap) {
  * @param file, line, func: Call information for debug purposes
  * @return Success(1); Couldn't be removed or bl was free'd(0)
  */
-int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, int line, const char* func, bool changeZone)
+int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, int line, const char* func)
 {
 	struct unit_data *ud = unit_bl2ud(bl);
 	struct status_change *sc = status_get_sc(bl);
@@ -3066,21 +3066,15 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 	ud->attackabletime = ud->canmove_tick /*= ud->canact_tick*/ = gettick();
 
 	if(sc && sc->count ) { // map-change/warp dispells.
-		if (changeZone) // Zone change calls the general NoSave statuses.
-			status_db.removeByStatusFlag(bl, { SCF_NOSAVE });
-
-		if (bl->type != BL_PC) // Players are cleared in pc_setpos.
-			status_db.removeByStatusFlag(bl, { SCF_REMOVEONMAPWARP });
+		status_db.removeByStatusFlag(bl, { SCF_REMOVEONCHANGEMAP });
 
 		// Ensure the bl is a PC; if so, we'll handle the removal of cloaking and cloaking exceed later
 		if ( bl->type != BL_PC ) {
 			status_change_end(bl, SC_CLOAKING);
 			status_change_end(bl, SC_CLOAKINGEXCEED);
 		}
-		
 		if (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF)
 			status_change_end(bl, SC_GOSPEL);
-		
 		if (sc->data[SC_PROVOKE] && sc->data[SC_PROVOKE]->val4 == 1)
 			status_change_end(bl, SC_PROVOKE); //End infinite provoke to prevent exploit
 	}
@@ -3326,25 +3320,25 @@ void unit_refresh(struct block_list *bl, bool walking) {
  *	0: Assume bl is being warped
  *	1: Death, appropriate cleanup performed
  */
-void unit_remove_map_pc(struct map_session_data *sd, clr_type clrtype, bool changeZone)
+void unit_remove_map_pc(struct map_session_data *sd, clr_type clrtype)
 {
-	unit_remove_map(&sd->bl,clrtype, changeZone);
+	unit_remove_map(&sd->bl,clrtype);
 
 	//CLR_RESPAWN is the warp from logging out, CLR_TELEPORT is the warp from teleporting, but pets/homunc need to just 'vanish' instead of showing the warping animation.
 	if (clrtype == CLR_RESPAWN || clrtype == CLR_TELEPORT)
 		clrtype = CLR_OUTSIGHT;
 
 	if(sd->pd)
-		unit_remove_map(&sd->pd->bl, clrtype, changeZone);
+		unit_remove_map(&sd->pd->bl, clrtype);
 
 	if(hom_is_active(sd->hd))
-		unit_remove_map(&sd->hd->bl, clrtype, changeZone);
+		unit_remove_map(&sd->hd->bl, clrtype);
 
 	if(sd->md)
-		unit_remove_map(&sd->md->bl, clrtype, changeZone);
+		unit_remove_map(&sd->md->bl, clrtype);
 
 	if(sd->ed)
-		unit_remove_map(&sd->ed->bl, clrtype, changeZone);
+		unit_remove_map(&sd->ed->bl, clrtype);
 }
 
 /**
@@ -3386,7 +3380,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 	map_freeblock_lock();
 
 	if( bl->prev )	// Players are supposed to logout with a "warp" effect.
-		unit_remove_map(bl, clrtype, false);
+		unit_remove_map(bl, clrtype);
 
 	switch( bl->type ) {
 		case BL_PC: {

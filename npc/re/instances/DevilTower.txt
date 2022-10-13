@@ -530,11 +530,11 @@ OnTimer26000:
 	mes "You administer the first-aid-kit to the soldier.";
 	next;
 	specialeffect EF_SPHERE;
-	progressbar "000000",10;
+	progressbar "000000",2;
 	if ('devil_tower == 1) {
 		delitem 7641,1;
 		specialeffect EF_ENTRY;
-		disablenpc();
+		disablenpc instance_npcname( strnpcinfo(0) );
 		enablenpc instance_npcname( strnpcinfo(1) + "#" + replacestr( strnpcinfo(2), "_1", "" ) );
 		specialeffect EF_ENTRY,AREA, instance_npcname( strnpcinfo(1) + "#" + replacestr( strnpcinfo(2), "_1", "" ) );
 		mes "It worked.";
@@ -870,7 +870,7 @@ OnMobDead:
 		mes "Lucile seems to be a machine.";
 		mes "I can hear mechanical sounds all of a sudden.";
 		specialeffect EF_LEVEL99_3;
-		progressbar "000000",40;
+		progressbar "000000",15;
 		if (is_party_leader() == true && 'devil_tower == 5) {
 			if (isbegin_quest(7572) == 0)
 				setquest 7572;// Lucile...?
@@ -1276,7 +1276,7 @@ OnDisable:
 	stopnpctimer;
 	killmonster 'map_tnm2$, instance_npcname(strnpcinfo(0)) + "::OnMobDead";	// note : officially still alive
 	killmonster 'map_tnm2$, instance_npcname("#devil_seal_dead") + "::OnSeal_" + strnpcinfo(2);	// note : officially still alive
-	disablenpc();
+	disablenpc instance_npcname(strnpcinfo(0));
 	end;
 OnStop:
 	stopnpctimer;
@@ -1294,7 +1294,7 @@ OnMobDead:
 1@tnm2,1,1,0	script	seal_reach_center#DIR_NORTHWEST	HIDDEN_WARP_NPC,{
 	end;
 OnStart:
-	enablenpc();
+	enablenpc instance_npcname(strnpcinfo(0));
 	initnpctimer;
 	end;
 OnTimer2000:
@@ -1305,7 +1305,7 @@ OnTimer4000:
 	npctalk "Thanatos: Stop him! Prevent him from coming closer!!!", 'thanatos$;
 	mapannounce 'map_tnm2$, "Thanatos: Stop him! Prevent him from coming closer!!!", bc_map,0xFF00;
 	stopnpctimer;
-	disablenpc();
+	disablenpc instance_npcname(strnpcinfo(0));
 	end;
 }
 1@tnm2,1,1,0	duplicate(seal_reach_center#DIR_NORTHWEST)	seal_reach_center#DIR_SOUTHWEST	HIDDEN_WARP_NPC
@@ -1394,7 +1394,7 @@ OnTimer7000:
 	else {
 		mes "[Lucile]";
 		mes "The collision of those two powers is too much to handle.";
-		mes "It could have influenced the south of Rune-Midgarts.";
+		mes "It could have influenced the south of Rune Midgard.";
 	}
 	next;
 	if (select( "Follow.", "Stop." ) == 2) {
@@ -1481,8 +1481,8 @@ OnTimer9000:
 		select("Where are they?");
 		unittalk getcharid(3), "" + strcharinfo(0) + " : Where are they?";
 		mes "[Young Girl]";
-		mes "They are in Morocc castle. My father is a knight.";
-		npctalk "They are in Morocc castle. My father is a knight.";
+		mes "They are in Morroc castle. My father is a knight.";
+		npctalk "They are in Morroc castle. My father is a knight.";
 		next;
 		mes "[Young Girl]";
 		mes "It seems like something is happening, I hear strange noises downstairs.";
@@ -1723,7 +1723,7 @@ OnMobDead:
 1@tnm3,97,48,3	script	Loki#tnmloki01	4_M_ROKI2,{
 	if ('devil_tower == 12) {
 		'devil_tower = 13;
-		donpcevent instance_npcname("#morocc_lord_talk") + "::OnStart";
+		donpcevent instance_npcname("#morroc_lord_talk") + "::OnStart";
 		end;
 	}
 	mes "[Loki]";
@@ -1733,13 +1733,13 @@ OnMobDead:
 
 1@tnm3,94,51,4	duplicate(Officer Heim#heim0)	Young Girl#tnm04	4_F_DST_CHILD
 
-1@tnm2,1,1,0	script	#morocc_lord_talk	HIDDEN_WARP_NPC,{
+1@tnm2,1,1,0	script	#morroc_lord_talk	HIDDEN_WARP_NPC,{
 	end;
 OnStart:
-	enablenpc instance_npcname("#morocc_lord_talk");
-	'Morocc$ = instance_npcname("Morocc Lord Knight#mocl");
+	enablenpc instance_npcname("#morroc_lord_talk");
+	'morroc$ = instance_npcname("Morocc Lord Knight#mocl");
 	'loki$ = instance_npcname("Loki#tnmloki01");
-	npctalk "Morocc Lord Knight: So.. the rat was an assassin? You came here to die?", 'Morocc$;
+	npctalk "Morocc Lord Knight: So.. the rat was an assassin? You came here to die?", 'morroc$;
 	initnpctimer;
 	end;
 OnTimer3000:
@@ -1749,16 +1749,16 @@ OnTimer6000:
 	npctalk "Loki: My mission brought me here to bury it again.", 'loki$;
 	end;
 OnTimer9000:
-	npctalk "Morocc Lord Knight: Really.. the Assassin guild who I thought was on a mission to balance power in the world.", 'Morocc$;
+	npctalk "Morocc Lord Knight: Really.. the Assassin guild who I thought was on a mission to balance power in the world.", 'morroc$;
 	end;
 OnTimer12000:
-	npctalk "Morocc Lord Knight: Resurrecting the demon would bring balance! Even the mightiest become slaves to a god..", 'Morocc$;
+	npctalk "Morocc Lord Knight: Resurrecting the demon would bring balance! Even the mightiest become slaves to a god..", 'morroc$;
 	end;
 OnTimer15000:
-	npctalk "Morocc Lord Knight: The gods have their own plans. Do you know what the gods plan for you or I?", 'Morocc$;
+	npctalk "Morocc Lord Knight: The gods have their own plans. Do you know what the gods plan for you or I?", 'morroc$;
 	end;
 OnTimer18000:
-	npctalk "Morocc Lord Knight: They want this world to only be in their image. Where do we fit into that?!", 'Morocc$;
+	npctalk "Morocc Lord Knight: They want this world to only be in their image. Where do we fit into that?!", 'morroc$;
 	end;
 OnTimer20000:
 	npctalk "Loki: Shut up!", 'loki$;
@@ -1770,7 +1770,7 @@ OnTimer25000:
 	npctalk "Loki: That is my mission!", 'loki$;
 	end;
 OnTimer28000:
-	npctalk "Morocc Lord Knight: So all you want is to finish your damn mission?..", 'Morocc$;
+	npctalk "Morocc Lord Knight: So all you want is to finish your damn mission?..", 'morroc$;
 	end;
 OnTimer31000:
 	npctalk "Loki: *Grins* Of course!!", 'loki$;
@@ -1794,7 +1794,7 @@ OnTimer36500:
 	npctalk "!!!", 'loki$;
 	end;
 OnTimer38500:
-	npctalk "Morocc Lord Knight: Oh no.. They should have sent better than you, Mr. Assassin, for this mission.", 'Morocc$;
+	npctalk "Morocc Lord Knight: Oh no.. They should have sent better than you, Mr. Assassin, for this mission.", 'morroc$;
 	end;
 OnTimer41500:
 	npctalk "Young Girl: Something is wrong....", instance_npcname("Young Girl#tnm04");
@@ -1803,15 +1803,15 @@ OnTimer44500:
 	npctalk "Young Girl: My Papa would never act this way.. Ugh..", instance_npcname("Young Girl#tnm04");
 	end;
 OnTimer47500:
-	npctalk "Morocc Lord Knight: Human.. To do such a stupid thing.. a sacrifice.", 'Morocc$;
+	npctalk "Morocc Lord Knight: Human.. To do such a stupid thing.. a sacrifice.", 'morroc$;
 	end;
 OnTimer50500:
-	npctalk "Morocc Lord Knight: You know, the truth is, that it is useless.", 'Morocc$;
+	npctalk "Morocc Lord Knight: You know, the truth is, that it is useless.", 'morroc$;
 	end;
 OnTimer53500:
-	npctalk "Morocc Lord Knight: Gwuaaa hahahaha. You stupid humans I will kill you all as sacrifices for the demon!!", 'Morocc$;
-	specialeffect EF_COUPLECASTING,AREA, 'Morocc$;
-	specialeffect EF_VOLCANO,AREA, 'Morocc$;
+	npctalk "Morocc Lord Knight: Gwuaaa hahahaha. You stupid humans I will kill you all as sacrifices for the demon!!", 'morroc$;
+	specialeffect EF_COUPLECASTING,AREA, 'morroc$;
+	specialeffect EF_VOLCANO,AREA, 'morroc$;
 	end;
 OnTimer54500:
 	npctalk "Loki:... tsk! useless....!", 'loki$;
@@ -1821,7 +1821,7 @@ OnTimer55500:
 	mapwarp 'map_tnm3$, 'map_tnm3$,136,62;// todo area 1x1
 	'devil_tower = 13;
 	stopnpctimer;
-	disablenpc instance_npcname("#morocc_lord_talk");
+	disablenpc instance_npcname("#morroc_lord_talk");
 	disablenpc instance_npcname("Morocc Lord Knight#mocl");
 	disablenpc instance_npcname("Loki#tnmloki01");
 	disablenpc instance_npcname("Young Girl#tnm04");
@@ -2020,12 +2020,20 @@ OnBossDead:
 	specialeffect EF_COIN;
 	disablenpc instance_npcname("box#tnmbosang");
 	makeitem 7293,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5));	// Rose Quartz
+	makeitem 7292,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5));	// Muscovite
 	makeitem 749,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5));	// Frozen Rose
 	makeitem 7511,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5));	// Rune of Darkness
+	
 	if (rand(100) < 75)
 		makeitem 616,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5));	// Old Card Album
+		makeitem 7291,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5));	// Agate
+		makeitem 7295,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5));	// Citrin
+		makeitem 7290,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5));	// Phlogopite
 	if (rand(100) < 50)
 		makeitem 748,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5));	// Witherless_Rose
+		makeitem 7289,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5));	// Peridot
+		makeitem 7297,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5));	// Biotite
+		makeitem 7296,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5));	// Pyroxene
 
 	setarray .@item_id_list[0],
 		1671,	// Devil_Won_Staff
@@ -2035,50 +2043,53 @@ OnBossDead:
 		21010, 	// Tw_Sword_Of_Evil_Slayer
 		28001; 	// Katar_Of_Evil_Slayer
 	setarray .@bonus_list1[0],
-		4800,	// SP50
-		4811,	// Fighting_Spirit1
-		4810,	// Fighting_Spirit2
-		4809,	// Fighting_Spirit3
 		4808,	// Fighting_Spirit4
 		4820,	// Fighting_Spirit5
 		4821,	// Fighting_Spirit6
-		4815,	// Spell1
-		4814,	// Spell2
-		4813,	// Spell3
-		4812,	// Spell4
-		4786;	// Mdef2
-	setarray .@bonus_list2[0],
-		4815,	// Spell1
-		4814,	// Spell2
-		4813,	// Spell3
 		4812,	// Spell4
 		4826,	// Spell5
-		4811,	// Fighting_Spirit1
-		4810,	// Fighting_Spirit2
-		4809,	// Fighting_Spirit3
-		4808,	// Fighting_Spirit4
-		4820,	// Fighting_Spirit5
-		4786;	// Mdef2
-	setarray .@bonus_list3[0],
-		4815,	// Spell1
-		4814,	// Spell2
-		4813,	// Spell3
-		4812,	// Spell4
-		4811,	// Fighting_Spirit1
-		4810,	// Fighting_Spirit2
-		4809,	// Fighting_Spirit3
+		4827,	// Spell6
+		4834,	// Expert_Archer3
+		4835,	// Expert_Archer4
+		4836,	// Expert_Archer5
+		4844,	// Sharp5
+		4807;	// Atk_Speed1
+	setarray .@bonus_list2[0],
 		4808,	// Fighting_Spirit4
 		4820,	// Fighting_Spirit5
 		4821,	// Fighting_Spirit6
-		4791,	// DEF+3
-		4786;	// Mdef2
+		4812,	// Spell4
+		4826,	// Spell5
+		4827,	// Spell6
+		4834,	// Expert_Archer3
+		4835,	// Expert_Archer4
+		4836,	// Expert_Archer5
+		4844,	// Sharp5
+		4807;	// Atk_Speed1
+	setarray .@bonus_list3[0],
+		4808,	// Fighting_Spirit4
+		4820,	// Fighting_Spirit5
+		4821,	// Fighting_Spirit6
+		4812,	// Spell4
+		4826,	// Spell5
+		4827,	// Spell6
+		4834,	// Expert_Archer3
+		4835,	// Expert_Archer4
+		4836,	// Expert_Archer5
+		4844,	// Sharp5
+		4807;	// Atk_Speed1
 	.@item_id = .@item_id_list[ rand( getarraysize(.@item_id_list) ) ];
-	.@refine = rand(1,6);
+	.@refine = rand(5,12);	// upgrade 5-12
 	.@bonus1 = .@bonus_list1[ rand( getarraysize(.@bonus_list1) ) ];
 	.@bonus2 = .@bonus_list1[ rand( getarraysize(.@bonus_list2) ) ];
 	.@bonus3 = .@bonus_list1[ rand( getarraysize(.@bonus_list3) ) ];
-
-	makeitem2 .@item_id,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5)), 0, .@refine,0, 0,.@bonus1,.@bonus2,.@bonus3;
+	
+	.@OptSelect = rand( 3,8 );	// str agi vit int dex luk
+	.@OptMinMax = rand( 3,6 );	// ค่า stat ที่สุ่ม 3-6
+	setarray .@OptParam[0],0;
+	
+	//makeitem2 .@item_id,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5)), 0, .@refine,0, 0,.@bonus1,.@bonus2,.@bonus3;
+	makeitem3 .@item_id,1, 'map_tnm3$, (69 + rand(-5,5)), (70 + rand(-5,5)), 0, .@refine,0,0,.@bonus1,.@bonus2,.@bonus3,.@OptSelect,.@OptMinMax,.@OptParam;
 	end;
 }
 
@@ -2198,7 +2209,7 @@ OnInstanceInit:
 
 	// Boss
 	disablenpc instance_npcname("Morocc Lord Knight#mocl");
-	disablenpc instance_npcname("#morocc_lord_talk");
+	disablenpc instance_npcname("#morroc_lord_talk");
 	disablenpc instance_npcname("Loki#tnmloki01");
 	disablenpc instance_npcname("Young Girl#tnm04");
 	disablenpc instance_npcname("Loki#tnmloki02");

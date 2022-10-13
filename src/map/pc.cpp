@@ -8,12 +8,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-#ifdef MAP_GENERATOR
-#include <fstream>
-#include <iostream>
-#include <nlohmann/json.hpp>
-#endif
-
 #include "../common/cbasetypes.hpp"
 #include "../common/core.hpp" // get_svn_revision()
 #include "../common/database.hpp"
@@ -344,29 +338,6 @@ uint64 ReputationDatabase::parseBodyNode( const ryml::NodeRef& node ){
 		}
 	}
 
-#ifdef MAP_GENERATOR
-	if (this->nodeExists(node, "Visibility")) {
-		std::string visibility;
-		if (!this->asString(node, "Visibility", visibility)) {
-			return 0;
-		}
-		if (visibility == "Always")
-			reputation->visibility = s_reputation::e_visibility::ALWAYS;
-		else if (visibility == "Never")
-			reputation->visibility = s_reputation::e_visibility::NEVER;
-		else if (visibility == "Exist")
-			reputation->visibility = s_reputation::e_visibility::EXIST;
-		else {
-			this->invalidWarning(node, "Visibility \"%s\" unknown.\n", visibility.c_str());
-			return 0;
-		}
-	} else {
-		if (!exists) {
-			reputation->visibility = s_reputation::e_visibility::ALWAYS;
-		}
-	}
-#endif
-
 	if( !exists ){
 		this->put( id, reputation );
 	}
@@ -375,50 +346,6 @@ uint64 ReputationDatabase::parseBodyNode( const ryml::NodeRef& node ){
 }
 
 ReputationDatabase reputation_db;
-
-void pc_reputation_generate() {
-#ifdef MAP_GENERATOR
-	const std::string filePrefix = "generated/clientside/data/contentdata/";
-	auto reputeInfo = nlohmann::json::object();
-	for (const auto& pair : reputation_db) {
-		auto id = pair.first;
-		auto rep = pair.second;
-		nlohmann::json node;
-		switch (rep->visibility) {
-		case s_reputation::e_visibility::ALWAYS:
-			node["Invisible"] = "VISIBLE_TRUE";
-			break;
-		case s_reputation::e_visibility::NEVER:
-			node["Invisible"] = "VISIBLE_FALSE";
-			break;
-		case s_reputation::e_visibility::EXIST:
-			node["Invisible"] = "VISIBLE_EXIST";
-			break;
-		}
-		node["MaxPoint_Negative"] = std::abs(rep->minimum);
-		node["MaxPoint_Positive"] = std::abs(rep->maximum);
-		node["Name"] = rep->name;
-
-		reputeInfo[std::to_string(id)] = node;
-	}
-
-	auto j = nlohmann::json::object();
-	j["reputeInfo"] = reputeInfo;
-	// std::cout << j.dump(2) << "\n";
-
-	auto bson = nlohmann::json::to_bson(j);
-
-	auto reputation_file = std::ofstream(filePrefix + "./reputeinfodata.bson", std::ios::binary);
-	if (!reputation_file) {
-		ShowError("Failed to create reputation file.\n");
-		ShowError("Maybe the file directory \"%s\" does not exist?\n", filePrefix.c_str());
-		ShowInfo("Create the directory and rerun map-server-generator\n");
-		exit(1);
-	}
-
-	reputation_file.write((const char *)&bson[0], bson.size());
-#endif
-}
 
 const std::string PenaltyDatabase::getDefaultLocation(){
 	return std::string( db_path ) + "/level_penalty.yml";
@@ -6586,7 +6513,7 @@ enum e_setpos pc_setpos(struct map_session_data* sd, unsigned short mapindex, in
 
 		npc_script_event(sd, NPCE_LOGOUT);
 		//remove from map, THEN change x/y coordinates
-		unit_remove_map_pc(sd,clrtype,true);
+		unit_remove_map_pc(sd,clrtype);
 		sd->mapindex = mapindex;
 		sd->bl.x=x;
 		sd->bl.y=y;
@@ -7896,34 +7823,32 @@ static void pc_calcexp(struct map_session_data *sd, t_exp *base_exp, t_exp *job_
 			bonus += (sd->sc.data[SC_EXPBOOST]->val1 / battle_config.vip_bm_increase);
 	}
 	
-	// PREMIUM SERVICE
-	if (sd->sc.data[SC_PREMIUMSERVICE_EXPBOOST_A]) {
-		bonus += sd->sc.data[SC_PREMIUMSERVICE_EXPBOOST_A]->val1;
+	// APACHE PREMIUM SERVICE
+	if (sd->sc.data[SC_APACHE_EXPBOOST_A]) {
+		bonus += sd->sc.data[SC_APACHE_EXPBOOST_A]->val1;
 		if (battle_config.vip_bm_increase && pc_isvip(sd)) // Increase Battle Manual EXP rate for VIP
-			bonus += (sd->sc.data[SC_PREMIUMSERVICE_EXPBOOST_A]->val1 / battle_config.vip_bm_increase);
+			bonus += (sd->sc.data[SC_APACHE_EXPBOOST_A]->val1 / battle_config.vip_bm_increase);
 	}
-	
-	if (sd->sc.data[SC_PREMIUMSERVICE_EXPBOOST_S]) {
-		bonus += sd->sc.data[SC_PREMIUMSERVICE_EXPBOOST_S]->val1;
+	if (sd->sc.data[SC_APACHE_EXPBOOST_S]) {
+		bonus += sd->sc.data[SC_APACHE_EXPBOOST_S]->val1;
 		if (battle_config.vip_bm_increase && pc_isvip(sd)) // Increase Battle Manual EXP rate for VIP
-			bonus += (sd->sc.data[SC_PREMIUMSERVICE_EXPBOOST_S]->val1 / battle_config.vip_bm_increase);
+			bonus += (sd->sc.data[SC_APACHE_EXPBOOST_S]->val1 / battle_config.vip_bm_increase);
 	}
 
 	if (*base_exp) {
 		t_exp exp = (t_exp)(*base_exp + ((double)*base_exp * ((bonus + vip_bonus_base) / 100.)));
 		*base_exp = cap_value(exp, 1, MAX_EXP);
 	}
-	
+
 	// Give JEXPBOOST for quests even if src is NULL.
 	if (sd->sc.data[SC_JEXPBOOST])
 		bonus += sd->sc.data[SC_JEXPBOOST]->val1;
 
-	// PREMIUM SERVICE
-	if (sd->sc.data[SC_PREMIUMSERVICE_JEXPBOOST_A])
-		bonus += sd->sc.data[SC_PREMIUMSERVICE_JEXPBOOST_A]->val1;
-	
-	if (sd->sc.data[SC_PREMIUMSERVICE_JEXPBOOST_S])
-		bonus += sd->sc.data[SC_PREMIUMSERVICE_JEXPBOOST_S]->val1;
+	// APACHE PREMIUM SERVICE
+	if (sd->sc.data[SC_APACHE_JEXPBOOST_A])
+		bonus += sd->sc.data[SC_APACHE_JEXPBOOST_A]->val1;
+	if (sd->sc.data[SC_APACHE_JEXPBOOST_S])
+		bonus += sd->sc.data[SC_APACHE_JEXPBOOST_S]->val1;
 
 	if (*job_exp) {
 		t_exp exp = (t_exp)(*job_exp + ((double)*job_exp * ((bonus + vip_bonus_job) / 100.)));
@@ -9526,12 +9451,12 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 				case 2: base_penalty = (t_exp) ( sd->status.base_exp * ( base_penalty / 10000. ) ); break;
 			}
 
-		// PREMIUM SERVICE
-		t_exp a_base = 0;
-		a_base = base_penalty;
-		if (sd->sc.data[SC_PREMIUMSERVICE_LIFEINSURANCE])
-		base_penalty -= (uint32)(a_base * (sd->sc.data[SC_PREMIUMSERVICE_LIFEINSURANCE]->val1 / 100.));
-
+			// APACHE PREMIUM SERVICE
+			uint32 a_base = 0;
+			a_base = base_penalty;
+			if (sd->sc.data[SC_APACHE_LIFEINSURANCE])
+				base_penalty -= (uint32) ( a_base * ( sd->sc.data[SC_APACHE_LIFEINSURANCE]->val1 / 100. ) );
+			
 			if (base_penalty){ //recheck after altering to speedup
 				if (battle_config.pk_mode && src && src->type==BL_PC)
 					base_penalty *= 2;
@@ -9543,15 +9468,15 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 
 		if ((battle_config.death_penalty_maxlv&2 || !pc_is_maxjoblv(sd)) && job_penalty > 0) {
 			switch (battle_config.death_penalty_type) {
-				case 1: job_penalty = (t_exp) ( pc_nextjobexp(sd) * ( job_penalty / 10000. ) ); break;
-				case 2: job_penalty = (t_exp) ( sd->status.job_exp * ( job_penalty /10000. ) ); break;
+				case 1: job_penalty = (uint32) ( pc_nextjobexp(sd) * ( job_penalty / 10000. ) ); break;
+				case 2: job_penalty = (uint32) ( sd->status.job_exp * ( job_penalty /10000. ) ); break;
 			}
 
-		// PREMIUM SERVICE
-		t_exp a_job = 0;
-		a_job = job_penalty;
-		if (sd->sc.data[SC_PREMIUMSERVICE_LIFEINSURANCE])
-		job_penalty -= (uint32)(a_job * (sd->sc.data[SC_PREMIUMSERVICE_LIFEINSURANCE]->val1 / 100.));
+			// APACHE PREMIUM SERVICE
+			uint32 a_job = 0;
+			a_job = job_penalty;
+			if (sd->sc.data[SC_APACHE_LIFEINSURANCE])
+				job_penalty -= (uint32) ( a_job * ( sd->sc.data[SC_APACHE_LIFEINSURANCE]->val1 / 100. ) );
 
 			if (job_penalty) {
 				if (battle_config.pk_mode && src && src->type==BL_PC)
@@ -11286,7 +11211,7 @@ void pc_addeventtimercount(struct map_session_data *sd,const char *name,int tick
 	for(i=0;i<MAX_EVENTTIMER;i++)
 		if( sd->eventtimer[i] != INVALID_TIMER && strcmp(
 			(char *)(get_timer(sd->eventtimer[i])->data), name)==0 ){
-				addtick_timer(sd->eventtimer[i],tick);
+				addt_tickimer(sd->eventtimer[i],tick);
 				break;
 		}
 }
@@ -11831,6 +11756,8 @@ static void pc_unequipitem_sub(struct map_session_data *sd, int n, int flag) {
 	pc_deleteautobonus( sd->autobonus3, sd->inventory.u.items_inventory[n].equip );
 
 	sd->inventory.u.items_inventory[n].equip = 0;
+	if (!(flag & 4))
+		pc_checkallowskill(sd);
 	iflag = sd->npc_item_flag;
 
 	// Check for combos (MUST be before status_calc_pc)
@@ -11860,8 +11787,7 @@ static void pc_unequipitem_sub(struct map_session_data *sd, int n, int flag) {
 	}
 
 	if (flag & 1 || status_calc) {
-		if (!(flag & 4))
-			pc_checkallowskill(sd);
+		pc_checkallowskill(sd);
 		status_calc_pc(sd, SCO_FORCE);
 	}
 
@@ -14495,7 +14421,7 @@ struct s_bonus_script_entry *pc_bonus_script_add(struct map_session_data *sd, co
 			if (strcmpi(script_str, StringBuf_Value(entry->script_buf)) == 0) {
 				t_tick newdur = gettick() + dur;
 				if (flag&BSF_FORCE_REPLACE && entry->tick < newdur) { // Change duration
-					settick_timer(entry->tid, newdur);
+					sett_tickimer(entry->tid, newdur);
 					script_free_code(script);
 					return NULL;
 				}

@@ -26,7 +26,7 @@
 
 // Information NPC
 //============================================================
-prontera,149,193,4	script	WOE Information	835,{
+morocc,152,112,4	script	WOE Information	835,{
 	doevent "WOE_CONTROL::OnMenu";
 	end;
 OnAgitStart:
@@ -80,8 +80,8 @@ OnInit:
 	// Rewards per castle.
 	//   setarray .reward_id[0],     <itemID>{,<itemID>,...}
 	//   setarray .reward_amount[0], <amount>{,<amount>,...}
-	setarray .reward_id[0],14001;
-	setarray .reward_amount[0],1;
+	setarray .reward_id[0],14001,12391,616;
+	setarray .reward_amount[0],10,5,1;
 
 	// Zeny reward:
 	.reward_zeny = 0;
@@ -195,7 +195,7 @@ OnMinute00:
 				deletearray .Active[0],2;
 				set .Active[0], $WOE_CONTROL[.@i+3];
 				if (.Init) { AgitEnd; AgitEnd2; AgitEnd3; }
-				else announce "The War Of Emperium has begun!",bc_all|bc_woe;
+				else announce "The War Of Emperium เริ่มขึ้นแล้ว!",bc_all|bc_woe;
 				sleep 1000;
 				AgitStart; AgitStart2; AgitStart3;
 				for(set .@j,0; .@j<.total_castle; set .@j,.@j+1) {
@@ -216,7 +216,7 @@ OnMinute00:
 
 function Disp_Owner {
 	set .@o, getcastledata(getarg(0),1);
-	if (.@o) announce "The ["+getcastlename(getarg(0))+"] castle "+((getarg(1))?"has been conquered":"is currently held")+" by the ["+getguildname(.@o)+"] guild.",bc_all|bc_woe;
+	if (.@o) announce "The ["+getcastlename(getarg(0))+"] castle "+((getarg(1))?"ถูกครอบครอง":"is currently held")+" โดย ["+getguildname(.@o)+"] guild.",bc_all|bc_woe;
 	else announce "The ["+getcastlename(getarg(0))+"] castle is currently unoccupied.",bc_all|bc_woe;
 	return;
 }
@@ -393,7 +393,7 @@ while(1) {
 			}
 		if (!getarraysize(.@time))
 			setarray .@time[0],$WOE_CONTROL[0],$WOE_CONTROL[1];
-		mes "The War of Emperium is ^777777inactive^000000.";
+		mes "The War of Emperium ^777777inactive^000000.";
 		if (.Size) {
 			mes " ";
 			mes "The next session will begin";

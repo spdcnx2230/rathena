@@ -27,10 +27,11 @@ menu	"Last Warp ^777777["+lastwarp$+"]^000000",-,
     	" ~ Towns",Towns,
     	" ~ Fields",Fields,
     	" ~ Dungeons",Dungeons,
-    	" ~ Guild Castles",Castles,
+    	//" ~ Guild Castles",Castles,
     	" ~ Guild Dungeons",Guild_Dungeons,
     	" ~ Instances",Instances,
-    	" ~ Special Areas",Special;
+		" ~ áÅ¡¤ÍÊáÅÐÍÍ¿¤ÍÊ",Costume;
+    	//" ~ Special Areas",Special;
 
 	if (lastwarp$ == "")
 		message strcharinfo(0),"You haven't warped anywhere yet.";
@@ -460,13 +461,26 @@ G8: Restrict("RE");
 // --------------------------------------------------
 	Instances:
 // --------------------------------------------------
-menu	"Bakonawa Lake",I1, "Bangungot Hospital 2F",I2, "Buwaya Cave",I3,
-		"Devil Tower",I4, "Eclage Interior",I5, "Endless Tower",I6,
-		"Faceworms Nest",I7, "Geffen Magic Tournament",I8, "Ghost Palace",I9,
-		"Hazy Forest",I10, "Horror Toy Factory",I11, "Malangdo Culvert",I12,
-		"Nidhoggur's Nest",I13, "Octopus Cave",I14, "Old Glast Heim",I15,
-		"Orc's Memory",I16, "Sarah and Fenrir",I17, "Sara Memory",I18,
-		"Sealed Shrine",I19, "Wolfchev's Laboratory",I20;
+menu	//"Bakonawa Lake",I1, 
+		//"Bangungot Hospital 2F",I2, 
+		//"Buwaya Cave",I3,
+		//"Devil Tower",I4, 
+		//"Eclage Interior",I5, 
+		//"Endless Tower",I6,
+		//"Faceworms Nest",I7, 
+		//"Geffen Magic Tournament",I8, 
+		//"Ghost Palace",I9,
+		//"Hazy Forest",I10, 
+		//"Horror Toy Factory",I11, 
+		//"Malangdo Culvert",I12,
+		//"Nidhoggur's Nest",I13, 
+		//"Octopus Cave(ÅèÒÍÒÇØ¸ãËÁè)",I14, 
+		//"Old Glast Heim",I15,
+		"Orc's Memory(áËÇ¹ÊØèÁÍÍ¿)",I16; 
+		//"Sarah and Fenrir",I17,
+		//"Sara Memory",I18,
+		//"Sealed Shrine(ÍÒÇØ¸ÊØèÁÍÍ¿áÅÐËÁÇ¡)",I19;
+		//"Wolfchev's Laboratory",I20;
 
 I1: Restrict("RE");
 	Go("ma_scene01",172,175);
@@ -505,6 +519,12 @@ I19: Go("monk_test",306,143);
 I20: Restrict("RE");
 	Go("lhz_dun04",148,269);
 
+// ------------------------------------------------
+	Costume:
+// ------------------------------------------------
+menu	"ËéÍ§áÅ¡¤ÍÊáÅÐÍÍ¿¤ÍÊ",Co1;
+Co1: Restrict("RE");
+	Go("mal_in01",25,119);
 // --------------------------------------------------
 	Special:
 // --------------------------------------------------
@@ -1190,27 +1210,27 @@ OnNaviGenerate:
 
 	// instances
 	naviregisterwarp("Warper > Endless Tower", "e_tower", 72, 112);
-	naviregisterwarp("Warper > Nidhoggur's Nest", "nyd_dun02", 95, 193);
+	//naviregisterwarp("Warper > Nidhoggur's Nest", "nyd_dun02", 95, 193);
 	naviregisterwarp("Warper > Orc's Memory", "gef_fild10", 240, 198);
 	naviregisterwarp("Warper > Sealed Shrine", "monk_test", 306, 143);
-	if (checkre(0)) {
+	naviregisterwarp("Warper > Octopus Cave", "mal_dun01", 152, 230);
+	naviregisterwarp("Warper > Geffen Magic Tournament", "dali", 94, 141);
+	/*if (checkre(0)) {
 		naviregisterwarp("Warper > Bakonawa Lake", "ma_scene01", 172, 175);
 		naviregisterwarp("Warper > Bangungot Hospital 2F", "ma_dun01", 151, 8);
 		naviregisterwarp("Warper > Buwaya Cave", "ma_fild02", 316, 317);
 		naviregisterwarp("Warper > Devil Tower", "dali02", 137, 115);
 		naviregisterwarp("Warper > Eclage Interior", "ecl_hub01", 129, 12);
 		naviregisterwarp("Warper > Faceworms Nest", "dali", 85, 64);
-		naviregisterwarp("Warper > Geffen Magic Tournament", "dali", 94, 141);
 		naviregisterwarp("Warper > Ghost Palace", "dali02", 46, 128);
 		naviregisterwarp("Warper > Hazy Forest", "bif_fild01", 161, 334);
 		naviregisterwarp("Warper > Horror Toy Factory", "xmas", 234, 298);
 		naviregisterwarp("Warper > Malangdo Culvert", "mal_in01", 164, 21);
-		naviregisterwarp("Warper > Octopus Cave", "mal_dun01", 152, 230);
 		naviregisterwarp("Warper > Old Glast Heim", "glast_01", 204, 268);
 		naviregisterwarp("Warper > Sarah and Fenrir", "dali02", 92, 141);
 		naviregisterwarp("Warper > Sara Memory", "dali", 133, 108);
 		naviregisterwarp("Warper > Wolfchev's Laboratory", "lhz_dun04", 148, 269);
-	}
+	}*/
 
 
 	// special
@@ -1236,52 +1256,52 @@ OnInit:
 // --------------------------------------------------
 //	Duplicates:
 // --------------------------------------------------
-alb2trea,57,70,6	duplicate(Warper)	Warper#tre	811
-alberta,28,240,4	duplicate(Warper)	Warper#alb	811
-aldebaran,145,118,4	duplicate(Warper)	Warper#alde	811
-amatsu,203,87,4	duplicate(Warper)	Warper#ama	811
-ayothaya,209,169,6	duplicate(Warper)	Warper#ayo	811
-comodo,194,158,4	duplicate(Warper)	Warper#com	811
-einbech,59,38,6	duplicate(Warper)	Warper#einbe	811
-einbroch,69,202,4	duplicate(Warper)	Warper#einbr	811
-gef_fild10,71,339,4	duplicate(Warper)	Warper#orc	811
-geffen,124,72,4	duplicate(Warper)	Warper#gef	811
-glast_01,372,308,4	duplicate(Warper)	Warper#glh	811
-gonryun,162,122,4	duplicate(Warper)	Warper#gon	811
-hugel,101,151,4	duplicate(Warper)	Warper#hug	811
-izlu2dun,110,92,4	duplicate(Warper)	Warper#izd	811
-izlude,134,150,4	duplicate(Warper)	Warper#izl	811	//Pre-RE: (132,120)
-jawaii,253,138,4	duplicate(Warper)	Warper#jaw	811
-lighthalzen,162,102,4	duplicate(Warper)	Warper#lhz	811
-louyang,208,103,6	duplicate(Warper)	Warper#lou	811
-manuk,274,146,6	duplicate(Warper)	Warper#man	811
-mid_camp,216,288,4	duplicate(Warper)	Warper#mid	811
-mjolnir_02,85,364,4	duplicate(Warper)	Warper#mjo	811
-moc_ruins,64,164,4	duplicate(Warper)	Warper#moc	811
-morocc,159,97,4	duplicate(Warper)	Warper#mor	811
-moscovia,229,191,4	duplicate(Warper)	Warper#mos	811
-nameless_n,259,213,4	duplicate(Warper)	Warper#nam	811
-niflheim,205,179,4	duplicate(Warper)	Warper#nif	811
-pay_arche,42,134,4	duplicate(Warper)	Warper#arc	811
-payon,182,108,4	duplicate(Warper)	Warper#pay	811
-prontera,159,192,4	duplicate(Warper)	Warper#prt	811
-prt_fild05,279,223,6	duplicate(Warper)	Warper#cul	811
-rachel,135,116,4	duplicate(Warper)	Warper#rac	811
-splendide,205,153,4	duplicate(Warper)	Warper#spl	811
-thor_camp,249,76,4	duplicate(Warper)	Warper#thor	811
-umbala,106,150,3	duplicate(Warper)	Warper#umb	811
-veins,214,123,4	duplicate(Warper)	Warper#ve	811
-xmas,150,136,6	duplicate(Warper)	Warper#xmas	811
-yuno,162,47,4	duplicate(Warper)	Warper#yuno	811
+alb2trea,57,70,6	duplicate(Warper)	Warper#tre	569
+alberta,28,240,4	duplicate(Warper)	Warper#alb	569
+aldebaran,145,118,4	duplicate(Warper)	Warper#alde	569
+amatsu,203,87,4	duplicate(Warper)	Warper#ama	569
+ayothaya,209,169,6	duplicate(Warper)	Warper#ayo	569
+comodo,194,158,4	duplicate(Warper)	Warper#com	569
+einbech,59,38,6	duplicate(Warper)	Warper#einbe	569
+einbroch,69,202,4	duplicate(Warper)	Warper#einbr	569
+gef_fild10,71,339,4	duplicate(Warper)	Warper#orc	569
+geffen,124,72,4	duplicate(Warper)	Warper#gef	569
+glast_01,372,308,4	duplicate(Warper)	Warper#glh	569
+gonryun,162,122,4	duplicate(Warper)	Warper#gon	569
+hugel,101,151,4	duplicate(Warper)	Warper#hug	569
+izlu2dun,110,92,4	duplicate(Warper)	Warper#izd	569
+izlude,134,150,4	duplicate(Warper)	Warper#izl	569	//Pre-RE: (132,120)
+jawaii,253,138,4	duplicate(Warper)	Warper#jaw	569
+lighthalzen,162,102,4	duplicate(Warper)	Warper#lhz	569
+louyang,208,103,6	duplicate(Warper)	Warper#lou	569
+manuk,274,146,6	duplicate(Warper)	Warper#man	569
+mid_camp,216,288,4	duplicate(Warper)	Warper#mid	569
+mjolnir_02,85,364,4	duplicate(Warper)	Warper#mjo	569
+moc_ruins,64,164,4	duplicate(Warper)	Warper#moc	569
+morocc,159,97,4	duplicate(Warper)	Warper#mor	569
+moscovia,229,191,4	duplicate(Warper)	Warper#mos	569
+nameless_n,259,213,4	duplicate(Warper)	Warper#nam	569
+niflheim,205,179,4	duplicate(Warper)	Warper#nif	569
+pay_arche,42,134,4	duplicate(Warper)	Warper#arc	569
+payon,182,108,4	duplicate(Warper)	Warper#pay	569
+prontera,159,192,4	duplicate(Warper)	Warper#prt	569
+prt_fild05,279,223,6	duplicate(Warper)	Warper#cul	569
+rachel,135,116,4	duplicate(Warper)	Warper#rac	569
+splendide,205,153,4	duplicate(Warper)	Warper#spl	569
+thor_camp,249,76,4	duplicate(Warper)	Warper#thor	569
+umbala,106,150,3	duplicate(Warper)	Warper#umb	569
+veins,214,123,4	duplicate(Warper)	Warper#ve	569
+xmas,150,136,6	duplicate(Warper)	Warper#xmas	569
+yuno,162,47,4	duplicate(Warper)	Warper#yuno	569
 
 // --------------------------------------------------
 //	Duplicates (Renewal):
 // --------------------------------------------------
-brasilis,201,222,4	duplicate(Warper)	Warper#bra	811
-dewata,204,186,6	duplicate(Warper)	Warper#dew	811
-dicastes01,194,194,6	duplicate(Warper)	Warper#dic	811
-ecl_in01,51,60,4	duplicate(Warper)	Warper#ecl	811
-lasagna,196,187,4	duplicate(Warper)	Warper#las	811
-malangdo,134,117,6	duplicate(Warper)	Warper#mal	811
-malaya,231,204,4	duplicate(Warper)	Warper#ma	811
-mora,57,152,4	duplicate(Warper)	Warper#mora	811
+brasilis,201,222,4	duplicate(Warper)	Warper#bra	569
+dewata,204,186,6	duplicate(Warper)	Warper#dew	569
+dicastes01,194,194,6	duplicate(Warper)	Warper#dic	569
+ecl_in01,51,60,4	duplicate(Warper)	Warper#ecl	569
+lasagna,196,187,4	duplicate(Warper)	Warper#las	569
+malangdo,134,117,6	duplicate(Warper)	Warper#mal	569
+malaya,231,204,4	duplicate(Warper)	Warper#ma	569
+mora,57,152,4	duplicate(Warper)	Warper#mora	569

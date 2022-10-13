@@ -17,41 +17,45 @@
 //= 1.3a Added 'disable_items' command. [Euphy]
 //============================================================ 
 
-prontera,165,60,2	script	Apprentice Craftsman	73,{
+morocc,123,82,2	script	Apprentice Craftsman	73,{
 	disable_items;
 	mes "[Apprentice Craftsman]";
-	if (Zeny >= 400000) {
-		mes "I've been studying ways to enhance an armor to maximize its capability.";
+	mes "ต้องมีขั้นต่ำ250,000 zeny";
+	if (Zeny >= 250000) {
+		mes "ข้าสามารถเสริมพลังให้กับ ชุดเกราะของเจ้าได้.";
 		next;
 		mes "[Apprentice Craftsman]";
-		mes "Enchanting is an awesome skill that infuses a mysterious status powers into the armor's hidden socket.";
+		mes "มีโอกาสได้รับ";
+		mes "Status +1~3";
+		mes "Fighting Spirit1 1~3";
+		mes "Spell 1~3";
+		mes "Sharp 1~3";
+		mes "เพิ่มผลการฟื้นฟู";
+		mes "MHP และ MSP";
 		next;
 		mes "[Apprentice Craftsman]";
-		mes "However, you have to keep in mind that if there are two armors of the same kind in your possession, the Enchantment will be applied in the order they are placed in your inventory.";
+		mes "ในต้วเจ้าจะต้องมี ^5555ffชุดเกราะ^000000 แค่ชิ้นเดียวเท่านั้น";
 		next;
 		mes "[Apprentice Craftsman]";
-		mes "In that case, the Enchantment may be applied to an item which you didn't mean to Enchant. So just bring ^5555ffONE Armor^000000 you want enchanted to be safe...";
+		mes "^FF0000อาจมีข้อผิดพลาดหากในตัวเจ้ามีของชิ้นเดียวกันมากกว่า 1 ชิ้น^FF0000";
 		next;
-		mes "[Apprentice Craftsman]";
-		mes "I'm not responsible for what would happen if you have more than one of the same kind in your inventory.";
-		next;
-		switch(select("Non Slotted Armor.:Slotted Armor.:High Grade Armor.:Maybe next time.")) {
+		switch(select("ชุดเกราะ ไม่มีรู.:ชุดเกราะ มีรู:High Grade Armor.:ลาก่อน.")) {
 		case 1:
 			setarray .@Items[0],2307,2309,2314,2316,2321,2325,2327,2328,2330,2332,2334,2335,2341,2344,2346,2348,2350,2337,2386,2394,2395,2396;
 			set .@j,50;
 			break;
 		case 2:
-			setarray .@Items[0],2311,2318,2319,2320,2308,2310,2315,2317,2322,2324,2326,2331,2333,2336,2342,2345,2347,2349,2351;
+			setarray .@Items[0],2355,2340,2311,2318,2319,2320,2308,2310,2315,2317,2322,2324,2326,2331,2333,2336,2342,2345,2347,2349,2351;
 			set .@j,55;
 			set .@k,1;
 			break;
 		case 3:
-			setarray .@Items[0],2364,2365,2391,2374,2375,2376,2377,2378,2379,2380,2381,2382,2387,2388,2389,2390;
+			setarray .@Items[0],15015,15016,15017,15018,15019,15020,15021,2364,2365,2391,2374,2375,2376,2377,2378,2379,2380,2381,2382,2387,2388,2389,2390;
 			set .@j,60;
 			break;
 		case 4:
 			mes "[Apprentice Craftsman]";
-			mes "Please come back when you have any interest in enchanting your armor.";
+			mes "กลับมาใหม่ละถ้าสนใจ enchanting.";
 			close;
 		}
 		set .@menu$,"";
@@ -60,10 +64,10 @@ prontera,165,60,2	script	Apprentice Craftsman	73,{
 		callsub S_EnchantArmor, .@Items[select(.@menu$)-1], .@j;
 		end;
 	}
-	mes "I am in charge of Enchanting Armors. Simply put, I've been studying ways to power-up armor.";
+	mes "ถ้าเงินแค่นี้ไม่มีก้ ลาก่อน.";
 	next;
 	mes "[Apprentice Craftsman]";
-	mes "If by any chance, you would want to enchant your armor, bring me 400,000 zeny and the armor you want to enchant and you are all set to go.";
+	mes "enchant armor มีค่าใช้จ่าย 250,000 zeny.";
 	close;
 
 S_EnchantArmor:
@@ -71,81 +75,82 @@ S_EnchantArmor:
 	set .@failrate,getarg(1);
 	mes "[Apprentice Craftsman]";
 	if (countitem(.@itemid) == 1) {
-		mes "Socket enchant will cost you 400,000 zeny. And there will be a random option enchanted. Of course, there is a chance of breaking your armor.";
+		mes "ค่าใช้จ่ายอยู่ที่ 250,000 zeny. ราคาเร้าๆ.";
 		next;
 		mes "[Apprentice Craftsman]";
-		mes "First and most importantly.";
-		mes "^ff5555Existing Refine Level of the Armor";
-		mes "and Cards will be GONE.^000000";
-		mes "Do you still want to try an Enchant?";
+		mes "^FF0000คำเตือน!!^FF0000";
+		mes "^ff5555ระดับการอัพเกรดของชุด";
+		mes "และ Cards จะหายไป!!.^000000";
+		mes "ยังต้องการจะ Enchant? อยู่ไหม";
 		next;
-		if(select("Hmm... Let me think it over.:Go ahead.") == 1) {
+		if(select("ข้าไม่อยากแล้ว.:ลุยเลย.") == 1) {
 			mes "[Apprentice Craftsman]";
-			mes "Well, I can't blame you. Safety first, eh?";
-			mes "Now you have a nice day.";
+			mes "คนที่กลัวการสูญเสีย มักไม่เจริญ!!";
+			mes "แค่ระดับอัพเกรดหาย+การ์ดหายแค่นี้ถึงกับป๊อด...";
 			close;
 		}
 		mes "[Apprentice Craftsman]";
-		mes "Quite of an adventurer huh? Well, shall we?";
+		mes "โฮ่ๆๆ งั้นเราก็ลุยกันเลย?";
 		close2;
 		specialeffect2 EF_MAPPILLAR;
-		if (Zeny < 400000) {
+		if (Zeny < 250000) {
 			mes "[Apprentice Craftsman]";
-			mes "Sorry, but you don't have enough zeny.";
+			mes "เจ้ามี zeny. ไม่พอ";
 			close;
 		}
-		progressbar "ffff00",7;
-		set Zeny, Zeny-400000;
+		progressbar "ffff00",3;
+		emotion ET_BEST;
+		set Zeny, Zeny-250000;
 		delitem .@itemid,1;
-		switch (rand(1,.@failrate)) {
-			case 1: set .@addpart,4702;break;
-			case 2: set .@addpart,4712;break;
-			case 3: set .@addpart,4722;break;
-			case 4: set .@addpart,4732;break;
-			case 5: set .@addpart,4742;break;
-			case 6: set .@addpart,4752;break;
-			case 7:
-			case 8: set .@addpart,4701;break;
-			case 9:
-			case 10: set .@addpart,4711;break;
-			case 11:
-			case 12: set .@addpart,4721;break;
-			case 13:
-			case 14: set .@addpart,4731;break;
-			case 15:
-			case 16: set .@addpart,4741;break;
-			case 17:
-			case 18: set .@addpart,4751;break;
-			case 19:
-			case 20:
-			case 21: set .@addpart,4700;break;
-			case 22:
-			case 23:
-			case 24: set .@addpart,4710;break;
-			case 25:
-			case 26:
-			case 27: set .@addpart,4720;break;
-			case 28:
-			case 29:
-			case 30: set .@addpart,4730;break;
-			case 31:
-			case 32:
-			case 33: set .@addpart,4740;break;
-			case 34:
-			case 35:
-			case 36: set .@addpart,4750;break;
+		switch (rand(1,36)) {
+			case 1: set .@addpart,4702;break;	//Strength3
+			case 2: set .@addpart,4712;break;	//Inteligence3
+			case 3: set .@addpart,4722;break;	//Dexterity3
+			case 4: set .@addpart,4732;break;	//Agility3
+			case 5: set .@addpart,4742;break;	//Vitality3
+			case 6: set .@addpart,4752;break;	//Luck3
+			case 7: set .@addpart,4701;break;	//Strength2
+			case 8: set .@addpart,4711;break;	//Inteligence2
+			case 9: set .@addpart,4721;break;	//Dexterity2
+			case 10: set .@addpart,4731;break;	//Agility2
+			case 11: set .@addpart,4741;break;	//Vitality2
+			case 12: set .@addpart,4751;break;	//Luck2
+			case 13: set .@addpart,4700;break;	//Strength1
+			case 14: set .@addpart,4710;break;	//Inteligence1
+			case 15: set .@addpart,4720;break;	//Dexterity1
+			case 16: set .@addpart,4730;break;	//Agility1
+			case 17: set .@addpart,4740;break;	//Vitality1
+			case 18: set .@addpart,4750;break;	//Luck1
+			case 19: set .@addpart,4811;break;	//Fighting_Spirit1
+			case 20: set .@addpart,4810;break;	//Fighting_Spirit2
+			case 21: set .@addpart,4809;break;	//Fighting_Spirit3
+			case 22: set .@addpart,4805;break;	//Heal_Amount2
+			case 23: set .@addpart,4850;break;	//Heal_Amount3
+			case 24: set .@addpart,4815;break;	//Spell1
+			case 25: set .@addpart,4814;break;	//Spell2
+			case 26: set .@addpart,4813;break;	//Spell3
+			case 27: set .@addpart,4818;break;	//Sharp1
+			case 28: set .@addpart,4817;break;	//Sharp2
+			case 29: set .@addpart,4816;break;	//Sharp3
+			case 30: set .@addpart,4797;break;	//MHP300
+			case 31: set .@addpart,4798;break;	//MHP400
+			case 32: set .@addpart,4799;break;	//MHP500
+			case 33: set .@addpart,4800;break;	//MSP50
+			case 34: set .@addpart,4801;break;	//MSP100
+			case 35: set .@addpart,4805;break;	//MSP150
+			case 36: set .@addpart,4832;break;	//Expert_Archer1
 			default:
 				specialeffect2 EF_PHARMACY_FAIL;
 				mes "[Apprentice Craftsman]";
-				mes "Well that's too bad.";
-				mes "The requested equipment has failed to enchant.";
+				mes "แย่หน่อยนะ.";
+				mes "^FF0000enchant พลาด^FF0000";
 				close;
 		}
 		getitem2 .@itemid, 1, 1, 0, 0, 0, 0, 0, .@addpart;
 	}
 	else {
-		mes "Hmm? There's nothing to be enchanted!";
-		mes "Please come back with just ONE equipment to be enchanted.";
+		mes "เจ้าไม่มีของนิ!";
+		mes "ไว้กลับมาใหม่ถ้ามีของละกัน.";
 		close;
 	}
 }

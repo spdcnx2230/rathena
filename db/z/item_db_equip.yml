@@ -89,3 +89,183 @@ Header:
   Version: 3
 
 Body:
+  - Id: 840100
+    AegisName: Hairtail_OC
+    Name: Cutlass
+    Type: Weapon
+    SubType: 2hSword
+    Attack: 160
+    Range: 4
+    Slots: 1
+    Jobs:
+      Crusader: true
+      Knight: true
+      Swordman: true
+    Locations:
+      Both_Hand: true
+    WeaponLevel: 3
+    EquipLevelMin: 50
+    Refineable: true
+    Trade:
+      NoGuildStorage: true
+      NoAuction: true
+    Script: |
+      bonus bCritical,getrefine()*4;
+      bonus bCritAtkRate,getrefine()*4;
+      .@r = getrefine();
+      if (.@r>6) {
+        bonus2 bSkillAtk,"KN_BOWLINGBASH",25;
+        bonus2 bSkillCooldown,"KN_BOWLINGBASH",-500;
+      }
+  - Id: 840101
+    AegisName: Tuna_OC
+    Name: Tuna
+    Type: Weapon
+    SubType: Mace
+    Attack: 150
+    Range: 1
+    Slots: 1   
+    Jobs:
+      Acolyte: true
+      Alchemist: true
+      Blacksmith: true
+      Crusader: true
+      Knight: true
+      Merchant: true
+      Monk: true
+      Priest: true
+      Swordman: true
+    Locations:
+      Right_Hand: true
+    WeaponLevel: 3
+    EquipLevelMin: 50
+    Refineable: true
+    Trade:
+      NoGuildStorage: true
+      NoAuction: true
+    Script: |
+      bonus bCritical,getrefine()*4;
+      bonus bCritAtkRate,getrefine()*4;
+      .@r = getrefine();
+      if (.@r>6) {
+        bonus2 bSkillAtk,"AM_ACIDTERROR",30;
+        bonus2 bVariableCastrate,"AM_ACIDTERROR",-50;
+      }
+  - Id: 840102
+    AegisName: Brindle_Eel_OC
+    Name: Zebra Eel
+    Type: Weapon
+    SubType: Bow
+    Attack: 125
+    Range: 5
+    Slots: 1 
+    Jobs:
+      BardDancer: true
+      Hunter: true
+    Locations:
+      Both_Hand: true
+    WeaponLevel: 3
+    EquipLevelMin: 50
+    Refineable: true
+    Trade:
+      NoGuildStorage: true
+      NoAuction: true
+    Script: |
+      bonus bCritical,getrefine()*4;
+      bonus bCritAtkRate,getrefine()*4;
+      .@r = getrefine();
+      if (.@r>6) {
+        bonus2 bSkillAtk,"AC_DOUBLE",30;
+      }
+  - Id: 840103
+    AegisName: Spearfish_OC
+    Name: Marlin
+    Type: Weapon
+    SubType: 2hSpear
+    Attack: 180
+    Range: 3
+    Slots: 1 
+    Jobs:
+      Crusader: true
+      Knight: true
+      Swordman: true
+    Locations:
+      Both_Hand: true
+    WeaponLevel: 3
+    EquipLevelMin: 50
+    Refineable: true
+    Trade:
+      NoGuildStorage: true
+      NoAuction: true
+    Script: |
+      bonus bCritical,getrefine()*4;
+      bonus bCritAtkRate,getrefine()*4;
+      .@r = getrefine();
+      if (.@r>6) {
+        bonus2 bSkillAtk,"CR_HOLYCROSS",20;
+      }
+  - Id: 840104
+    AegisName: Saurel_OC
+    Name: Pompano
+    Type: Weapon
+    SubType: Dagger
+    Attack: 130
+    MagicAttack: 100
+    Range: 3
+    Slots: 1 
+    Jobs:
+      Alchemist: true
+      Archer: true
+      Assassin: true
+      BardDancer: true
+      Blacksmith: true
+      Crusader: true
+      Hunter: true
+      KagerouOboro: true
+      Knight: true
+      Mage: true
+      Merchant: true
+      Ninja: true
+      Rogue: true
+      Sage: true
+      SoulLinker: true
+      Swordman: true
+      Thief: true
+      Wizard: true
+    Locations:
+      Right_Hand: true
+    WeaponLevel: 3
+    EquipLevelMin: 50
+    Refineable: true
+    Trade:
+      NoGuildStorage: true
+      NoAuction: true
+    Script: |
+      bonus bCritical,getrefine()*4;
+      bonus bCritAtkRate,getrefine()*4;
+      .@r = getrefine();
+      if (.@r>6) {
+        bonus bAspdRate,5;
+        bonus bMatk,70;
+      }
+  - Id: 840105
+    AegisName: Orca_Cloth_OC
+    Name: Orca Clothes
+    Type: Armor
+    Weight: 1200
+    Defense: 30
+    Slots: 1
+    Locations:
+      Armor: true
+    ArmorLevel: 1
+    EquipLevelMin: 60
+    Refineable: true
+    Script: |
+      .@r = getrefine();
+      bonus bMatk,30;
+      bonus bMdef,5+.@r;
+      bonus2 bSubRace,RC_Fish,5+.@r;
+      if (.@r>6) {
+        bonus bNoCastCancel;
+        bonus bVariableCastrate,-20;
+      }

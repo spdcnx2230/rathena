@@ -25,6 +25,24 @@ alberta_in,55,142,7	script	Stylist#alberta	4_F_02,{
 	}
 }
 
+////////// morocc
+morocc,147,87,7	script	เปลี่ยนสีผมทรงผมสีชุด#morocc	4_F_02,{
+	mes "[Sweet Tuu]";
+	mes "อยากเปลีย่นแปลงตัวตนใช่ไหมละ.";
+	next;
+	switch(select("อยากเปลี่ยนทุกอย่าง:ไม่มีไร")) {
+	case 1:
+		close2;
+		openstylist();
+		end;
+	case 2:
+		next;
+		mes "[Sweet Tuu]";
+		mes "ไว้เจอกันนะ.";
+		close;
+	}
+}
+
 //= Stylist of Prontera
 //===================================================
 prt_in,243,168,4	script	Stylist#prontera	4_F_02,{

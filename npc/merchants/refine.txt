@@ -536,8 +536,8 @@ prt_in,63,60,0	script	Hollgrehenn	4_M_03,{
 		end;
 	}
 }
-
-morocc_in,73,38,6	script	Aragham	4W_M_03,{
+//morocc_in,73,38,6	script	Aragham	4W_M_03,{
+morocc,134,79,5	script	Aragham	448,{
 	if( getbattleflag( "feature.refineui" ) ){
 		mes "[Aragham]";
 		mes "De~ sert~ Blacksmith~";
@@ -550,6 +550,8 @@ morocc_in,73,38,6	script	Aragham	4W_M_03,{
 		callfunc "refinemain","Aragham",0;
 		end;
 	}
+	OnInit:
+	waitingroom "�պǡ",0;
 }
 
 payon,144,173,5	script	Antonio	4_M_ORIENT01,{

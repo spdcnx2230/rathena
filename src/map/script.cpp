@@ -8815,7 +8815,6 @@ BUILDIN_FUNC(getcharid)
 
 /*==========================================
  * returns the GID of an NPC
- * Returns 0 if the NPC name provided is not found.
  *------------------------------------------*/
 BUILDIN_FUNC(getnpcid)
 {
@@ -8826,9 +8825,9 @@ BUILDIN_FUNC(getnpcid)
 	{// unique npc name
 		if( ( nd = npc_name2id(script_getstr(st,3)) ) == NULL )
 		{
-			//Npc not found.
+			ShowError("buildin_getnpcid: No such NPC '%s'.\n", script_getstr(st,3));
 			script_pushint(st,0);
-			return SCRIPT_CMD_SUCCESS;
+			return SCRIPT_CMD_FAILURE;
 		}
 	}
 
@@ -18206,43 +18205,6 @@ BUILDIN_FUNC(delmonsterdrop)
 }
 
 
-
-/*==========================================
- * Returns a random mob_id
- * type: Where to fetch from (see enum e_random_monster)
- * flag: Type of checks to apply (see enum e_random_monster_flags)
- * lv: Mob level to check against
- *------------------------------------------*/
-BUILDIN_FUNC(getrandmobid)
-{
-	int type = script_hasdata(st, 2) ? script_getnum(st, 2) : MOBG_BRANCH_OF_DEAD_TREE;
-
-	if (type < MOBG_BRANCH_OF_DEAD_TREE || type >= MOBG_MAX) {
-		ShowWarning("buildin_getrandmobid: Invalid type %d.\n", type);
-		script_pushint(st, 0);
-		return SCRIPT_CMD_FAILURE;
-	}
-
-	int flag = script_hasdata(st, 3) ? script_getnum(st, 3) : RMF_MOB_NOT_BOSS;
-	if (flag < RMF_NONE || flag > RMF_ALL) {
-		ShowWarning("buildin_getrandmobid: Invalid flag %d.\n", flag);
-		script_pushint(st, 0);
-		return SCRIPT_CMD_FAILURE;
-	}
-
-	int lv = script_hasdata(st, 4) ? script_getnum(st, 4) : MAX_LEVEL;
-	if (lv <= 0) {
-		ShowWarning("buildin_getrandmobid: Invalid level %d.\n", lv);
-		script_pushint(st, 0);
-		return SCRIPT_CMD_FAILURE;
-	}
-
-	script_pushint(st, mob_get_random_id(type, (enum e_random_monster_flags)flag, lv));
-
-	return SCRIPT_CMD_SUCCESS;
-}
-
-
 /*==========================================
  * Returns some values of a monster [Lupus]
  * Name, Level, race, size, etc...
@@ -19619,15 +19581,11 @@ BUILDIN_FUNC(unitwalk)
 			status_calc_npc(((TBL_NPC*)bl), SCO_NONE);
 	}
 
-	bool can_reach = false;
-
 	if (!strcmp(cmd,"unitwalk")) {
 		int x = script_getnum(st,3);
 		int y = script_getnum(st,4);
-		can_reach = unit_can_reach_pos(bl,x,y,0);
-		script_pushint(st, can_reach);
 
-		if (can_reach) {
+		if (script_pushint(st, unit_can_reach_pos(bl,x,y,0))) {
 			if (ud != nullptr)
 				ud->state.force_walk = true;
 			add_timer(gettick()+50, unit_delay_walktoxy_timer, bl->id, (x<<16)|(y&0xFFFF)); // Need timer to avoid mismatches
@@ -19639,11 +19597,7 @@ BUILDIN_FUNC(unitwalk)
 			ShowError("buildin_unitwalk: Bad target destination.\n");
 			script_pushint(st, 0);
 			return SCRIPT_CMD_FAILURE;
-		}
-		can_reach = unit_can_reach_bl(bl, tbl, distance_bl(bl, tbl)+1, 0, NULL, NULL);
-		script_pushint(st, can_reach);
-		
-		if (can_reach) {
+		} else if (script_pushint(st, unit_can_reach_bl(bl, tbl, distance_bl(bl, tbl)+1, 0, NULL, NULL))) {
 			if (ud != nullptr)
 				ud->state.force_walk = true;
 			add_timer(gettick()+50, unit_delay_walktobl_timer, bl->id, tbl->id); // Need timer to avoid mismatches
@@ -19651,7 +19605,7 @@ BUILDIN_FUNC(unitwalk)
 		off = 4;
 	}
 
-	if (ud && script_hasdata(st, off) && can_reach) {
+	if (ud && script_hasdata(st, off)) {
 		done_label = script_getstr(st, off);
 		check_event(st, done_label);
 		safestrncpy(ud->walk_done_event, done_label, sizeof(ud->walk_done_event));
@@ -19798,6 +19752,11 @@ BUILDIN_FUNC(unitstopwalk)
 
 		if (ud != nullptr)
 			ud->state.force_walk = false;
+
+		if (unit_stop_walking(bl, flag) == 0 && flag != USW_FORCE_STOP) {
+			ShowWarning("buildin_unitstopwalk: Unable to find unit or unit is not walking.\n");
+			return SCRIPT_CMD_FAILURE;
+		}
 
 		return SCRIPT_CMD_SUCCESS;
 	} else {
@@ -24169,12 +24128,6 @@ BUILDIN_FUNC(minmax){
 	return SCRIPT_CMD_SUCCESS;
 }
 
-BUILDIN_FUNC(cap_value)
-{
-	script_pushint(st, (int)cap_value(script_getnum(st, 2), script_getnum(st, 3), script_getnum(st, 4)));
-	return true;
-}
-
 /**
  * Safety Base/Job EXP addition than using `set BaseExp,n;` or `set JobExp,n;`
  * Unlike `getexp` that affected by some adjustments.
@@ -25065,115 +25018,6 @@ BUILDIN_FUNC(unloadnpc) {
 	npc_read_event_script();
 
 	return SCRIPT_CMD_SUCCESS;
-}
-
-/**
- * Duplicate a NPC.
- * Return the duplicate Unique name on success or empty string on failure.
- * duplicate "<NPC name>","<map>",<x>,<y>{,"<Duplicate NPC name>"{,<sprite>{,<dir>{,<xs>{,<xy>}}}}};
- */
-BUILDIN_FUNC(duplicate)
-{
-	const char* old_npcname = script_getstr( st, 2 );
-	npc_data* nd = npc_name2id( old_npcname );
-
-	if( nd == nullptr ){
-		ShowError( "buildin_duplicate: No such NPC '%s'.\n", old_npcname );
-		script_pushstrcopy( st, "" );
-		return SCRIPT_CMD_FAILURE;
-	}
-
-	const char* mapname = script_getstr( st, 3 );
-	int16 mapid = map_mapname2mapid( mapname );
-
-	if( mapid < 0 ){
-		ShowError( "buildin_duplicate: map '%s' in not found!\n", mapname );
-		script_pushstrcopy( st, "" );
-		return SCRIPT_CMD_FAILURE;
-	}
-
-	struct map_data* mapdata = map_getmapdata( mapid );
-
-	if( mapdata == nullptr ){
-		// Should not happen, but who knows...
-		ShowError( "buildin_duplicate: mapdata for '%s' is unavailable!\n", mapname );
-		script_pushstrcopy( st, "" );
-		return SCRIPT_CMD_FAILURE;
-	}
-
-	int16 x = script_getnum( st, 4 );
-
-	if( x < 0 || x >= mapdata->xs ){
-		ShowError( "buildin_duplicate: x coordinate %hd is out of bounds for map %s[0-%hd]!\n", x, mapname, mapdata->xs );
-		script_pushstrcopy( st, "" );
-		return SCRIPT_CMD_FAILURE;
-	}
-
-	int16 y = script_getnum( st, 5 );
-
-	if( y < 0 || y >= mapdata->ys ){
-		ShowError( "buildin_duplicate: y coordinate %hd is out of bounds for map %s[0-%hd]!\n", y, mapname, mapdata->ys );
-		script_pushstrcopy( st, "" );
-		return SCRIPT_CMD_FAILURE;
-	}
-
-	char name[NPC_NAME_LENGTH + 1];
-
-	if( script_hasdata( st, 6 ) ){
-		const char* new_name = script_getstr( st, 6 );
-
-		if( strlen( new_name ) > NPC_NAME_LENGTH ){
-			ShowError( "buildin_duplicate: new NPC name \"%s\" is too long!\n", new_name );
-			script_pushstrcopy( st, "" );
-			return SCRIPT_CMD_FAILURE;
-		}
-
-		safestrncpy( name, new_name, sizeof( name ) );
-	}else{
-		safestrncpy( name, nd->name, sizeof( name ) );
-	}
-
-	int class_;
-
-	if( script_hasdata( st, 7 ) ){
-		class_ = script_getnum( st, 7 );
-	}else{
-		class_ = nd->class_;
-	}
-
-	uint8 dir;
-
-	if( script_hasdata( st, 8 ) ){
-		dir = script_getnum( st, 8 );
-	}else{
-		dir = nd->ud.dir;
-	}
-
-	int16 xs;
-
-	if( script_hasdata( st, 9 ) ){
-		xs = script_getnum( st, 9 );
-	}else{
-		xs = nd->u.scr.xs;
-	}
-
-	int16 ys;
-
-	if( script_hasdata( st, 10 ) ){
-		ys = script_getnum( st, 10 );
-	}else{
-		ys = nd->u.scr.ys;
-	}
-
-	npc_data* dnd = npc_duplicate_npc( nd, name, mapid, x, y, class_, dir, xs, ys );
-
-	if( dnd == nullptr ){
-		script_pushstrcopy( st, "" );
-		return SCRIPT_CMD_FAILURE;
-	}else{
-		script_pushstrcopy( st, dnd->exname );
-		return SCRIPT_CMD_SUCCESS;
-	}
 }
 
 /**
@@ -26684,71 +26528,18 @@ BUILDIN_FUNC(item_enchant){
 #endif
 }
 
-/**
-* Generate item link string for client
-* itemlink(<item_id>,<refine>,<card0>,<card1>,<card2>,<card3>,<enchantgrade>{,<RandomIDArray>,<RandomValueArray>,<RandomParamArray>});
-* @author [Cydh]
-**/
-BUILDIN_FUNC(itemlink)
-{
-	struct item item = {};
-	item.nameid = script_getnum(st, 2);
-	
-	if( !item_db.exists( item.nameid ) ){
-		ShowError( "Itemlink: Item ID %u does not exists.\n", item.nameid );
-		st->state = END;
+BUILDIN_FUNC(announce_refine_result) {
+	map_session_data* sd;
+
+	if (!script_charid2sd(5, sd)) {
 		return SCRIPT_CMD_FAILURE;
 	}
 
-	FETCH(3, item.refine);
-	FETCH(4, item.card[0]);
-	FETCH(5, item.card[1]);
-	FETCH(6, item.card[2]);
-	FETCH(7, item.card[3]);
-	FETCH(8, item.enchantgrade);
+	t_itemid itemId = script_getnum(st, 2);
+	int level = script_getnum(st, 3);
+	bool success = script_getnum(st, 4) == 1;
 
-#if PACKETVER >= 20150225
-	if ( script_hasdata(st,9) && script_getitem_randomoption(st, nullptr, &item, "itemlink", 9) == SCRIPT_CMD_FAILURE ) {
-		st->state = END;
-		return SCRIPT_CMD_FAILURE;
-	}
-#endif
-
-	std::string itemlstr = createItemLink(item);
-	script_pushstrcopy(st, itemlstr.c_str());
-	return SCRIPT_CMD_SUCCESS;
-}
-
-BUILDIN_FUNC(addfame) {
-	struct map_session_data *sd;
-
-	if (!script_charid2sd(3, sd))
-		return SCRIPT_CMD_FAILURE;
-
-	pc_addfame(*sd, script_getnum(st, 2));
-
-	return SCRIPT_CMD_SUCCESS;
-}
-
-
-BUILDIN_FUNC(getfame) {
-	struct map_session_data *sd;
-
-	if (!script_charid2sd(2, sd))
-		return SCRIPT_CMD_FAILURE;
-
-	script_pushint(st, sd->status.fame);
-
-	return SCRIPT_CMD_SUCCESS;
-}
-
-BUILDIN_FUNC(getfamerank) {
-	struct map_session_data *sd;
-
-	if (!script_charid2sd(2, sd))
-		return SCRIPT_CMD_FAILURE;
-
-	script_pushint(st, pc_famerank(sd->status.char_id, sd->class_ & MAPID_UPPERMASK));
+	clif_broadcast_refine_result(*sd, itemId, (int8)level, success);
 
 	return SCRIPT_CMD_SUCCESS;
 }
@@ -27162,7 +26953,6 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF2(minmax,"minimum", "*"),
 	BUILDIN_DEF2(minmax,"max", "*"),
 	BUILDIN_DEF2(minmax,"maximum", "*"),
-	BUILDIN_DEF(cap_value, "iii"),
 	// <--- [zBuffer] List of mathematics commands
 	BUILDIN_DEF(md5,"s"),
 	// [zBuffer] List of dynamic var commands --->
@@ -27180,7 +26970,6 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(setitemscript,"is?"), //Set NEW item bonus script. Lupus
 	BUILDIN_DEF(disguise,"i?"), //disguise player. Lupus
 	BUILDIN_DEF(undisguise,"?"), //undisguise player. Lupus
-	BUILDIN_DEF(getrandmobid, "i??"),
 	BUILDIN_DEF(getmonsterinfo,"vi"), //Lupus
 	BUILDIN_DEF(addmonsterdrop,"vii??"), //Akinari [Lupus]
 	BUILDIN_DEF(delmonsterdrop,"vi"), //Akinari [Lupus]
@@ -27400,7 +27189,6 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(jobcanentermap,"s?"),
 	BUILDIN_DEF(openstorage2,"ii?"),
 	BUILDIN_DEF(unloadnpc, "s"),
-	BUILDIN_DEF(duplicate, "ssii?????"),
 
 	// WoE TE
 	BUILDIN_DEF(agitstart3,""),
@@ -27497,12 +27285,7 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(get_reputation_points, "i?"),
 	BUILDIN_DEF(item_reform, "??"),
 	BUILDIN_DEF(item_enchant, "i?"),
-	BUILDIN_DEF(itemlink, "i?????????"),
-	
-	// Add PC Fame script commands #7310
-	BUILDIN_DEF(addfame, "i?"),
-	BUILDIN_DEF(getfame, "?"),
-	BUILDIN_DEF(getfamerank, "?"),
+	BUILDIN_DEF(announce_refine_result, "iii?"),
 #include "../custom/script_def.inc"
 
 	{NULL,NULL,NULL},

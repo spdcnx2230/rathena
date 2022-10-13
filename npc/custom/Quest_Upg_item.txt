@@ -1,0 +1,281 @@
+
+// Item NPCs -- supplying no argument displays entire menu.
+//	callfunc "shophelmgod"{,<shop ID>{,<shop ID>{,...}}};
+//  ADD YOUR NPC HERE
+//============================================================
+morocc,124,72,5	script	ชายทองคำ	617,{ 
+callfunc "shophelmgod",1;
+		//"shophelmgod",2,
+//"shophelmgod",3,
+//"shophelmgod",4,
+//"shophelmgod",5,
+//"shophelmgod",6,
+//"shophelmgod",7;
+
+OnInit:
+waitingroom "แลกของทอง",0;
+end;
+ }
+//-------------
+
+// etc.. Add your Item NPCs 'แลกไอเทม#XXX' here
+//============================================================
+
+
+// Script Core - DO NOT DUPLICATE THIS NPC !!!!!!!!!!!!!
+//============================================================
+-	script	quest_shophelmgod	-1,{
+function Add; function Chk; function Slot;
+OnInit:
+	freeloop(1);
+
+// -----------------------------------------------------------
+//  Basic shop settings.
+// -----------------------------------------------------------
+
+	set .Announce,0;	// Announce quest completion? (1: yes / 0: no)
+	set .ShowSlot,1;	// Show item slots? (2: all equipment / 1: if slots > 0 / 0: never)
+	set .ShowID,0;  	// Show item IDs? (1: yes / 0: no)
+	set .ShowZeny,1;	// Show Zeny cost, if any? (1: yes / 0: no)
+	set .MaxStack,100;	// Max number of แลกไอเทมs purchased at one time.
+
+// -----------------------------------------------------------
+//  Points variable -- optional quest requirement.
+//	setarray .Points$[0],"<variable name>","<display name>";
+// -----------------------------------------------------------
+
+	setarray .Points$[0],
+		"#CASHPOINTS", "Cash Points";
+
+
+//=====================================================================================
+// ------------------- ADD YOUR SHOPS NAME AND ITEMS SHOPS STARTING HERE --------------
+//=====================================================================================
+
+// -----------------------------------------------------------
+//  Item IDs -- to add shops, copy dummy data at bottom of file.
+//	setarray .Items$[1],"<Item 1>","<Item 2>"{,...};
+// -----------------------------------------------------------
+
+	setarray .Items$[1],
+		"Golden Armors";	//1
+		//"God Gentleman's Pipe",		//2
+		//"Neo Fashion Shades",		//3
+		//"GOD of War Plate",		//4
+		//"GOD of War Manteau",		//5
+		//"GOD of War Boot",		//6
+		//"GOD Bunny";		//7
+
+// -----------------------------------------------------------
+//  แลกไอเทมs -- do NOT use a reward item more than once!
+//	Add(<shop ID>,<reward ID>,<reward amount>,
+//	    <Zeny cost>,<point cost>,
+//	    <required item ID>,<required item amount>{,...});
+// -----------------------------------------------------------
+
+// Item 1
+	Add(1,2149,1,700000,0,2102,3,969,3);
+	Add(1,2150,1,800000,0,2104,3,969,3);
+	Add(1,2151,1,900000,0,2106,3,969,3);
+	Add(1,2459,1,700000,0,2404,3,969,3);
+	Add(1,2460,1,800000,0,2406,3,969,3);
+	Add(1,2461,1,900000,0,2412,3,969,3);
+	Add(1,2561,1,700000,0,2502,3,969,3);
+	Add(1,2562,1,800000,0,2504,3,969,3);
+	Add(1,2563,1,900000,0,2506,3,969,3);
+	Add(1,15015,1,700000,0,2306,3,969,3);
+	Add(1,15016,1,800000,0,2310,3,969,3);
+	Add(1,15017,1,900000,0,2326,3,969,3);
+	Add(1,15018,1,900000,0,2331,3,969,3);
+	Add(1,15019,1,900000,0,2336,3,969,3);
+	Add(1,15020,1,900000,0,2315,3,969,3);
+	Add(1,15021,1,900000,0,2320,3,969,3);
+
+// Item 2
+	//Add(2,41004,1,250000000,1000,52001,7,969,20,5377,1,1009,25,706,10);
+	
+// Item 3
+	//Add(3,41005,1,250000000,1000,2202,1,2204,1,969,20,52001,7,5325,1,1009,25,706,10);
+	
+// Item 4
+	//Add(4,41006,1,250000000,1000,64004,1,969,20,52001,7,1009,25,706,10);
+	
+// Item 5
+	//Add(5,41007,1,250000000,1000,64010,1,969,20,52001,7,1009,25,706,10);
+	
+// Item 6
+	//Add(6,41008,1,250000000,1000,64016,1,969,20,52001,7,1009,25,706,10);
+
+// Item 7
+	//Add(7,28902,1,250000000,1000,64047,1,969,20,52001,7,1009,25,706,10);
+	
+
+//=====================================================================================
+// ------------------- YOUR SHOPS AND ITEMS SHOPS HAVE BEEN ADDED ---------------------
+//=====================================================================================
+
+	freeloop(0);
+	set .menu$,"";
+	for(set .@i,1; .@i<=getarraysize(.Items$); set .@i,.@i+1) {
+		set .menu$, .menu$+.Items$[.@i]+":";
+		npcshopdelitem "shophelmgod"+.@i,909;
+	}
+
+	end;
+OnMenu:
+	set .@size, getarraysize(@i);
+	if (!.@size) set @shop_index, select(.menu$);
+	else if (.@size == 1) set @shop_index, @i[0];
+	else {
+		for(set .@j,0; .@j<.@size; set .@j,.@j+1)
+			set .@menu$, .@menu$+.Items$[@i[.@j]]+":";
+		set @shop_index, @i[select(.@menu$)-1];
+	}
+	deletearray @i[0],getarraysize(@i);
+	if (.Items$[@shop_index] == "") {
+		message strcharinfo(0),"เกิดข้อผิดพลาด.";
+		end;
+	}
+	dispbottom "เลือกได้แค่ที่ละชิ้นเท่านั้น.";
+	callshop "shophelmgod"+@shop_index,1;
+	npcshopattach "shophelmgod"+@shop_index;
+	end;
+
+OnBuyItem:
+	// .@q[] : แลก ItemID, BoughtAmt, แลก ItemAmt, BaseAmt, ReqZeny, ReqPts, { ReqItem, ReqAmt, ... }
+	setarray .@q[0],@bought_nameid[0],((@bought_quantity[0] > .MaxStack)?.MaxStack:@bought_quantity[0]);
+	copyarray .@q[3],getd(".q_"+@shop_index+"_"+.@q[0]+"[0]"),getarraysize(getd(".q_"+@shop_index+"_"+.@q[0]));
+	set .@q[2],.@q[1]*.@q[3];
+	if (!.@q[2] || .@q[2] > 30000) {
+		message strcharinfo(0),"เจ้าไม่สามารถแลกได้มากกว่านี้ "+getitemname(.@q[0])+".";
+		end;
+	}
+	mes "[แลกไอเทม]";
+	mes "แลก Item: ^0055FF"+((.@q[2] > 1)?.@q[2]+"x ":"")+Slot(.@q[0])+"^000000";
+	mes "สิ่งที่ต้องการ:";
+	disable_items;
+	if (.@q[4]) mes " > "+Chk(Zeny,.@q[4]*.@q[1])+(.@q[4]*.@q[1])+" Zeny^000000";
+	if (.@q[5]) mes " > "+Chk(getd(.Points$[0]),.@q[5]*.@q[1])+(.@q[5]*.@q[1])+" "+.Points$[1]+" ("+getd(.Points$[0])+"/"+(.@q[5]*.@q[1])+")^000000";
+	if (.@q[6]) for(set .@i,6; .@i<getarraysize(.@q); set .@i,.@i+2)
+		mes " > "+Chk(countitem(.@q[.@i]),.@q[.@i+1]*.@q[1])+((.ShowID)?"{"+.@q[.@i]+"} ":"")+Slot(.@q[.@i])+" ("+countitem(.@q[.@i])+"/"+(.@q[.@i+1]*.@q[1])+")^000000";
+	next;
+	setarray @qe[1], getiteminfo(.@q[0],5), getiteminfo(.@q[0],11);
+	if (@qe[2] > 0 && ((@qe[1] & EQP_HEAD_LOW) || (@qe[1] & EQP_HEAD_TOP) || (@qe[1] & EQP_HEAD_MID) || (@qe[1] & EQP_COSTUME_HEAD_TOP) || (@qe[1] & EQP_COSTUME_HEAD_MID) || (@qe[1] & EQP_COSTUME_HEAD_LOW) || (@qe[1] & EQP_GARMENT) || (@qe[1] & EQP_COSTUME_GARMENT)))
+		set .@preview,1;
+	addtimer 1000, strnpcinfo(0)+"::OnEnd";
+	while(1) {
+		switch(select(" ~ แลก ^0055FF"+getitemname(.@q[0])+"^000000:"+((.@preview && !@qe[7])?" ~ Preview...":"")+": ~ ^777777Cancel^000000")) {
+		case 1:
+			if (@qe[0]) {
+				mes "[แลกไอเทม]";
+				mes "คุณขาดข้อกำหนด Item ไม่ครบ ";
+				mes "หามาให้ครบแล้ว กลับมาใหม่อีกครั้ง ";
+				close;
+			}
+			if (!checkweight(.@q[0],.@q[2])) {
+				mes "[แลกไอเทม]";
+				mes "^FF0000"+(((.@q[2]*getiteminfo(.@q[0],6))+Weight-MaxWeight)/10)+" น้ำหนักของเจ้าเกินกำหนด.^000000";
+				close;
+			}
+			if (.@q[4]) set Zeny, Zeny-(.@q[4]*.@q[1]);
+			if (.@q[5]) setd .Points$[0], getd(.Points$[0])-(.@q[5]*.@q[1]);
+			if (.@q[6]) for(set .@i,6; .@i<getarraysize(.@q); set .@i,.@i+2)
+				delitem .@q[.@i],.@q[.@i+1]*.@q[1];
+			getitem .@q[0],.@q[2];
+			if (.Announce) announce strcharinfo(0)+" has created "+((.@q[2] > 1)?.@q[2]+"x "+getitemname(.@q[0]):callfunc("F_InsertArticle",getitemname(.@q[0])))+"!",0;
+			specialeffect2 EF_FLOWERLEAF;
+			close;
+		case 2:
+			setarray @qe[3], getlook(LOOK_HEAD_BOTTOM), getlook(LOOK_HEAD_TOP), getlook(LOOK_HEAD_MID), getlook(LOOK_ROBE), 1;
+			if ((@qe[1] & 1) || (@qe[1] & 4096)) changelook LOOK_HEAD_BOTTOM, @qe[2];
+			else if ((@qe[1] & 256) || (@qe[1] & 1024)) changelook LOOK_HEAD_TOP, @qe[2];
+			else if ((@qe[1] & 512) || (@qe[1] & 2048)) changelook LOOK_HEAD_MID, @qe[2];
+			else if ((@qe[1] & 4) || (@qe[1] & 8192)) changelook LOOK_ROBE, @qe[2];
+			break;
+		case 3:
+			close;
+		}
+	}
+
+OnEnd:
+	if (@qe[7]) {
+		changelook LOOK_HEAD_BOTTOM, @qe[3];
+		changelook LOOK_HEAD_TOP, @qe[4];
+		changelook LOOK_HEAD_MID, @qe[5];
+		changelook LOOK_ROBE, @qe[6];
+	}
+	deletearray @qe[0],8;
+	end;
+
+function Add {
+	if (getitemname(getarg(1)) == "null") {
+		debugmes "Quest reward #"+getarg(1)+" invalid (skipped).";
+		return;
+	}
+	setarray .@j[0],getarg(2),getarg(3),getarg(4);
+	for(set .@i,5; .@i<getargcount(); set .@i,.@i+2) {
+		if (getitemname(getarg(.@i)) == "null") {
+			debugmes "Quest requirement #"+getarg(.@i)+" invalid (skipped).";
+			return;
+		} else
+			setarray .@j[.@i-2],getarg(.@i),getarg(.@i+1);
+	}
+	copyarray getd(".q_"+getarg(0)+"_"+getarg(1)+"[0]"),.@j[0],getarraysize(.@j);
+	npcshopadditem "shophelmgod"+getarg(0),getarg(1),((.ShowZeny)?getarg(3):0);
+	return;
+}
+
+function Chk {
+	if (getarg(0) < getarg(1)) {
+		set @qe[0],1;
+		return "^FF0000";
+	} else
+		return "^00FF00";
+}
+
+function Slot {
+	set .@s$,getitemname(getarg(0));
+	switch(.ShowSlot) {
+		case 1: if (!getitemslots(getarg(0))) return .@s$;
+		case 2: if (getiteminfo(getarg(0),2) == 4 || getiteminfo(getarg(0),2) == 5) return .@s$+" ["+getitemslots(getarg(0))+"]";
+		default: return .@s$;
+	}
+}
+}
+
+function	script	shophelmgod	{
+	deletearray @i[0],getarraysize(@i);
+	for(set .@i,0; .@i<getargcount(); set .@i,.@i+1)
+		set @i[.@i],getarg(.@i);
+	doevent "quest_shophelmgod::OnMenu";
+	end;
+}
+
+
+// Dummy shop data -- copy as needed.
+//============================================================
+-	shop	shophelmgod1	-1,909:-1
+//-	shop	shophelmgod2	-1,909:-1
+//-	shop	shophelmgod3	-1,909:-1
+//-	shop	shophelmgod4	-1,909:-1
+//-	shop	shophelmgod5	-1,909:-1
+//-	shop	shophelmgod6	-1,909:-1
+//-	shop	shophelmgod7	-1,909:-1
+//-	shop	shophelmgod8	-1,909:-1
+//-	shop	shophelmgod9	-1,909:-1
+//-	shop	shophelmgod10	-1,909:-1
+//-	shop	shophelmgod11	-1,909:-1
+//-	shop	shophelmgod12	-1,909:-1
+//-	shop	shophelmgod13	-1,909:-1
+//-	shop	shophelmgod14	-1,909:-1
+//-	shop	shophelmgod15	-1,909:-1
+//-	shop	shophelmgod16	-1,909:-1
+//-	shop	shophelmgod17	-1,909:-1
+//-	shop	shophelmgod18	-1,909:-1
+//-	shop	shophelmgod19	-1,909:-1
+//-	shop	shophelmgod20	-1,909:-1
+//-	shop	shophelmgod21	-1,909:-1
+//-	shop	shophelmgod22	-1,909:-1
+//-	shop	shophelmgod23	-1,909:-1
+//-	shop	shophelmgod24	-1,909:-1
+//-	shop	shophelmgod25	-1,909:-1

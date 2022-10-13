@@ -8787,9 +8787,6 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		struct status_change *sc = status_get_sc(src);
 		int starget = BL_CHAR|BL_SKILL;
 
-		if (skill_id == LG_OVERBRAND)
-			clif_skill_poseffect(src, skill_id, skill_lv, src->x, src->y, tick);
-
 		if (skill_id == SR_HOWLINGOFLION)
 			starget = splash_target(src);
 		if (skill_id == SJ_NEWMOONKICK) {
@@ -10067,10 +10064,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 	case NPC_RANDOMMOVE:
 		if (md) {
 			md->next_walktime = tick - 1;
-			if (md->special_state.ai == AI_SPHERE)
-				unit_escape(&md->bl, bl, 7, 2);
-			else
-				mob_randomwalk(md,tick);
+			mob_randomwalk(md,tick);
 		}
 		break;
 
@@ -10168,7 +10162,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		break;
 
 	case NPC_SIEGEMODE:
-		// Not implemented/used: Gives EFST_SIEGEMODE which reduces speed to 1000.
+		// not sure what it does
 		clif_skill_nodamage(src,bl,skill_id,skill_lv,1);
 		break;
 

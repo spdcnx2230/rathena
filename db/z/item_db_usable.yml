@@ -90,8 +90,8 @@ Header:
 
 Body:
   - Id: 23207
-    AegisName: Premium_Box
-    Name: Premium Service Box
+    AegisName: Premium_Service_Box30
+    Name: Premium Service Box30
     Type: Usable
     Buy: 10
     Weight: 0
@@ -107,14 +107,84 @@ Body:
       NoMail: true
       NoAuction: true
     Script: |
-      rentitem 23165,2592000;
-      #PREMIUMSERVICE_TIME = gettimetick(2)+2592000;
-      sc_start SC_PREMIUMSERVICE,2592000000,30;
-      sc_start SC_PREMIUMSERVICE_STORAGE,2592000000,300;
-      sc_start SC_PREMIUMSERVICE_EXPBOOST_A,2592000000,20;
-      sc_start SC_PREMIUMSERVICE_JEXPBOOST_A,2592000000,20;
-      sc_start SC_PREMIUMSERVICE_ITEMBOOST_A,2592000000,30;
-#      cmd
+      //rentitem 23165,2592000; 
+      .APACHE_PREMIUM_SERVICE = 9; 
+      .APACHE_PREMIUM_TIME = gettimetick(2)+2592000; 
+      //sc_start SC_APACHE_STORAGE,2592000000,300; 
+      sc_start SC_APACHE_EXPBOOST_A,2592000000,30; 
+      sc_start SC_APACHE_ITEMBOOST_A,2592000000,30;
+  - Id: 23209
+    AegisName: Premium_Service_Box1
+    Name: Premium Service Box1
+    Type: Usable
+    Buy: 10
+    Weight: 0
+    Delay:
+      Duration: 15000
+    Trade:
+      Override: 100
+      NoDrop: true
+      NoTrade: true
+      NoSell: true
+      NoCart: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Script: |
+      //rentitem 23165,86400000; //86400000
+      .APACHE_PREMIUM_SERVICE = 9; 
+      .APACHE_PREMIUM_TIME = gettimetick(2)+86400000; 
+      //sc_start SC_APACHE_STORAGE,86400000,300; 
+      sc_start SC_APACHE_EXPBOOST_A,86400000,30; 
+      sc_start SC_APACHE_ITEMBOOST_A,86400000,30;
+  - Id: 23210
+    AegisName: Premium_Service_Box4
+    Name: Premium Service Box4
+    Type: Usable
+    Buy: 10
+    Weight: 0
+    Delay:
+      Duration: 15000
+    Trade:
+      Override: 100
+      NoDrop: true
+      NoTrade: true
+      NoSell: true
+      NoCart: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Script: |
+      rentitem 23165,100000; //345600000
+      .APACHE_PREMIUM_SERVICE = 9; 
+      .APACHE_PREMIUM_TIME = gettimetick(2)+100000; 
+      sc_start SC_APACHE_STORAGE,100000,300; 
+      sc_start SC_APACHE_EXPBOOST_A,100000,30; 
+      sc_start SC_APACHE_ITEMBOOST_A,100000,30;
+  - Id: 23213
+    AegisName: Premium_Service_Box7
+    Name: Premium Service Box7
+    Type: Usable
+    Buy: 10
+    Weight: 0
+    Delay:
+      Duration: 15000
+    Trade:
+      Override: 100
+      NoDrop: true
+      NoTrade: true
+      NoSell: true
+      NoCart: true
+      NoGuildStorage: true
+      NoMail: true
+      NoAuction: true
+    Script: |
+      //rentitem 23165,604800000; 
+      .APACHE_PREMIUM_SERVICE = 9; 
+      .APACHE_PREMIUM_TIME = gettimetick(2)+604800000; 
+      //sc_start SC_APACHE_STORAGE,604800000,300; 
+      sc_start SC_APACHE_EXPBOOST_A,604800000,30; 
+      sc_start SC_APACHE_ITEMBOOST_A,604800000,30;
   - Id: 23165
     AegisName: Service30_AID_Buff
     Name: Premium Service Personnel
@@ -206,3 +276,37 @@ Body:
       NoAuction: true
     Script: |
       rentitem 23648,2592000;
+  - Id: 1100102
+    AegisName: Shadow_begin_Box1
+    Name: Shadow Box1
+    Type: Usable
+    Weight: 10
+    Flags:
+      Container: true
+    Trade:
+      NoSell: true
+      NoAuction: true
+    Script: |
+      getgroupitem(IG_Shadow_begin_Box1);
+  - Id: 61001
+    AegisName: Cash_coin1
+    Name: 1 Cash Coin
+    Type: Usable
+    Trade:
+      NoDrop: true
+      NoSell: true
+      NoGuildStorage: true
+      NoAuction: true
+    Script: |
+      dispbottom "Get "+callfunc("F_InsertComma",(countitem(61001)*1+1))+" Cash Point."; set #CASHPOINTS,#CASHPOINTS +((countitem(61001)*1)+1); delitem 61001,countitem(61001);
+  - Id: 61002
+    AegisName: Cash_coin10
+    Name: 10 Cash Coin
+    Type: Usable
+    Trade:
+      NoDrop: true
+      NoSell: true
+      NoGuildStorage: true
+      NoAuction: true
+    Script: |
+      dispbottom "Get "+callfunc("F_InsertComma",(countitem(61002)*10+10))+" Cash Point."; set #CASHPOINTS,#CASHPOINTS +((countitem(61002)*10)+10); delitem 61002,countitem(61002);

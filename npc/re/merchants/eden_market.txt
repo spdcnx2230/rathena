@@ -530,6 +530,7 @@ paramk,74,15,0	script	Leria#coin	4_M_BIBI,{
 }
 
 // Heimhunter
+/*
 paramk,71,15,3	script	Heimhunter#hei	4_GEFFEN_11,{
 	if ($event_paramk > 0) {
 		mes "[Heimhunter]";
@@ -554,7 +555,7 @@ paramk,71,15,3	script	Heimhunter#hei	4_GEFFEN_11,{
 		mes "I will take a break, too.";
 		close;
 	}
-}
+}*/
 
 // Zephet
 paramk,68,15,0	script	Zephet#key	4_M_HUMERCHANT,{

@@ -5,7 +5,6 @@
 #define ITEMDB_HPP
 
 #include <map>
-#include <string>
 #include <vector>
 
 #include "../common/database.hpp"
@@ -1026,7 +1025,6 @@ enum e_random_item_group {
 	IG_S_SPELLCASTER_SHOES,
 	IG_S_ABSORB_WEAPON,
 	IG_S_ABSORB_SHIELD,
-	IG_PORINGSPRECIOUSBOX,
 	IG_ODIN_RELIC,
 	IG_Ein_1HITEMbox,
 	IG_Ein_UNDIUM,
@@ -1613,8 +1611,6 @@ bool itemdb_isNoEquip(struct item_data *id, uint16 m);
 bool itemdb_parse_roulette_db(void);
 
 void itemdb_reload(void);
-
-std::string createItemLink(struct item& data);
 
 void do_final_itemdb(void);
 void do_init_itemdb(void);

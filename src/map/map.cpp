@@ -192,7 +192,6 @@ int enable_grf = 0;	//To enable/disable reading maps from GRF files, bypassing m
 #ifdef MAP_GENERATOR
 struct s_generator_options {
 	bool navi;
-	bool reputation;
 } gen_options;
 #endif
 
@@ -1381,7 +1380,7 @@ int map_foreachindir(int(*func)(struct block_list*, va_list), int16 m, int16 x0,
 	struct block_list *bl;
 	int bx, by;
 	int mx0, mx1, my0, my1, rx, ry;
-	uint8 dir = map_calc_dir_xy( x0, y0, x1, y1, DIR_EAST );
+	uint8 dir = map_calc_dir_xy(x0, y0, x1, y1, 6);
 	short dx = dirx[dir];
 	short dy = diry[dir];
 	va_list ap;
@@ -1397,7 +1396,7 @@ int map_foreachindir(int(*func)(struct block_list*, va_list), int16 m, int16 x0,
 		return 0;
 
 	//Special offset handling for diagonal paths
-	if( offset && direction_diagonal( (directions)dir ) ){
+	if (offset && (dir % 2)) {
 		//So that diagonal paths can attach to each other, we have to work with half-tile offsets
 		offset = (2 * offset) - 1;
 		//To get the half-tiles we need to increase length by one
@@ -1423,10 +1422,10 @@ int map_foreachindir(int(*func)(struct block_list*, va_list), int16 m, int16 x0,
 		SWAP(my0, my1);
 
 	//Apply width to the path by turning 90 degrees
-	mx0 -= abs( range * dirx[( dir + 2 ) % DIR_MAX] );
-	my0 -= abs( range * diry[( dir + 2 ) % DIR_MAX] );
-	mx1 += abs( range * dirx[( dir + 2 ) % DIR_MAX] );
-	my1 += abs( range * diry[( dir + 2 ) % DIR_MAX] );
+	mx0 -= abs(range*dirx[(dir + 2) % 8]);
+	my0 -= abs(range*diry[(dir + 2) % 8]);
+	mx1 += abs(range*dirx[(dir + 2) % 8]);
+	my1 += abs(range*diry[(dir + 2) % 8]);
 
 	mx0 = max(mx0, 0);
 	my0 = max(my0, 0);
@@ -1451,7 +1450,7 @@ int map_foreachindir(int(*func)(struct block_list*, va_list), int16 m, int16 x0,
 						rx *= dx;
 						ry *= dy;
 						//These checks only need to be done for diagonal paths
-						if( direction_diagonal( (directions)dir ) ){
+						if (dir % 2) {
 							//Check for length
 							if ((rx + ry < offset) || (rx + ry > 2 * (length + (offset/2) - 1)))
 								continue;
@@ -1487,7 +1486,7 @@ int map_foreachindir(int(*func)(struct block_list*, va_list), int16 m, int16 x0,
 						rx *= dx;
 						ry *= dy;
 						//These checks only need to be done for diagonal paths
-						if( direction_diagonal( (directions)dir ) ){
+						if (dir % 2) {
 							//Check for length
 							if ((rx + ry < offset) || (rx + ry > 2 * (length + (offset / 2) - 1)))
 								continue;
@@ -1775,7 +1774,7 @@ int map_search_freecell(struct block_list *src, int16 m, int16 *x,int16 *y, int1
  *------------------------------------------*/
 bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
 {
-	uint8 dir = DIR_EAST;
+	uint8 dir = 6;
 	int16 tx = *x;
 	int16 ty = *y;
 	int costrange = 10;
@@ -1789,7 +1788,7 @@ bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
 		short dy = diry[dir];
 
 		//Linear search
-		if( !direction_diagonal( (directions)dir ) && costrange % MOVE_COST == 0 ){
+		if(dir%2 == 0 && costrange%MOVE_COST == 0) {
 			tx = *x+dx*(costrange/MOVE_COST);
 			ty = *y+dy*(costrange/MOVE_COST);
 			if(!map_count_oncell(m, tx, ty, type, flag) && map_getcell(m,tx,ty,CELL_CHKPASS)) {
@@ -1799,7 +1798,7 @@ bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
 			}
 		} 
 		//Full diagonal search
-		else if( direction_diagonal( (directions)dir ) && costrange % MOVE_DIAGONAL_COST == 0 ){
+		else if(dir%2 == 1 && costrange%MOVE_DIAGONAL_COST == 0) {
 			tx = *x+dx*(costrange/MOVE_DIAGONAL_COST);
 			ty = *y+dy*(costrange/MOVE_DIAGONAL_COST);
 			if(!map_count_oncell(m, tx, ty, type, flag) && map_getcell(m,tx,ty,CELL_CHKPASS)) {
@@ -1809,7 +1808,7 @@ bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
 			}
 		}
 		//One cell diagonal, rest linear (TODO: Find a better algorithm for this)
-		else if( direction_diagonal( (directions)dir ) && costrange % MOVE_COST == 4 ){
+		else if(dir%2 == 1 && costrange%MOVE_COST == 4) {
 			tx = *x+dx*((dir%4==3)?(costrange/MOVE_COST):1);
 			ty = *y+dy*((dir%4==1)?(costrange/MOVE_COST):1);
 			if(!map_count_oncell(m, tx, ty, type, flag) && map_getcell(m,tx,ty,CELL_CHKPASS)) {
@@ -1827,17 +1826,17 @@ bool map_closest_freecell(int16 m, int16 *x, int16 *y, int type, int flag)
 		}
 
 		//Get next direction
-		if( dir == DIR_SOUTHEAST ){
+		if (dir == 5) {
 			//Diagonal search complete, repeat with higher cost range
 			if(costrange == 14) costrange += 6;
 			else if(costrange == 28 || costrange >= 38) costrange += 2;
 			else costrange += 4;
-			dir = DIR_EAST;
-		}else if( dir == DIR_SOUTH ){
+			dir = 6;
+		} else if (dir == 4) {
 			//Linear search complete, switch to diagonal directions
-			dir = DIR_NORTHEAST;
+			dir = 7;
 		} else {
-			dir = ( dir + 2 ) % DIR_MAX;
+			dir = (dir+2)%8;
 		}
 	}
 
@@ -3023,14 +3022,14 @@ int map_check_dir(int s_dir,int t_dir)
 	if(s_dir == t_dir)
 		return 0;
 	switch(s_dir) {
-		case DIR_NORTH: if( t_dir == DIR_NORTHEAST || t_dir == DIR_NORTHWEST || t_dir == DIR_NORTH ) return 0; break;
-		case DIR_NORTHWEST: if( t_dir == DIR_NORTH || t_dir == DIR_WEST || t_dir == DIR_NORTHWEST ) return 0; break;
-		case DIR_WEST: if( t_dir == DIR_NORTHWEST || t_dir == DIR_SOUTHWEST || t_dir == DIR_WEST ) return 0; break;
-		case DIR_SOUTHWEST: if( t_dir == DIR_WEST || t_dir == DIR_SOUTH || t_dir == DIR_SOUTHWEST ) return 0; break;
-		case DIR_SOUTH: if( t_dir == DIR_SOUTHWEST || t_dir == DIR_SOUTHEAST || t_dir == DIR_SOUTH ) return 0; break;
-		case DIR_SOUTHEAST: if( t_dir == DIR_SOUTH || t_dir == DIR_EAST || t_dir == DIR_SOUTHEAST ) return 0; break;
-		case DIR_EAST: if( t_dir == DIR_SOUTHEAST || t_dir == DIR_NORTHEAST || t_dir == DIR_EAST ) return 0; break;
-		case DIR_NORTHEAST: if( t_dir == DIR_EAST || t_dir == DIR_NORTH || t_dir == DIR_NORTHEAST ) return 0; break;
+		case 0: if(t_dir == 7 || t_dir == 1 || t_dir == 0) return 0; break;
+		case 1: if(t_dir == 0 || t_dir == 2 || t_dir == 1) return 0; break;
+		case 2: if(t_dir == 1 || t_dir == 3 || t_dir == 2) return 0; break;
+		case 3: if(t_dir == 2 || t_dir == 4 || t_dir == 3) return 0; break;
+		case 4: if(t_dir == 3 || t_dir == 5 || t_dir == 4) return 0; break;
+		case 5: if(t_dir == 4 || t_dir == 6 || t_dir == 5) return 0; break;
+		case 6: if(t_dir == 5 || t_dir == 7 || t_dir == 6) return 0; break;
+		case 7: if(t_dir == 6 || t_dir == 0 || t_dir == 7) return 0; break;
 	}
 	return 1;
 }
@@ -3040,9 +3039,9 @@ int map_check_dir(int s_dir,int t_dir)
  *------------------------------------------*/
 uint8 map_calc_dir(struct block_list* src, int16 x, int16 y)
 {
-	uint8 dir = DIR_NORTH;
+	uint8 dir = 0;
 
-	nullpo_retr( dir, src );
+	nullpo_ret(src);
 
 	dir = map_calc_dir_xy(src->x, src->y, x, y, unit_getdir(src));
 
@@ -3054,7 +3053,7 @@ uint8 map_calc_dir(struct block_list* src, int16 x, int16 y)
  * Use this if you don't have a block list available to check against
  *------------------------------------------*/
 uint8 map_calc_dir_xy(int16 srcx, int16 srcy, int16 x, int16 y, uint8 srcdir) {
-	uint8 dir = DIR_NORTH;
+	uint8 dir = 0;
 	int dx, dy;
 
 	dx = x-srcx;
@@ -3063,31 +3062,31 @@ uint8 map_calc_dir_xy(int16 srcx, int16 srcy, int16 x, int16 y, uint8 srcdir) {
 	{	// both are standing on the same spot
 		// aegis-style, makes knockback default to the left
 		// athena-style, makes knockback default to behind 'src'
-		dir = ( battle_config.knockback_left ? DIR_EAST : srcdir );
+		dir = (battle_config.knockback_left ? 6 : srcdir);
 	}
 	else if( dx >= 0 && dy >=0 )
 	{	// upper-right
-		if( dx >= dy*3 )      dir = DIR_EAST;	// right
-		else if( dx*3 < dy )  dir = DIR_NORTH;	// up
-		else                  dir = DIR_NORTHEAST;	// up-right
+		if( dx >= dy*3 )      dir = 6;	// right
+		else if( dx*3 < dy )  dir = 0;	// up
+		else                  dir = 7;	// up-right
 	}
 	else if( dx >= 0 && dy <= 0 )
 	{	// lower-right
-		if( dx >= -dy*3 )     dir = DIR_EAST;	// right
-		else if( dx*3 < -dy ) dir = DIR_SOUTH;	// down
-		else                  dir = DIR_SOUTHEAST;	// down-right
+		if( dx >= -dy*3 )     dir = 6;	// right
+		else if( dx*3 < -dy ) dir = 4;	// down
+		else                  dir = 5;	// down-right
 	}
 	else if( dx <= 0 && dy <= 0 )
 	{	// lower-left
-		if( dx*3 >= dy )      dir = DIR_SOUTH;	// down
-		else if( dx < dy*3 )  dir = DIR_WEST;	// left
-		else                  dir = DIR_SOUTHWEST;	// down-left
+		if( dx*3 >= dy )      dir = 4;	// down
+		else if( dx < dy*3 )  dir = 2;	// left
+		else                  dir = 3;	// down-left
 	}
 	else
 	{	// upper-left
-		if( -dx*3 <= dy )     dir = DIR_NORTH;	// up
-		else if( -dx > dy*3 ) dir = DIR_WEST;	// left
-		else                  dir = DIR_NORTHWEST;	// up-left
+		if( -dx*3 <= dy )     dir = 0;	// up
+		else if( -dx > dy*3 ) dir = 2;	// left
+		else                  dir = 1;	// up-left
 	}
 	return dir;
 }
@@ -3305,16 +3304,16 @@ bool map_iwall_exist(const char* wall_name)
 
 void map_iwall_nextxy(int16 x, int16 y, int8 dir, int pos, int16 *x1, int16 *y1)
 {
-	if( dir == DIR_NORTH || dir == DIR_SOUTH )
+	if( dir == 0 || dir == 4 )
 		*x1 = x; // Keep X
-	else if( dir > DIR_NORTH && dir < DIR_SOUTH )
+	else if( dir > 0 && dir < 4 )
 		*x1 = x - pos; // Going left
 	else
 		*x1 = x + pos; // Going right
 
-	if( dir == DIR_WEST || dir == DIR_EAST )
+	if( dir == 2 || dir == 6 )
 		*y1 = y;
-	else if( dir > DIR_WEST && dir < DIR_EAST )
+	else if( dir > 2 && dir < 6 )
 		*y1 = y - pos;
 	else
 		*y1 = y + pos;
@@ -5106,8 +5105,6 @@ int mapgenerator_get_options(int argc, char** argv) {
 
 			if (strcmp(arg, "generate-navi") == 0) {
 				gen_options.navi = true;
-			} else if (strcmp(arg, "generate-reputation") == 0) {
-				gen_options.reputation = true;
 			} else {
 				// pass through to default get_options
 				continue;
@@ -5297,10 +5294,6 @@ int do_init(int argc, char *argv[])
 	// depending on gen_options, generate the correct things
 	if (gen_options.navi)
 		navi_create_lists();
-
-	if (gen_options.reputation)
-		pc_reputation_generate();
-
 	runflag = CORE_ST_STOP;
 #endif
 

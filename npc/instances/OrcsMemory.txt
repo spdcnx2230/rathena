@@ -40,26 +40,26 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	406,{
 	set .@party_id,getcharid(1);
 	set .@md_name$,"Orc's Memory";
 
-	if (!instance_check_party(.@party_id,2,30,80)) {
-		mes "Only users between Levels ^ff000030 ~ 80^000000 can enter this Dungeon.";
+	if (!instance_check_party(.@party_id,1,50,200)) {
+		mes "เข้าได้เฉพาะผู้ที่มีเลเวล  Levels ^ff000050^000000 ขึ้นไป.";
 		close;
 	}
 
 	set .@orctime,checkquest(12059,PLAYTIME);
 	if (.@orctime == -1) {
 		if (is_party_leader() == true) {
-			mes "Party status confirmed. Would you like to book entrance to the "+.@md_name$+"?";
+			mes "ยืนยันสถานะปาร์ตี้. ดำเนินการจองดันเจี้ยน "+.@md_name$+"?";
 			next;
-			switch(select("Reserve the "+.@md_name$+":Enter the Dungeon:Cancel")) {
+			switch(select("จองดันเจี้ยน "+.@md_name$+":Enter the Dungeon:Cancel")) {
 			case 1:
 				if (instance_create(.@md_name$) < 0) {
 					mes "Party Name: "+ getpartyname(.@party_id);
 					mes "Party Leader: "+strcharinfo(0);
-					mes "^0000ff"+.@md_name$+" ^000000 - Reservation Failed.";
+					mes "^0000ff"+.@md_name$+" ^000000 - การจองล้มเหลว.";
 					close;
 				}
-				mes "^0000ff"+.@md_name$+"^000000- Attempting to book an entrance";
-				mes "After making a reservation, you have to select 'Enter the Dungeon' from the menu if you wish to enter the "+.@md_name$+".";
+				mes "^0000ff"+.@md_name$+"^000000- ดำเนินการจองทางเข้า";
+				mes "หลังจากทำการจอง, คุณต้องเลือก 'Enter the Dungeon' เพื่อเข้าสู่ดันเจี้ยน "+.@md_name$+".";
 				close;
 			case 2:
 				callsub L_Enter,0;
@@ -67,7 +67,7 @@ gef_fild10,242,202,0	script	Dimensional Gorge Piece	406,{
 				close;
 			}
 		}
-		if(select(.@md_name$ + " Enter the Memorial Dungeon:Cancel") == 2)
+		if(select(.@md_name$ + " Enter the Dungeon:Cancel") == 2)
 			end;
 		callsub L_Enter,1;
 	} else if (.@orctime == 0 || .@orctime == 1) {
@@ -89,11 +89,11 @@ L_Enter:
 		mes "An unknown error has occurred.";
 		close;
 	case IE_NOINSTANCE:
-		mes "Memorial Dungeon Orc's Memory does not exist.";
-		mes "Memorial Dungeon has been destroyed by the Party Leader, or because of the time limit. Please try again after 2 hours.";
+		mes "Memorial Dungeon Orc's Memory จบแล้ว.";
+		mes "Memorial Dungeon สามารถเข้าใหม่ในอีก 2 ช.ม..";
 		close;
 	case IE_NOMEMBER:
-		mes "Only a member of the party can enter the Memorial Dungeon.";
+		mes "เฉพาะสมาชิก party ที่สามารถเข้า Memorial Dungeon.";
 		close;
 	case IE_OK:
 		mapannounce "gef_fild10", getpartyname( getcharid(1) ) +" party's member "+strcharinfo(0)+" has entered the Orc's Memory.",bc_map,"0x00ff99";
@@ -522,7 +522,7 @@ OnInstanceInit:
 
 OnEnable:
 	enablenpc instance_npcname("#2Resurrect Monsters1");
-	monster instance_mapname("2@orcs"),0,0,"Vengeful Orc",1152,30,instance_npcname("#2Resurrect Monsters1")+"::OnMyMobDead";
+	monster instance_mapname("2@orcs"),0,0,"Vengeful Orc",1152,10,instance_npcname("#2Resurrect Monsters1")+"::OnMyMobDead";
 	end;
 
 OnDisable:
@@ -566,7 +566,7 @@ OnTimer10:
 OnTimer4010:
 	set .@map$, instance_mapname("2@orcs");
 	mapannounce .@map$, "[ Wraiths were summoned by an unknown power ]",bc_map,"0x77ff77";
-	areamonster .@map$,167,25,177,35,"Wraith",1475,30,instance_npcname("#2Resurrect Monsters1")+"::OnMyMobDead";
+	areamonster .@map$,167,25,177,35,"Wraith",1475,1,instance_npcname("#2Resurrect Monsters1")+"::OnMyMobDead";
 	stopnpctimer;
 	end;
 }
@@ -845,6 +845,38 @@ OnMyMobDead:
 	else {
 		mapannounce .@map$, "Shaman Cargalache: Defeated by these fools... It can't be happening...!",bc_map,"0xffff00";
 	}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	.@ren_e_m = rand(1,751);	/////// สุ่มออฟช่อง4
+	     if (.@ren_e_m < 10) .@en_name_4 = 0;
+	else if (.@ren_e_m < 202) .@en_name_4 = 4742;	// Vitality3
+	else if (.@ren_e_m < 301) .@en_name_4 = 4702;	// Strength3
+	else if (.@ren_e_m < 401) .@en_name_4 = 4732;	// Agility3
+	else if (.@ren_e_m < 501) .@en_name_4 = 4722;	// Dexterity3
+	else if (.@ren_e_m < 601) .@en_name_4 = 4712;	// Inteligence3
+	else if (.@ren_e_m < 701) .@en_name_4 = 4752;	// Luck3
+	if (.@en_name_4 > 0) {	////////////////// ถ้ามีออฟช่อง4  ถึงจะสุ่มออฟช่อง3ได้
+		.@ren_e_m = rand(1,751);
+			if (.@ren_e_m < 20) .@en_name_3 = 0;
+		else if (.@ren_e_m < 202) .@en_name_3 = 4742;	// Vitality3
+		else if (.@ren_e_m < 301) .@en_name_3 = 4702;	// Strength3
+		else if (.@ren_e_m < 401) .@en_name_3 = 4732;	// Agility3
+		else if (.@ren_e_m < 501) .@en_name_3 = 4722;	// Dexterity3
+		else if (.@ren_e_m < 601) .@en_name_3 = 4712;	// Inteligence3
+		else if (.@ren_e_m < 701) .@en_name_3 = 4752;	// Luck3
+	}
+	if (.@en_name_3 > 0) {	////////////////// ถ้ามีออฟช่อง3  ถึงจะสุ่มออฟช่อง2ได้
+		.@ren_e_m = rand(1,751);
+			if (.@ren_e_m < 30) .@en_name_2 = 0;
+		else if (.@ren_e_m < 202) .@en_name_2 = 4797;	// MHP300
+		else if (.@ren_e_m < 301) .@en_name_2 = 4800;	// SP50
+		else if (.@ren_e_m < 401) .@en_name_2 = 4810;	// Fighting_Spirit2
+		else if (.@ren_e_m < 501) .@en_name_2 = 4817;	// Sharp2
+		else if (.@ren_e_m < 601) .@en_name_2 = 4833;	// Expert_Archer2
+		else if (.@ren_e_m < 701) .@en_name_2 = 4814;	// Spell2
+	}
+	makeitem2 28522,1,.@map$,182,14,0,0,0,0,.@en_name_2,.@en_name_3,.@en_name_4;
+	//getitem2 28522,1,0,0,0,0,.@en_name_2,.@en_name_3,.@en_name_4;
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	donpcevent instance_npcname("#2Resurrect Monsters1")+"::OnDisable";
 	donpcevent instance_npcname("#2Resurrect Monsters3")+"::OnDisable";
 	donpcevent instance_npcname("#Warp Outside Orc Dun")+"::OnEnable";

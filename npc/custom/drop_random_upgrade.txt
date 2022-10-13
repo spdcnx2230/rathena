@@ -1,0 +1,60 @@
+	-	script	monsterdrop	-1,{
+OnNPCKillEvent:
+	if (getmonsterinfo(killedrid, MOB_ID)==1929) {	////////////////// กำหนดมอนสเตอร์ ถ้าอยากให้ใช้กับ MVP เปลี่ยนเป็น if (getmonsterinfo(killedrid, MOB_MVPEXP) > 0) 
+			getmapxy(.@map$,.@x,.@y,BL_PC);
+			
+			.@ren_e_m = rand(1,6);////สุ่มcard slot4
+			  if (.@ren_e_m ==1 ) .@en_name_4 = 4833;	// Expert_Archer2
+		else if (.@ren_e_m ==2 ) .@en_name_4 = 4834;	// Expert_Archer3
+		else if (.@ren_e_m ==3 ) .@en_name_4 = 4835;	// Expert_Archer4
+		else if (.@ren_e_m ==4 ) .@en_name_4 = 4810;	// Fighting_Spirit2
+		else if (.@ren_e_m ==5 ) .@en_name_4 = 4809;	// Fighting_Spirit3
+		else if (.@ren_e_m ==6 ) .@en_name_4 = 4808;	// Fighting_Spirit4
+		//else if (.@ren_e_m ==7 ) .@en_name_4 = 4817;	// Sharp2
+		//else if (.@ren_e_m ==8 ) .@en_name_4 = 4816;	// Sharp3
+		//else if (.@ren_e_m ==9 ) .@en_name_4 = 4843;	// Sharp4
+			.@ren_e_m = rand(1,6);////สุ่มcard slot3
+			  if (.@ren_e_m ==1 ) .@en_name_3 = 4833;	// Expert_Archer2
+		else if (.@ren_e_m ==2 ) .@en_name_3 = 4834;	// Expert_Archer3
+		else if (.@ren_e_m ==3 ) .@en_name_3 = 4835;	// Expert_Archer4
+		else if (.@ren_e_m ==4 ) .@en_name_3 = 4810;	// Fighting_Spirit2
+		else if (.@ren_e_m ==5 ) .@en_name_3 = 4809;	// Fighting_Spirit3
+		else if (.@ren_e_m ==6 ) .@en_name_3 = 4808;	// Fighting_Spirit4
+		//else if (.@ren_e_m ==7 ) .@en_name_3 = 4817;	// Sharp2
+		//else if (.@ren_e_m ==8 ) .@en_name_3 = 4816;	// Sharp3
+		//else if (.@ren_e_m ==9 ) .@en_name_3 = 4843;	// Sharp4
+		
+			.@OptSelect = rand( 3,8 );	// str agi vit int dex luk
+			.@OptMinMax = rand( 3,6 );	// ค่า stat ที่สุ่ม 3-6
+			.@refine = rand( 1,10 );  	// สุ่มตี+
+			setarray .@OptParam[0],0;
+			makeitem3 1181,1,.@map$,.@x,.@y,0,.@refine,0,0,0,.@en_name_3,.@en_name_4,.@OptSelect,.@OptMinMax,.@OptParam;
+			.@ren_e_m = rand(1,6);////สุ่มcard slot4
+			  if (.@ren_e_m ==1 ) .@en_name_4 = 4817;	// Sharp2
+		else if (.@ren_e_m ==2 ) .@en_name_4 = 4816;	// Sharp3
+		else if (.@ren_e_m ==3 ) .@en_name_4 = 4843;	// Sharp4
+		else if (.@ren_e_m ==4 ) .@en_name_4 = 4810;	// Fighting_Spirit2
+		else if (.@ren_e_m ==5 ) .@en_name_4 = 4809;	// Fighting_Spirit3
+		else if (.@ren_e_m ==6 ) .@en_name_4 = 4808;	// Fighting_Spirit4
+		//else if (.@ren_e_m ==7 ) .@en_name_4 = 4833;	// Expert_Archer2
+		//else if (.@ren_e_m ==8 ) .@en_name_4 = 4834;	// Expert_Archer3
+		//else if (.@ren_e_m ==9 ) .@en_name_4 = 4835;	// Expert_Archer4
+			.@ren_e_m = rand(1,6);////สุ่มcard slot3
+			  if (.@ren_e_m ==1 ) .@en_name_3 = 4817;	// Sharp2
+		else if (.@ren_e_m ==2 ) .@en_name_3 = 4816;	// Sharp3
+		else if (.@ren_e_m ==3 ) .@en_name_3 = 4843;	// Sharp4
+		else if (.@ren_e_m ==4 ) .@en_name_3 = 4810;	// Fighting_Spirit2
+		else if (.@ren_e_m ==5 ) .@en_name_3 = 4809;	// Fighting_Spirit3
+		else if (.@ren_e_m ==6 ) .@en_name_3 = 4808;	// Fighting_Spirit4
+		//else if (.@ren_e_m ==7 ) .@en_name_3 = 4833;	// Expert_Archer2
+		//else if (.@ren_e_m ==8 ) .@en_name_3 = 4834;	// Expert_Archer3
+		//else if (.@ren_e_m ==9 ) .@en_name_3 = 4835;	// Expert_Archer4
+		
+			.@OptSelect = rand( 3,8 );	// str agi vit int dex luk
+			.@OptMinMax = rand( 3,6 );	// ค่า stat ที่สุ่ม 3-6
+			.@refine = rand( 1,10 );  	// สุ่มตี+
+			setarray .@OptParam[0],0;
+			makeitem3 1476,1,.@map$,.@x,.@y,0,.@refine,0,0,0,.@en_name_3,.@en_name_4,.@OptSelect,.@OptMinMax,.@OptParam;
+		}
+	end;
+	}

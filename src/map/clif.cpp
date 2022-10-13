@@ -8189,7 +8189,7 @@ void clif_party_message( struct party_data& party, uint32 account_id, const char
 		return;
 	}
 
-	if (len > CHAT_SIZE_MAX) {
+	if( len ){
 		ShowWarning( "clif_party_message: Truncated message '%s' (len=%d, max=%" PRIuPTR ", party_id=%d).\n", mes, len, CHAT_SIZE_MAX, party.party.party_id );
 		len = CHAT_SIZE_MAX;
 	}
@@ -10295,17 +10295,15 @@ void clif_disp_overhead_(struct block_list *bl, const char* mes, enum send_targe
  * Minimap fix [Kevin]
  * Remove dot from minimap
  *--------------------------*/
-void clif_party_xy_remove(struct map_session_data* sd)
+void clif_party_xy_remove(struct map_session_data *sd)
 {
+	unsigned char buf[16];
 	nullpo_retv(sd);
-
-	PACKET_ZC_NOTIFY_POSITION_TO_GROUPM p{};
-	p.PacketType = HEADER_ZC_NOTIFY_POSITION_TO_GROUPM;
-	p.AID = sd->status.account_id;
-	p.xPos = -1;
-	p.yPos = -1;
-
-	clif_send(&p, sizeof(p), &sd->bl, PARTY_SAMEMAP_WOS);
+	WBUFW(buf,0)=0x107;
+	WBUFL(buf,2)=sd->status.account_id;
+	WBUFW(buf,6)=-1;
+	WBUFW(buf,8)=-1;
+	clif_send(buf,packet_len(0x107),&sd->bl,PARTY_SAMEMAP_WOS);
 }
 
 
@@ -21012,14 +21010,6 @@ void clif_parse_merge_item_cancel(int fd, struct map_session_data* sd) {
 	return; // Nothing todo yet
 }
 
-static std::string clif_hide_name(const char* original_name)
-{
-	std::string censored(original_name);
-	int hide = min(battle_config.broadcast_hide_name, censored.length() - 1);
-	censored.replace(censored.length() - hide, hide, hide, '*');
-	return censored;
-}
-
 /**
  * 07fd <size>.W <type>.B <itemid>.W <charname_len>.B <charname>.24B <source_len>.B <containerid>.W (ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN)
  * 07fd <size>.W <type>.B <itemid>.W <charname_len>.B <charname>.24B <source_len>.B <srcname>.24B (ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN)
@@ -21030,8 +21020,10 @@ void clif_broadcast_obtain_special_item( const char *char_name, t_itemid nameid,
 	char name[NAME_LENGTH];
 
 	if( battle_config.broadcast_hide_name ){
-		std::string dispname = clif_hide_name(char_name);
-		safestrncpy(name, dispname.c_str(), sizeof(name));
+		std::string dispname = std::string( char_name );
+		int hide = min( battle_config.broadcast_hide_name, dispname.length() - 1 );
+		dispname.replace( dispname.length() - hide, hide, hide, '*' );
+		safestrncpy( name, dispname.c_str(), sizeof( name ) );
 	}else{
 		safestrncpy( name, char_name, sizeof( name ) );
 	}
@@ -22498,7 +22490,7 @@ void clif_unequipall_reply( struct map_session_data* sd, bool failed ){
 }
 
 void clif_parse_unequipall( int fd, struct map_session_data* sd ){
-#if PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210818
+#if PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210818
 	if( pc_cant_act( sd ) ){
 		clif_unequipall_reply( sd, true );
 		return;
@@ -24775,27 +24767,6 @@ void clif_parse_itempackage_select( int fd, struct map_session_data* sd ){
 #endif
 }
 
-void clif_broadcast_refine_result(map_session_data& sd, t_itemid itemId, int8 level, bool success)
-{
-#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
-	PACKET_ZC_BROADCAST_ITEMREFINING_RESULT p{};
-	p.packetType = HEADER_ZC_BROADCAST_ITEMREFINING_RESULT;
-	p.itemId = itemId;
-	p.refine_level = level;
-	p.status = (int8)success;
-
-	if (battle_config.broadcast_hide_name) {
-		std::string dispname = clif_hide_name(sd.status.name);
-		safestrncpy(p.name, dispname.c_str(), sizeof(p.name));
-	}
-	else {
-		safestrncpy(p.name, sd.status.name, sizeof(p.name));
-	}
-
-	clif_send(&p, sizeof(p), &sd.bl, ALL_CLIENT);
-#endif
-}
-
 void clif_partybooking_ask( struct map_session_data* sd, struct map_session_data* joining_sd ){
 #if PACKETVER >= 20191204
 	struct PACKET_ZC_PARTY_REQ_MASTER_TO_JOIN p = { 0 };
@@ -24913,6 +24884,29 @@ void clif_parse_partybooking_reply( int fd, struct map_session_data* sd ){
 	}
 
 	clif_partybooking_reply( tsd, sd, p->accept );
+#endif
+}
+
+void clif_broadcast_refine_result(map_session_data& sd, t_itemid itemId, int8 level, bool success)
+{
+#if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
+	PACKET_ZC_BROADCAST_ITEMREFINING_RESULT packet{};
+	packet.packetType = HEADER_ZC_BROADCAST_ITEMREFINING_RESULT;
+	packet.itemId = itemId;
+	packet.refine_level = level;
+	packet.status = (int8)success;
+
+	if (battle_config.broadcast_hide_name) {
+		std::string dispname = std::string(sd.status.name);
+		int hide = min(battle_config.broadcast_hide_name, dispname.length() - 1);
+		dispname.replace(dispname.length() - hide, hide, hide, '*');
+		safestrncpy(packet.name, dispname.c_str(), NAME_LENGTH);
+	}
+	else {
+		safestrncpy(packet.name, sd.status.name, NAME_LENGTH);
+	}
+
+	clif_send(&packet, sizeof(packet), &sd.bl, ALL_CLIENT);
 #endif
 }
 
